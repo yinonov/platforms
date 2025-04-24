@@ -2,7 +2,9 @@ import { html, when } from "@microsoft/fast-element";
 import type { SignaturePanel } from "./signature-panel";
 
 export const SignaturePanelTemplate = html<SignaturePanel>`
-  <form>
+  <form class="card">
+    <h3>אימות זהות לחתימה</h3>
+
     <label for="signerName">
       שם החותם:
       <input
@@ -61,6 +63,8 @@ export const SignaturePanelTemplate = html<SignaturePanel>`
       />
       אני מאשר/ת את תוכן החוזה
     </label>
+
+    <p id="error-message" style="color: red; font-size: 0.9rem;"></p>
   </form>
 
   ${(x) =>

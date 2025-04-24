@@ -3,7 +3,7 @@ import { signInWithPhoneNumber } from "firebase/auth";
 import { PhoneAuthElement } from "../../utils";
 import { auth } from "../../firebase/firebase-config";
 
-interface SignedEventDetail {
+export interface SignedEventDetail {
   signerName: string;
   signedAt: string;
   phone: string;

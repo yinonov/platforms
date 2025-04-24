@@ -5,6 +5,7 @@ import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD8SkiPGIznzCAu5tc60jx3kpXLydbLi6A",
@@ -21,3 +22,4 @@ const auth = getAuth(app);
 
 export const functions = getFunctions(app);
 export { auth, RecaptchaVerifier, signInWithPhoneNumber };
+export const db = getFirestore(app);

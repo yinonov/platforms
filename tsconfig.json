@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "pretty": true,
-    "target": "ES2015",
+    "target": "ES2015", // according to https://fast.design/docs/integrations#typescript. changing this will break decorators
     "module": "ES2015",
     "moduleResolution": "node",
     "importHelpers": true, // when using decorators this allows for the smallest footprint using tslib
@@ -13,12 +13,7 @@
     "strict": true,
     "outDir": "dist/build",
     "rootDir": "src",
-    "lib": [
-      "dom",
-      "esnext"
-    ]
+    "lib": ["dom", "esnext"]
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

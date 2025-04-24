@@ -2,9 +2,7 @@ import { html, when } from "@microsoft/fast-element";
 import type { ContractForm } from "./contract-form";
 
 export const ContractFormTemplate = html<ContractForm>`
-  <signature-panel
-    @signed="${(x, c) => x.handleSigned(c.event as CustomEvent)}"
-  ></signature-panel>
+  ${(x) => x.landlord}1
   <form @submit="${(x, c) => x.handleSubmit(c.event)}">
     <label>
       משכיר:

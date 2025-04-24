@@ -54,7 +54,7 @@ export class PhoneAuthElement extends FASTElement {
     cleanupRecaptcha(this.recaptchaElement, this.recaptchaVerifier);
   }
 
-  protected handleInput(field: string, event: Event) {
+  handleInput(field: string, event: Event) {
     handleInputValue(this, field as keyof this, event);
   }
 }

@@ -1,13 +1,16 @@
 // auth-panel.ts
-import { observable } from "@microsoft/fast-element";
+import { observable, when } from "@microsoft/fast-element";
 import {
   signInWithPhoneNumber,
   onAuthStateChanged,
   signOut,
   User,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import { PhoneAuthElement } from "../../utils";
 import { auth } from "../../firebase/firebase-config";
+import { userContext } from "../../context";
 
 export class AuthPanel extends PhoneAuthElement {
   @observable phone: string = "";
@@ -15,6 +18,7 @@ export class AuthPanel extends PhoneAuthElement {
   @observable isLoggedIn: boolean = false;
   @observable currentUser: User | null = null;
   @observable smsSent: boolean = false;
+  @observable isExpanded: boolean = false;
 
   private confirmationResult: any = null;
 
@@ -23,7 +27,29 @@ export class AuthPanel extends PhoneAuthElement {
     onAuthStateChanged(auth, (user) => {
       this.currentUser = user;
       this.isLoggedIn = !!user;
+      userContext.setUser(user);
     });
+  }
+
+  togglePanel(event: Event) {
+    event.preventDefault();
+    this.isExpanded = !this.isExpanded;
+  }
+
+  signInWithGoogle(event: Event) {
+    event.preventDefault();
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        this.currentUser = result.user;
+        this.isLoggedIn = true;
+        this.isExpanded = false;
+        userContext.setUser(result.user);
+      })
+      .catch((error) => {
+        console.error("שגיאה בהתחברות עם גוגל:", error);
+        this.showError("שגיאה בהתחברות עם גוגל: " + error.message);
+      });
   }
 
   sendSMS(event: Event) {
@@ -34,11 +60,10 @@ export class AuthPanel extends PhoneAuthElement {
       .then((confirmationResult) => {
         this.confirmationResult = confirmationResult;
         this.smsSent = true;
-        alert("קוד אימות נשלח");
       })
       .catch((error) => {
         console.error("שגיאה בשליחת SMS:", error);
-        alert("שגיאה בשליחת SMS: " + error.message);
+        this.showError("שגיאה בשליחת SMS: " + error.message);
       });
   }
 
@@ -51,11 +76,12 @@ export class AuthPanel extends PhoneAuthElement {
       .then((result: { user: User }) => {
         this.currentUser = result.user;
         this.isLoggedIn = true;
-        alert("התחברת בהצלחה");
+        this.isExpanded = false;
+        userContext.setUser(result.user);
       })
       .catch((error: Error) => {
         console.error("שגיאת אימות:", error);
-        alert("קוד לא תקין");
+        this.showError("קוד לא תקין");
       });
   }
 
@@ -68,11 +94,17 @@ export class AuthPanel extends PhoneAuthElement {
         this.smsSent = false;
         this.phone = "";
         this.smsCode = "";
-        alert("התנתקת בהצלחה");
+        this.isExpanded = false;
+        userContext.setUser(null);
       })
       .catch((error) => {
         console.error("שגיאה בהתנתקות:", error);
-        alert("שגיאה בהתנתקות: " + error.message);
+        this.showError("שגיאה בהתנתקות: " + error.message);
       });
+  }
+
+  showError(message: string) {
+    const errorElement = this.shadowRoot?.getElementById("error-message");
+    if (errorElement) errorElement.textContent = message;
   }
 }

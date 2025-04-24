@@ -1,2 +1,1 @@
-import "./components/contract-form";
-import "./components/auth-panel";
+import "./components/app-layout";

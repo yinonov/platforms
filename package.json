@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@microsoft/fast-element": "^2.2.1",
+    "@vaadin/router": "^2.0.0",
     "axios": "^1.8.4",
     "firebase": "^11.6.0",
     "html2pdf.js": "^0.10.3",

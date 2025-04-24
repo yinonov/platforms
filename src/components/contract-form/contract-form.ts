@@ -37,6 +37,7 @@ export class ContractForm extends FASTElement {
     this.rent = getRandomRent();
     this.period = "12 חודשים";
     this.startDate = new Date().toISOString().slice(0, 10);
+    console.log("Generating random data...", this.landlord);
   }
 
   handleInput(field: string, event: Event) {
@@ -50,16 +51,22 @@ export class ContractForm extends FASTElement {
     this.generatedContract = "";
 
     try {
-      const contractText = await generateContractFromForm({
+      const data = {
         landlord: this.landlord,
         tenant: this.tenant,
         address: this.address,
         rent: this.rent,
         period: this.period,
         startDate: this.startDate,
-      });
+      };
+      const contractText = await generateContractFromForm(data);
 
       this.generatedContract = contractText || "לא התקבל חוזה.";
+
+      this.$emit("contract-data", {
+        text: this.generatedContract,
+        ...data,
+      });
     } catch (err) {
       console.error("שגיאה:", err);
       this.generatedContract = "אירעה שגיאה ביצירת החוזה.";
