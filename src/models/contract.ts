@@ -8,6 +8,12 @@ export interface Contract {
     signedAt?: string;
   }[];
   createdAt: string;
+  metadata?: {
+    landlord?: string;
+    tenant?: string;
+    address?: string;
+    rent?: string;
+  };
 }
 
 export interface ContractFormData {

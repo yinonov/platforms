@@ -1,9 +1,17 @@
 // create-contract.ts
 import { FASTElement, observable } from "@microsoft/fast-element";
-import { Contract, ContractFormData } from "../../../models/contract";
+import { Contract } from "../../../models/contract";
 import { saveContract } from "../../../firebase/firestore-service";
 import { userContext } from "../../../context/user-context";
 import { SignedEventDetail } from "../../../models";
+
+export interface ContractFormData {
+  landlord: string;
+  tenant: string;
+  address: string;
+  rent: string;
+  text: string;
+}
 
 export class CreateContract extends FASTElement {
   @observable contractContent: string = "";
@@ -36,6 +44,12 @@ export class CreateContract extends FASTElement {
         createdBy: this.currentUser.uid,
         signers: [],
         createdAt: new Date().toISOString(),
+        metadata: {
+          landlord: this.contractFormData.landlord || "",
+          tenant: this.contractFormData.tenant || "",
+          address: this.contractFormData.address || "",
+          rent: this.contractFormData.rent || "",
+        },
       };
 
       this.createdContractId = await saveContract(contract);

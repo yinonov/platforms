@@ -8,6 +8,7 @@ export const CreateContractTemplate = html<CreateContract>`
   <contract-form
     @contract-generated="${(x, c) =>
       (x.contractContent = (c.event as CustomEvent).detail.text)}"
+    @contract-data="${(x, c) => x.handleFormData(c.event as CustomEvent)}"
   ></contract-form>
 
   ${when(
