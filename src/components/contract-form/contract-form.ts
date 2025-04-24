@@ -1,6 +1,7 @@
 import { FASTElement, observable } from "@microsoft/fast-element";
 import { generateContractFromForm } from "../../services/contract-api";
 import html2pdf from "html2pdf.js";
+import { ContractFormData } from "../../models";
 
 export class ContractForm extends FASTElement {
   @observable landlord: string = "";
@@ -37,7 +38,6 @@ export class ContractForm extends FASTElement {
     this.rent = getRandomRent();
     this.period = "12 חודשים";
     this.startDate = new Date().toISOString().slice(0, 10);
-    console.log("Generating random data...", this.landlord);
   }
 
   handleInput(field: string, event: Event) {
@@ -51,7 +51,7 @@ export class ContractForm extends FASTElement {
     this.generatedContract = "";
 
     try {
-      const data = {
+      const data: ContractFormData = {
         landlord: this.landlord,
         tenant: this.tenant,
         address: this.address,

@@ -2,13 +2,7 @@ import { observable } from "@microsoft/fast-element";
 import { signInWithPhoneNumber } from "firebase/auth";
 import { PhoneAuthElement } from "../../utils";
 import { auth } from "../../firebase/firebase-config";
-
-export interface SignedEventDetail {
-  signerName: string;
-  signedAt: string;
-  phone: string;
-  isApproved: boolean;
-}
+import { SignedEventDetail } from "../../models";
 
 export class SignaturePanel extends PhoneAuthElement {
   @observable signerName: string = "";
