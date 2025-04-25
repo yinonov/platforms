@@ -1,48 +1,76 @@
+// src/components/contract-form/contract-form.ts (refactored with draft creation)
 import { FASTElement, observable } from "@microsoft/fast-element";
 import { generateContractFromForm } from "../../services/contract-api";
-import html2pdf from "html2pdf.js";
-import { ContractFormData } from "../../models";
+import { exportContractToPDF } from "../../services/pdf-export";
+import { getRandomContractData } from "../../services/demo-data";
+import { db, auth } from "../../firebase/firebase-config";
+import {
+  addDoc,
+  collection,
+  doc,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+import type { ContractFormData, SignatureData } from "../../models";
 
 export class ContractForm extends FASTElement {
-  @observable landlord: string = "";
-  @observable tenant: string = "";
-  @observable address: string = "";
-  @observable rent: string = "";
-  @observable period: string = "";
-  @observable startDate: string = "";
-  @observable generatedContract: string = "";
-  @observable isLoading: boolean = false;
-  @observable signerName: string = "";
-  @observable signedAt: string = "";
-  @observable phone: string = "";
-  @observable isApproved: boolean = false;
+  @observable landlord = "";
+  @observable tenant = "";
+  @observable address = "";
+  @observable rent = "";
+  @observable period = "";
+  @observable startDate = "";
+  @observable generatedContract = "";
+  @observable isLoading = false;
+  @observable signature: SignatureData = {
+    signerName: "",
+    signedAt: "",
+    phone: "",
+    isApproved: false,
+  };
+  private contractId: string | null = null;
+  private saveDraftDebounce?: number;
 
   connectedCallback() {
     super.connectedCallback();
-    const names = ["ינון עובד", "דנה לוי", "יוסי כהן", "נועה ברמן", "מיכל פרץ"];
-    const addresses = [
-      "הרצל 10, תל אביב",
-      "שדרות ירושלים 42, חולון",
-      "אלנבי 55, תל אביב",
-      "החרש 12, פתח תקווה",
-    ];
-
-    const getRandom = (arr: string[]) =>
-      arr[Math.floor(Math.random() * arr.length)];
-    const getRandomRent = () =>
-      (Math.floor(Math.random() * 3000) + 3000).toString();
-
-    this.landlord = getRandom(names);
-    this.tenant = getRandom(names);
-    this.address = getRandom(addresses);
-    this.rent = getRandomRent();
-    this.period = "12 חודשים";
-    this.startDate = new Date().toISOString().slice(0, 10);
+    const data = getRandomContractData();
+    Object.assign(this, data);
+    this.createDraft();
   }
 
-  handleInput(field: string, event: Event) {
+  async createDraft() {
+    const userId = auth.currentUser?.uid;
+    if (!userId) return;
+
+    const ref = await addDoc(collection(db, "contracts"), {
+      ownerId: userId,
+      participants: [userId],
+      status: "draft",
+      createdAt: serverTimestamp(),
+    });
+    this.contractId = ref.id;
+  }
+
+  async saveDraft() {
+    if (!this.contractId) return;
+    const draftRef = doc(db, "contracts", this.contractId);
+    const metadata: ContractFormData = {
+      landlord: this.landlord,
+      tenant: this.tenant,
+      address: this.address,
+      rent: this.rent,
+      period: this.period,
+      startDate: this.startDate,
+    };
+    await updateDoc(draftRef, { ...metadata });
+  }
+
+  handleInput(field: keyof ContractForm, event: Event) {
     const target = event.target as HTMLInputElement;
     (this as any)[field] = target.value;
+
+    clearTimeout(this.saveDraftDebounce);
+    this.saveDraftDebounce = window.setTimeout(() => this.saveDraft(), 800);
   }
 
   async handleSubmit(event: Event) {
@@ -50,18 +78,27 @@ export class ContractForm extends FASTElement {
     this.isLoading = true;
     this.generatedContract = "";
 
-    try {
-      const data: ContractFormData = {
-        landlord: this.landlord,
-        tenant: this.tenant,
-        address: this.address,
-        rent: this.rent,
-        period: this.period,
-        startDate: this.startDate,
-      };
-      const contractText = await generateContractFromForm(data);
+    const data: ContractFormData = {
+      landlord: this.landlord,
+      tenant: this.tenant,
+      address: this.address,
+      rent: this.rent,
+      period: this.period,
+      startDate: this.startDate,
+    };
 
+    try {
+      const contractText = await generateContractFromForm(data);
       this.generatedContract = contractText || "לא התקבל חוזה.";
+
+      if (this.contractId) {
+        const ref = doc(db, "contracts", this.contractId);
+        await updateDoc(ref, {
+          ...data,
+          content: this.generatedContract,
+          status: "generated",
+        });
+      }
 
       this.$emit("contract-data", {
         text: this.generatedContract,
@@ -75,39 +112,14 @@ export class ContractForm extends FASTElement {
     }
   }
 
-  handleSigned(event: CustomEvent) {
-    const { signerName, signedAt, phone, isApproved } = event.detail;
-    this.signerName = signerName;
-    this.signedAt = signedAt;
-    this.phone = phone;
-    this.isApproved = isApproved;
+  handleSigned(event: CustomEvent<SignatureData>) {
+    this.signature = event.detail;
   }
 
   downloadAsSignedPDF() {
     const element = this.shadowRoot?.getElementById("contract");
-    if (!element) return;
-
-    const clone = element.cloneNode(true) as HTMLElement;
-    const footer = document.createElement("div");
-    footer.innerHTML = `
-    <hr/>
-    <p style="direction: rtl; font-style: italic;">
-      נחתם ע״י: ${this.signerName}<br/>
-      מספר טלפון מאומת: ${this.phone}<br/>
-      תאריך: ${this.signedAt}
-    </p>
-  `;
-    clone.appendChild(footer);
-
-    html2pdf()
-      .set({
-        margin: 1,
-        filename: "חוזה_שכירות_חתום.pdf",
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "cm", format: "a4", orientation: "portrait" },
-      })
-      .from(clone)
-      .save();
+    if (element) {
+      exportContractToPDF(element, this.signature);
+    }
   }
 }

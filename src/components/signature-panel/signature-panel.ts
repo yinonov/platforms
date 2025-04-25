@@ -1,66 +1,79 @@
-import { observable } from "@microsoft/fast-element";
-import { signInWithPhoneNumber } from "firebase/auth";
-import { PhoneAuthElement } from "../../utils";
+// components/signature-panel/signature-panel.ts (מתוקן)
+import { FASTElement, attr, observable } from "@microsoft/fast-element";
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  ConfirmationResult,
+} from "firebase/auth";
 import { auth } from "../../firebase/firebase-config";
-import { SignedEventDetail } from "../../models";
+import type { SignatureData } from "../../models";
 
-export class SignaturePanel extends PhoneAuthElement {
-  @observable signerName: string = "";
-  @observable phone: string = "";
-  @observable smsCode: string = "";
-  @observable isApproved: boolean = false;
-  @observable isPhoneVerified: boolean = false;
-  @observable signedAt: string = "";
-  @observable smsSent: boolean = false;
+export class SignaturePanel extends FASTElement {
+  @observable signerName = "";
+  @observable phone = "";
+  @observable code = "";
+  @observable sent = false;
+  @observable verified = false;
+  @observable loading = false;
+  @observable error = "";
+  private confirmationResult: ConfirmationResult | null = null;
+  private recaptchaVerifier: RecaptchaVerifier | null = null;
 
-  private confirmationResult: any = null;
-
-  handleCheckbox(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.isApproved = target.checked;
+  connectedCallback() {
+    super.connectedCallback();
+    this.initRecaptcha();
   }
 
-  sendSMS(event: Event) {
-    event.preventDefault();
-    if (!this.recaptchaVerifier) return;
-
-    signInWithPhoneNumber(auth, this.phone, this.recaptchaVerifier)
-      .then((confirmationResult) => {
-        this.confirmationResult = confirmationResult;
-        this.smsSent = true;
-        alert("קוד אימות נשלח בהצלחה");
-      })
-      .catch((error) => {
-        console.error("שגיאה בשליחת SMS:", error);
-        alert("שגיאה בשליחת SMS: " + error.message);
-      });
+  initRecaptcha() {
+    if (!this.recaptchaVerifier) {
+      this.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: () => console.log("Recaptcha solved"),
+        }
+      );
+    }
   }
 
-  verifyCode(event: Event) {
-    event.preventDefault();
+  async sendCode() {
+    this.loading = true;
+    this.error = "";
+    try {
+      this.confirmationResult = await signInWithPhoneNumber(
+        auth,
+        this.phone,
+        this.recaptchaVerifier!
+      );
+      this.sent = true;
+    } catch (err: any) {
+      this.error = err.message;
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async verifyCodeAndSign() {
     if (!this.confirmationResult) return;
+    this.loading = true;
+    this.error = "";
+    try {
+      const result = await this.confirmationResult.confirm(this.code);
+      const verifiedPhone = result.user.phoneNumber || this.phone;
+      this.verified = true;
 
-    this.confirmationResult
-      .confirm(this.smsCode)
-      .then(() => {
-        this.isPhoneVerified = true;
-        this.signedAt = new Date().toLocaleDateString("he-IL");
-        this.dispatchEvent(
-          new CustomEvent<SignedEventDetail>("signed", {
-            detail: {
-              signerName: this.signerName,
-              signedAt: this.signedAt,
-              phone: this.phone,
-              isApproved: this.isApproved,
-            },
-            bubbles: true,
-            composed: true,
-          })
-        );
-      })
-      .catch((error: Error) => {
-        console.error("קוד אימות שגוי:", error);
-        alert("קוד שגוי. נסה שוב.");
-      });
+      const signed: SignatureData = {
+        signerName: this.signerName,
+        phone: verifiedPhone,
+        signedAt: new Date().toISOString(),
+        isApproved: true,
+      };
+      this.$emit("signed", signed);
+    } catch (err: any) {
+      this.error = "קוד שגוי או פג תוקף.";
+    } finally {
+      this.loading = false;
+    }
   }
 }

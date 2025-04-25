@@ -2,7 +2,6 @@ import { html, when } from "@microsoft/fast-element";
 import type { ContractForm } from "./contract-form";
 
 export const ContractFormTemplate = html<ContractForm>`
-  ${(x) => x.landlord}1
   <form @submit="${(x, c) => x.handleSubmit(c.event)}">
     <label>
       משכיר:

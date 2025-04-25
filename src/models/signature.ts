@@ -4,3 +4,11 @@ export interface SignedEventDetail {
   phone: string;
   isApproved: boolean;
 }
+
+// models.ts (הרחבה לתוך קובץ קיים)
+export interface SignatureData {
+  signerName: string;
+  phone: string;
+  signedAt: string;
+  isApproved: boolean;
+}

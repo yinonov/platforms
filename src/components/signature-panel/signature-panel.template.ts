@@ -1,74 +1,63 @@
-import { html, when } from "@microsoft/fast-element";
+// components/signature-panel/signature-panel.template.ts
+import { html } from "@microsoft/fast-element";
 import type { SignaturePanel } from "./signature-panel";
 
 export const SignaturePanelTemplate = html<SignaturePanel>`
-  <form class="card">
-    <h3>אימות זהות לחתימה</h3>
-
-    <label for="signerName">
-      שם החותם:
+  <form
+    @submit.prevent="verifyCodeAndSign"
+    style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px;"
+  >
+    <div>
+      <label>שם מלא</label><br />
       <input
-        name="signerName"
-        id="signerName"
         type="text"
         value="${(x) => x.signerName}"
-        @input="${(x, c) => x.handleInput("signerName", c.event)}"
+        @input="${(x, c) =>
+          (x.signerName = (c.event.target as HTMLInputElement).value)}"
         required
       />
-    </label>
+    </div>
 
-    <label for="phone">
-      מספר טלפון:
+    <div>
+      <label>מספר טלפון</label><br />
       <input
-        name="phone"
-        id="phone"
         type="tel"
         value="${(x) => x.phone}"
-        @input="${(x, c) => x.handleInput("phone", c.event)}"
+        @input="${(x, c) =>
+          (x.phone = (c.event.target as HTMLInputElement).value)}"
+        ?disabled="${(x) => x.sent}"
         required
       />
-    </label>
+      <button
+        type="button"
+        @click="sendCode"
+        ?disabled="${(x) => x.loading || x.sent}"
+      >
+        שלח קוד
+      </button>
+    </div>
 
-    <button type="button" @click="${(x, c) => x.sendSMS(c.event)}">
-      שלח קוד אימות
-    </button>
+    ${(x) =>
+      x.sent
+        ? html`
+            <div>
+              <label>קוד אימות</label><br />
+              <input
+                type="text"
+                value="${(x) => x.code}"
+                @input="${(x, c) =>
+                  (x.code = (c.event.target as HTMLInputElement).value)}"
+                required
+              />
+            </div>
+            <button type="submit" ?disabled="${(x) => x.loading}">
+              אמת וחתום
+            </button>
+          `
+        : ""}
+    ${(x) => (x.loading ? html`<p>טוען...</p>` : "")}
+    ${(x) => (x.error ? html`<p style="color: red">${x.error}</p>` : "")}
 
-    ${when(
-      (x) => x.smsSent,
-      html`
-        <label for="smsCode">
-          קוד אימות:
-          <input
-            name="smsCode"
-            id="smsCode"
-            type="text"
-            value="${(x) => x.smsCode}"
-            @input="${(x, c) => x.handleInput("smsCode", c.event)}"
-            required
-          />
-        </label>
-        <button type="button" @click="${(x, c) => x.verifyCode(c.event)}">
-          אמת קוד
-        </button>
-      `
-    )}
-
-    <label>
-      <input
-        name="approval"
-        type="checkbox"
-        ?checked="${(x) => x.isApproved}"
-        @change="${(x, c) => x.handleCheckbox(c.event)}"
-        required
-      />
-      אני מאשר/ת את תוכן החוזה
-    </label>
-
-    <p id="error-message" style="color: red; font-size: 0.9rem;"></p>
+    <div id="recaptcha-container" style="display: none;"></div>
   </form>
-
-  ${(x) =>
-    x.isPhoneVerified && x.signerName && x.isApproved
-      ? html` <p style="color: green;">✔ חתימה בוצעה בתאריך: ${x.signedAt}</p> `
-      : ""}
 `;

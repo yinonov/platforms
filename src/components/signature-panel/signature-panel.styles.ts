@@ -1,48 +1,50 @@
+// components/signature-panel/signature-panel.styles.ts
 import { css } from "@microsoft/fast-element";
 
 export const SignaturePanelStyles = css`
-  form.card {
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 400px;
+    padding: 1rem;
     background: #f9f9f9;
     border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 2rem;
-    max-width: 400px;
-    margin: auto;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
-  h3 {
-    margin-bottom: 1rem;
-    font-size: 1.25rem;
-    text-align: center;
-  }
+
   label {
+    font-weight: bold;
     display: block;
-    font-family: sans-serif;
+    margin-bottom: 0.25rem;
   }
-  input[type="text"],
-  input[type="tel"] {
+
+  input {
+    width: 100%;
     padding: 0.5rem;
     font-size: 1rem;
-    width: 100%;
-    margin-top: 0.25rem;
-    margin-bottom: 1rem;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 0.5rem;
   }
+
   button {
     padding: 0.5rem 1rem;
     font-size: 1rem;
-    background: #0d6efd;
+    background-color: #0066cc;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 0.5rem;
     cursor: pointer;
-    margin-bottom: 1rem;
   }
-  button:hover {
-    background: #0b5ed7;
+
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
   }
-  #error-message {
-    min-height: 1.2rem;
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
   }
 `;
