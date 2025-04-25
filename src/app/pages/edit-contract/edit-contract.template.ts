@@ -1,6 +1,7 @@
 // src/app/pages/edit-contract/edit-contract.template.ts
-import { html, repeat, when } from "@microsoft/fast-element";
+import { html, when, repeat } from "@microsoft/fast-element";
 import type { EditContract } from "./edit-contract";
+import "../../../components/contract-form";
 
 export const EditContractTemplate = html<EditContract>`
   ${when((x) => x.loading, html`<p>טוען...</p>`)}
@@ -12,7 +13,6 @@ export const EditContractTemplate = html<EditContract>`
     (x) => !x.contractId && !x.loading && !x.error,
     html<EditContract>`
       <h2>בחר סוג חוזה</h2>
-
       <select
         @change=${(x, c) =>
           x.handleTemplateSelect((c.event.target as HTMLSelectElement).value)}
@@ -32,7 +32,7 @@ export const EditContractTemplate = html<EditContract>`
     html<EditContract>`
       <contract-form
         type="${(x) => x.contract!.type}"
-        .metadata="${(x) => x.contract!.metadata}"
+        :metadata="${(x) => x.contract!.metadata}"
         @submit=${(x, c) => x.handleSubmit((c.event as CustomEvent).detail)}
       ></contract-form>
     `
