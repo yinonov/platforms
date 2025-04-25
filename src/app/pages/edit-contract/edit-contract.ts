@@ -11,6 +11,8 @@ import {
 } from "../../../templates/contract-templates";
 import type { Contract } from "../../../models/contract";
 import { auth } from "../../../services/firebase-config";
+import { httpsCallable } from "firebase/functions";
+import { functions } from "../../../services";
 
 export class EditContract extends FASTElement {
   @attr contractId?: string;
@@ -19,7 +21,7 @@ export class EditContract extends FASTElement {
   @observable selectedType = "";
   @observable loading = true;
   @observable error: string | null = null;
-  @observable template: ContractTemplate | null = null;
+  private template: ContractTemplate | null = null;
 
   async connectedCallback() {
     super.connectedCallback();
@@ -55,7 +57,7 @@ export class EditContract extends FASTElement {
     const draft: Omit<Contract, "id"> = {
       type: this.template.type,
       title: this.template.defaultTitle,
-      content: this.template.defaultContent,
+      content: "", // נוצר רק אחרי שליחה
       metadata: { ...this.template.defaultMetadata },
       status: "draft",
       createdBy: auth.currentUser!.uid,
@@ -75,10 +77,11 @@ export class EditContract extends FASTElement {
     try {
       this.loading = true;
       const metadata = detail.metadata;
-      const content = Object.keys(metadata).reduce(
-        (txt, key) => txt.replace(new RegExp(`{{${key}}}`, "g"), metadata[key]),
-        this.template!.defaultContent
-      );
+
+      const generateContract = httpsCallable(functions, "generateContract");
+      const response = await generateContract(metadata);
+      const content = (response.data as any).contractText;
+
       const base: Omit<Contract, "id"> = {
         type: this.template.type,
         title: this.template.defaultTitle,
@@ -88,6 +91,7 @@ export class EditContract extends FASTElement {
         createdBy: auth.currentUser.uid,
         createdAt: this.contract?.createdAt || new Date().toISOString(),
       };
+
       if (this.contractId) {
         await updateContract(this.contractId, base);
       } else {
