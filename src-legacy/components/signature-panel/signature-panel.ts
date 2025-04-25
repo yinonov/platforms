@@ -1,9 +1,10 @@
-// components/signature-panel/signature-panel.ts (מתוקן)
-import { FASTElement, attr, observable } from "@microsoft/fast-element";
+// src/components/signature-panel/signature-panel.ts (correct RecaptchaVerifier usage + redirect flow)
+import { FASTElement, observable } from "@microsoft/fast-element";
 import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
   ConfirmationResult,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../../firebase/firebase-config";
 import type { SignatureData } from "../../models";
@@ -21,11 +22,20 @@ export class SignaturePanel extends FASTElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.initRecaptcha();
+
+    if (auth.currentUser) {
+      this.initRecaptcha();
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user && !this.recaptchaVerifier) {
+        this.initRecaptcha();
+      }
+    });
   }
 
   initRecaptcha() {
-    if (!this.recaptchaVerifier) {
+    try {
       this.recaptchaVerifier = new RecaptchaVerifier(
         auth,
         "recaptcha-container",
@@ -34,6 +44,9 @@ export class SignaturePanel extends FASTElement {
           callback: () => console.log("Recaptcha solved"),
         }
       );
+    } catch (err) {
+      console.error("Recaptcha init error:", err);
+      this.error = "שגיאה באתחול אימות. אנא רענן את הדף.";
     }
   }
 
@@ -77,3 +90,6 @@ export class SignaturePanel extends FASTElement {
     }
   }
 }
+
+// שימוש בהפניה בעמוד create/edit לאחר שמירה:
+// window.location.href = `/contract-view?id=${this.contractId}`; // בסוף save

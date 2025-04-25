@@ -24,21 +24,11 @@ export const CreateContractTemplate = html<CreateContract>`
         >
         <button
           @click="${(x, c) => x.save()}"
-          ?disabled="${(x) => x.saving || x.createdContractId !== ""}"
+          ?disabled="${(x) => x.saving || x.contractId !== ""}"
         >
           ${when((x) => x.saving, html`שומר...`, html`שמור חוזה`)}
         </button>
       </section>
-    `
-  )}
-  ${when(
-    (x) => x.createdContractId,
-    html`
-      <signature-panel
-        contract-id="${(x) => x.createdContractId}"
-        signer-name="${(x) => x.currentUser?.displayName || ""}"
-        @signed="${(x, c) => x.handleSigned(c)}"
-      ></signature-panel>
     `
   )}
   ${when((x) => x.error, html`<p style="color: red;">${(x) => x.error}</p>`)}

@@ -1,3 +1,4 @@
+// src/components/contract-form/contract-form.styles.ts
 import { css } from "@microsoft/fast-element";
 
 export const ContractFormStyles = css`
@@ -5,30 +6,33 @@ export const ContractFormStyles = css`
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    max-width: 400px;
-    margin: 2rem auto;
-    font-family: sans-serif;
+    max-width: 600px;
   }
 
   label {
-    display: flex;
-    flex-direction: column;
-    font-size: 0.9rem;
+    display: block;
+    font-weight: 600;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
   }
 
   button {
-    padding: 0.5rem;
+    padding: 0.75rem 1.25rem;
     font-size: 1rem;
-    background-color: #0d6efd;
+    background-color: #007bff;
     color: white;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
   }
 
-  pre {
-    background: #f8f9fa;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    font-family: inherit;
+  button:hover {
+    background-color: #0056b3;
   }
 `;

@@ -1,26 +1,12 @@
+// src/models/contract.ts
+
 export interface Contract {
   id?: string;
+  type: string; // e.g. "rental" | "service"
+  title: string;
   content: string;
+  metadata: Record<string, string>;
+  status: "draft" | "generated" | "signed";
   createdBy: string;
-  signers: {
-    uid: string;
-    name: string;
-    signedAt?: string;
-  }[];
   createdAt: string;
-  metadata?: {
-    landlord?: string;
-    tenant?: string;
-    address?: string;
-    rent?: string;
-  };
-}
-
-export interface ContractFormData {
-  landlord: string;
-  tenant: string;
-  address: string;
-  rent: string;
-  period: string;
-  startDate: string;
 }

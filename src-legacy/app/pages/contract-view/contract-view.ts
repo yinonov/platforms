@@ -1,14 +1,16 @@
-// contract-view.ts
+// src/app/pages/contract-view/contract-view.ts
 import { FASTElement, observable } from "@microsoft/fast-element";
-import { Contract } from "../../models/contract";
-import { db } from "../../firebase/firebase-config";
-import { doc, getDoc } from "firebase/firestore";
+import { Contract } from "../../../models";
+import { db } from "../../../firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { RouterLocation } from "@vaadin/router";
+import type { SignedEventDetail } from "../../../models";
 
 export class ContractView extends FASTElement {
   @observable contract: Contract | null = null;
   @observable loading = true;
   @observable error: string | null = null;
+  @observable signatureDetails: SignedEventDetail | null = null;
 
   async connectedCallback() {
     super.connectedCallback();
@@ -27,7 +29,9 @@ export class ContractView extends FASTElement {
       const ref = doc(db, "contracts", contractId);
       const snap = await getDoc(ref);
       if (snap.exists()) {
-        this.contract = { id: snap.id, ...snap.data() } as Contract;
+        const data = snap.data();
+        this.contract = { id: snap.id, ...data } as Contract;
+        this.signatureDetails = data.signatureDetails || null;
       } else {
         this.error = "החוזה לא נמצא.";
       }
@@ -36,6 +40,23 @@ export class ContractView extends FASTElement {
       console.error(err);
     } finally {
       this.loading = false;
+    }
+  }
+
+  async handleSigned(e: CustomEvent<SignedEventDetail>) {
+    if (!this.contract?.id) return;
+
+    const ref = doc(db, "contracts", this.contract.id);
+    try {
+      await updateDoc(ref, {
+        signed: true,
+        signatureDetails: e.detail,
+      });
+      this.contract.signed = true;
+      this.signatureDetails = e.detail;
+    } catch (err) {
+      console.error("שגיאה בשמירת חתימה:", err);
+      this.error = "לא ניתן לשמור את החתימה.";
     }
   }
 }

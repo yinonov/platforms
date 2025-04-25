@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "firebase-tools": "^14.2.0",
     "typescript": "~5.7.2",
-    "vite": "^6.3.1"
+    "vite": "^6.3.1",
+    "vite-plugin-checker": "^0.9.1"
   },
   "dependencies": {
     "@microsoft/fast-element": "^2.2.1",

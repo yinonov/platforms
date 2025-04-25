@@ -8,6 +8,7 @@ export const AppLayoutTemplate = html<AppLayout>`
       <a href="/">בית</a>
       <a href="/create">יצירת חוזה</a>
       <a href="/dashboard">האזור האישי</a>
+      <auth-panel></auth-panel>
     </nav>
   </header>
   <main id="outlet"></main>
