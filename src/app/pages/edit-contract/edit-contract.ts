@@ -1,7 +1,6 @@
 // src/app/pages/edit-contract/edit-contract.ts
 import { FASTElement, attr, observable } from "@microsoft/fast-element";
 import {
-  getContract,
   saveContract,
   updateContract,
 } from "../../../services/firestore-service";
@@ -10,9 +9,10 @@ import {
   ContractTemplate,
 } from "../../../templates/contract-templates";
 import type { Contract } from "../../../models/contract";
-import { auth } from "../../../services/firebase-config";
+import { auth, db } from "../../../services/firebase-config";
 import { httpsCallable } from "firebase/functions";
-import { functions } from "../../../services";
+import { functions } from "../../../services/firebase-config";
+import { doc, onSnapshot } from "firebase/firestore";
 
 export class EditContract extends FASTElement {
   @attr contractId?: string;
@@ -22,51 +22,49 @@ export class EditContract extends FASTElement {
   @observable loading = true;
   @observable error: string | null = null;
   private template: ContractTemplate | null = null;
+  private unsubscribe: (() => void) | null = null;
 
-  async connectedCallback() {
+  connectedCallback() {
     super.connectedCallback();
 
     if (this.contractId) {
-      try {
-        const loaded = await getContract(this.contractId);
-        if (loaded) {
-          this.contract = loaded;
-          this.selectedType = loaded.type;
-          this.template =
-            contractTemplates.find((t) => t.type === loaded.type) || null;
-        } else {
-          this.error = "החוזה לא נמצא.";
+      const ref = doc(db, "contracts", this.contractId);
+      this.unsubscribe = onSnapshot(
+        ref,
+        (snap) => {
+          if (snap.exists()) {
+            this.contract = snap.data() as Contract;
+          } else {
+            this.error = "החוזה לא נמצא.";
+          }
+          this.loading = false;
+        },
+        (error) => {
+          console.error(error);
+          this.error = "שגיאה בקריאת חוזה.";
+          this.loading = false;
         }
-      } catch (err) {
-        console.error(err);
-        this.error = "שגיאה בטעינת חוזה.";
-      } finally {
-        this.loading = false;
-      }
+      );
     } else {
       this.loading = false;
     }
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+
   handleTemplateSelect(type: string) {
+    if (this.contractId) {
+      // כבר יש חוזה קיים, אל תיצור חדש
+      return;
+    }
     this.error = null;
     this.selectedType = type;
     this.template = this.templates.find((t) => t.type === type) || null;
-    if (!this.template) return;
-    const now = new Date().toISOString();
-    const draft: Omit<Contract, "id"> = {
-      type: this.template.type,
-      title: this.template.defaultTitle,
-      content: "", // נוצר רק אחרי שליחה
-      metadata: { ...this.template.defaultMetadata },
-      status: "draft",
-      createdBy: auth.currentUser!.uid,
-      createdAt: now,
-    };
-    saveContract(draft).then((id) => {
-      this.contractId = id;
-      this.contract = { id, ...draft };
-    });
   }
 
   async handleSubmit(detail: { metadata: Record<string, string> }) {
@@ -98,7 +96,6 @@ export class EditContract extends FASTElement {
         const id = await saveContract(base);
         this.contractId = id;
       }
-      this.contract = { id: this.contractId, ...base } as Contract;
     } catch (err: any) {
       console.error(err);
       this.error = "אירעה שגיאה בשמירת החוזה";

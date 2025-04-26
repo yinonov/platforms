@@ -38,6 +38,24 @@ const routes = [
     },
     conditions: [requireAuth],
   },
+  {
+    path: "/contract/:id",
+    component: "edit-contract",
+    action: async () => {
+      await import("../pages/edit-contract");
+      return;
+    },
+    conditions: [requireAuth],
+  },
+  {
+    path: "/dashboard",
+    component: "user-dashboard",
+    action: async () => {
+      await import("../pages/user-dashboard");
+      return;
+    },
+    conditions: [requireAuth],
+  },
   // {
   //   path: "/contract-view",
   //   component: "contract-view",
