@@ -1,7 +1,8 @@
 // src/app/app-root.ts
 import { FASTElement } from "@microsoft/fast-element";
 import { Router } from "@vaadin/router";
-import { auth } from "@services";
+import { auth } from "@services/index";
+// preload home-view
 import "@pages/home-view";
 //import "@pages/contract-view";
 
