@@ -1,6 +1,6 @@
 // src/components/user-auth/user-auth.ts
 import { FASTElement, observable } from "@microsoft/fast-element";
-import { auth } from "../../services/firebase-config";
+import { auth } from "@services";
 import {
   GoogleAuthProvider,
   RecaptchaVerifier,

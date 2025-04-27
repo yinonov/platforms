@@ -1,8 +1,8 @@
 // src/app/pages/user-dashboard/user-dashboard.ts
 import { FASTElement, observable } from "@microsoft/fast-element";
-import { auth, db } from "../../../services/firebase-config";
+import { auth, db } from "@services";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
-import type { Contract } from "../../../models/contract";
+import type { Contract } from "@models";
 
 export class UserDashboard extends FASTElement {
   @observable myContracts: Contract[] = [];

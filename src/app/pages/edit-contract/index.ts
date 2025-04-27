@@ -1,4 +1,4 @@
-import "../../../components/contract-form";
+import "@components/contract-form";
 import { EditContract } from "./edit-contract";
 import { EditContractTemplate as template } from "./edit-contract.template";
 import { EditContractStyles as styles } from "./edit-contract.styles";

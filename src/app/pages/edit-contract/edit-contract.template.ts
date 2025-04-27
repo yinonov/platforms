@@ -1,7 +1,7 @@
 // src/app/pages/edit-contract/edit-contract.template.ts
 import { html, when, repeat } from "@microsoft/fast-element";
 import type { EditContract } from "./edit-contract";
-import "../../../components/contract-form";
+import "@components/contract-form";
 
 export const EditContractTemplate = html<EditContract>`
   ${when((x) => x.loading, html`<p>טוען...</p>`)}

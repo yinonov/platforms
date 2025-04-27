@@ -8,7 +8,7 @@ import {
   addDoc,
   updateDoc,
 } from "firebase/firestore";
-import type { Contract } from "../models/contract";
+import type { Contract } from "@models/contract";
 
 const contractsCollection = collection(db, "contracts");
 

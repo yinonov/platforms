@@ -13,7 +13,19 @@
     "strict": true,
     "outDir": "dist/build",
     "rootDir": "src",
-    "lib": ["dom", "esnext"]
+    "lib": ["dom", "esnext"],
+    "baseUrl": ".",
+    "paths": {
+      "@components": ["src/components/index.ts"],
+      "@pages": ["src/pages/index.ts"],
+      "@services": ["src/services/index.ts"],
+      "@models": ["src/models/index.ts"],
+      "@templates": ["src/templates/index.ts"],
+      "@context": ["src/context/index.ts"],
+      "@constants": ["src/constants/index.ts"],
+      "@utils": ["src/utils/index.ts"],
+      "@app": ["src/app/index.ts"]
+    }
   },
   "include": ["src"]
 }

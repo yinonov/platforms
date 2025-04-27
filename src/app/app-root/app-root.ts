@@ -1,9 +1,9 @@
 // src/app/app-root.ts
 import { FASTElement } from "@microsoft/fast-element";
 import { Router } from "@vaadin/router";
-import { auth } from "../../services/firebase-config";
-import "../pages/home-view";
-//import "../pages/contract-view";
+import { auth } from "@services";
+import "@pages/home-view";
+//import "@pages/contract-view";
 
 const isAuthenticated = async () => {
   return new Promise((resolve) => {
@@ -33,7 +33,7 @@ const routes = [
     path: "/contract",
     component: "edit-contract",
     action: async () => {
-      await import("../pages/edit-contract");
+      await import("@pages/edit-contract");
       return;
     },
     conditions: [requireAuth],
@@ -42,7 +42,7 @@ const routes = [
     path: "/contract/:id",
     component: "edit-contract",
     action: async () => {
-      await import("../pages/edit-contract");
+      await import("@pages/edit-contract");
       return;
     },
     conditions: [requireAuth],
@@ -51,7 +51,7 @@ const routes = [
     path: "/dashboard",
     component: "user-dashboard",
     action: async () => {
-      await import("../pages/user-dashboard");
+      await import("@pages/user-dashboard");
       return;
     },
     conditions: [requireAuth],
