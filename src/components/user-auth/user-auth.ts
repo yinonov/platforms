@@ -1,88 +1,116 @@
-// src/components/user-auth/user-auth.ts
-import { FASTElement, observable } from "@microsoft/fast-element";
-import { auth } from "@services/index";
 import {
-  GoogleAuthProvider,
-  RecaptchaVerifier,
-  signInWithPopup,
-  signInWithPhoneNumber,
-  signOut,
-  onAuthStateChanged,
-  ConfirmationResult,
-  User,
-} from "firebase/auth";
+  FASTElement,
+  customElement,
+  observable,
+} from "@microsoft/fast-element";
+import { emailLogin } from "@services/email-auth-service";
+import {
+  sendPhoneVerification,
+  verifyPhoneCode,
+} from "@services/phone-auth-service";
+import { googleLogin } from "@services/google-auth-service";
+import { logout } from "@services/auth-service";
+import { auth } from "@services/firebase-config";
+import { onAuthStateChanged } from "firebase/auth";
 
 export class UserAuth extends FASTElement {
-  @observable user: User | null = null;
-  @observable phone = "";
-  @observable code = "";
-  @observable codeSent = false;
-  private confirmationResult: ConfirmationResult | null = null;
-  private recaptchaVerifier: RecaptchaVerifier | null = null;
-  private recaptchaContainer: HTMLElement | null = null;
+  @observable authMethod: "email" | "phone" | "google" = "email";
+  @observable email = "";
+  @observable password = "";
+  @observable phoneNumber = "";
+  @observable smsCode = "";
+  @observable loading = false;
+  @observable errorMessage = "";
+  @observable currentUser: any = null;
+
+  private confirmationResult: any = null;
+  private recaptchaContainer: HTMLDivElement | null = null;
 
   connectedCallback() {
     super.connectedCallback();
-    // Create a container in light DOM for reCAPTCHA
-    const container = document.createElement("div");
-    container.style.display = "none";
-    document.body.appendChild(container);
-    this.recaptchaContainer = container;
-    // Initialize recaptcha verifier using HTMLElement
-    this.recaptchaVerifier = new RecaptchaVerifier(auth, container, {
-      size: "invisible",
-    });
-    // Listen auth state changes
-    onAuthStateChanged(auth, (u) => {
-      this.user = u;
+
+    this.recaptchaContainer = document.createElement("div");
+    this.recaptchaContainer.style.display = "none";
+    document.body.appendChild(this.recaptchaContainer);
+
+    onAuthStateChanged(auth, (user) => {
+      this.currentUser = user;
     });
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    // Clean up container
-    if (this.recaptchaContainer && this.recaptchaContainer.parentNode) {
-      this.recaptchaContainer.parentNode.removeChild(this.recaptchaContainer);
+
+    if (this.recaptchaContainer) {
+      this.recaptchaContainer.remove();
+      this.recaptchaContainer = null;
     }
   }
 
-  async loginWithGoogle() {
+  async signIn() {
+    this.errorMessage = "";
+    this.loading = true;
     try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-    } catch (err) {
-      console.error(err);
+      if (this.authMethod === "email") {
+        await this.emailLogin();
+      } else if (this.authMethod === "phone") {
+        await this.verifyPhoneLogin();
+      } else if (this.authMethod === "google") {
+        await this.googleSignIn();
+      }
+    } catch (error) {
+      console.error(error);
+      this.errorMessage = (error as Error).message || "Sign in failed.";
+    } finally {
+      this.loading = false;
     }
+  }
+
+  async emailLogin() {
+    await emailLogin(this.email, this.password);
   }
 
   async sendPhoneCode() {
-    if (!this.recaptchaVerifier) return;
+    this.errorMessage = "";
+    this.loading = true;
     try {
-      this.confirmationResult = await signInWithPhoneNumber(
-        auth,
-        this.phone,
-        this.recaptchaVerifier
+      if (!this.recaptchaContainer) {
+        throw new Error("No reCAPTCHA container available.");
+      }
+      this.confirmationResult = await sendPhoneVerification(
+        this.phoneNumber,
+        this.recaptchaContainer
       );
-      this.codeSent = true;
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
+      this.errorMessage =
+        (error as Error).message || "Failed to send verification code.";
+    } finally {
+      this.loading = false;
     }
   }
 
-  async verifyPhoneCode() {
-    if (!this.confirmationResult) return;
-    try {
-      await this.confirmationResult.confirm(this.code);
-    } catch (err) {
-      console.error(err);
+  async verifyPhoneLogin() {
+    if (!this.confirmationResult) {
+      throw new Error("No verification in progress.");
     }
+    await verifyPhoneCode(this.confirmationResult, this.smsCode);
   }
 
-  async logout() {
+  async googleSignIn() {
+    await googleLogin();
+  }
+
+  async signOut() {
+    this.errorMessage = "";
+    this.loading = true;
     try {
-      await signOut(auth);
-    } catch (err) {
-      console.error(err);
+      await logout();
+    } catch (error) {
+      console.error(error);
+      this.errorMessage = (error as Error).message || "Sign out failed.";
+    } finally {
+      this.loading = false;
     }
   }
 }

@@ -1,34 +1,85 @@
-// src/services/firestore-service.ts
-import { db } from "./firebase-config";
+import { db, auth } from "@services/firebase-config";
 import {
   collection,
   doc,
   getDoc,
-  setDoc,
-  addDoc,
   updateDoc,
+  deleteDoc,
+  addDoc,
+  onSnapshot,
+  query,
+  where,
+  orderBy,
 } from "firebase/firestore";
-import type { Contract } from "@models/contract";
+import { Contract } from "@models/index";
+import { onAuthStateChanged } from "firebase/auth";
 
 const contractsCollection = collection(db, "contracts");
 
-export async function getContract(id: string): Promise<Contract | null> {
-  const ref = doc(db, "contracts", id);
-  const snap = await getDoc(ref);
-  return snap.exists() ? ({ id: snap.id, ...snap.data() } as Contract) : null;
-}
+export const createContract = async (contract: Contract) => {
+  const docRef = await addDoc(contractsCollection, contract);
+  return docRef.id;
+};
 
-export async function saveContract(
-  contract: Omit<Contract, "id">
-): Promise<string> {
-  const ref = await addDoc(contractsCollection, contract);
-  return ref.id;
-}
+export const getContract = async (contractId: string) => {
+  const docRef = doc(db, "contracts", contractId);
+  const docSnap = await getDoc(docRef);
+  if (!docSnap.exists()) {
+    throw new Error("Contract not found");
+  }
+  return docSnap.data() as Contract;
+};
 
-export async function updateContract(
-  id: string,
-  updates: Partial<Contract>
-): Promise<void> {
-  const ref = doc(db, "contracts", id);
-  await updateDoc(ref, updates);
-}
+/**
+ * מאזין לחוזים של היוזר הנוכחי בזמן אמת
+ * @param callback מקבל מערך טיפוסי של חוזים
+ */
+export const listenToContracts = (
+  callback: (contracts: Contract[]) => void
+) => {
+  let unsubscribeFirestore: (() => void) | null = null;
+
+  const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+    if (unsubscribeFirestore) {
+      unsubscribeFirestore();
+      unsubscribeFirestore = null;
+    }
+
+    if (user) {
+      const contractsRef = collection(db, "contracts");
+      const q = query(
+        contractsRef,
+        where("userId", "==", user.uid),
+        orderBy("createdAt", "desc")
+      );
+
+      unsubscribeFirestore = onSnapshot(q, (querySnapshot) => {
+        const contracts: Contract[] = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as Omit<Contract, "id">),
+        }));
+        callback(contracts);
+      });
+    } else {
+      callback([]); // אין יוזר? רשימה ריקה
+    }
+  });
+
+  return () => {
+    if (unsubscribeFirestore) unsubscribeFirestore();
+    unsubscribeAuth();
+  };
+};
+
+export const updateContract = async (
+  contractId: string,
+  data: Partial<Contract>
+) => {
+  const docRef = doc(db, "contracts", contractId);
+  await updateDoc(docRef, data);
+};
+
+export const deleteContract = async (contractId: string) => {
+  const docRef = doc(db, "contracts", contractId);
+  await deleteDoc(docRef);
+};

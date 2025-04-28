@@ -1,49 +1,29 @@
-// src/app/pages/user-dashboard/user-dashboard.ts
 import { FASTElement, observable } from "@microsoft/fast-element";
-import { auth, db } from "@services/index";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
-import type { Contract } from "@models/index";
+import { Contract } from "@models/contract";
+import { listenToContracts } from "@services/index";
 
 export class UserDashboard extends FASTElement {
-  @observable myContracts: Contract[] = [];
+  @observable contracts: Contract[] = [];
   @observable loading = true;
-  @observable error: string | null = null;
-  private unsubscribe: (() => void) | null = null;
+  private unsubscribeContracts: (() => void) | null = null;
 
   connectedCallback() {
     super.connectedCallback();
 
-    const user = auth.currentUser;
-    if (!user) {
-      this.error = "חייבים להיות מחוברים כדי להציג חוזים.";
-      this.loading = false;
-      return;
-    }
+    this.loading = true;
 
-    const q = query(
-      collection(db, "contracts"),
-      where("createdBy", "==", user.uid)
-    );
-    this.unsubscribe = onSnapshot(
-      q,
-      (snapshot) => {
-        this.myContracts = snapshot.docs.map(
-          (doc) => ({ id: doc.id, ...doc.data() } as Contract)
-        );
-        this.loading = false;
-      },
-      (error) => {
-        console.error(error);
-        this.error = "שגיאה בטעינת חוזים.";
-        this.loading = false;
-      }
-    );
+    this.unsubscribeContracts = listenToContracts((contracts) => {
+      this.contracts = contracts;
+      this.loading = false;
+    });
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.unsubscribe) {
-      this.unsubscribe();
+
+    if (this.unsubscribeContracts) {
+      this.unsubscribeContracts();
+      this.unsubscribeContracts = null;
     }
   }
 }

@@ -1,33 +1,39 @@
-// src/app/pages/user-dashboard/user-dashboard.styles.ts
 import { css } from "@microsoft/fast-element";
 
 export const UserDashboardStyles = css`
-  :host {
-    display: block;
-    padding: 1rem;
-    font-family: sans-serif;
+  .dashboard-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  h2 {
-    margin-bottom: 1rem;
+  .spinner {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #007bff;
+    padding: 2rem 0;
   }
 
-  ul {
+  .contracts-list {
     list-style: none;
     padding: 0;
+    margin: 0;
   }
 
-  li {
-    margin-bottom: 0.75rem;
+  .contract-item {
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
   }
 
-  a {
-    text-decoration: none;
-    color: blue;
-    font-weight: bold;
+  .contract-item:last-child {
+    border-bottom: none;
   }
 
-  a:hover {
-    text-decoration: underline;
+  p {
+    text-align: center;
+    color: #666;
   }
 `;

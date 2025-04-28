@@ -1,6 +1,6 @@
 // src/app/pages/edit-contract/edit-contract.ts
 import { FASTElement, attr, observable } from "@microsoft/fast-element";
-import { saveContract, updateContract } from "@services/index";
+import { createContract, updateContract } from "@services/index";
 import { contractTemplates, ContractTemplate } from "@templates/index";
 import type { Contract } from "@models/index";
 import { auth, db } from "@services/index";
@@ -87,7 +87,7 @@ export class EditContract extends FASTElement {
       if (this.contractId) {
         await updateContract(this.contractId, base);
       } else {
-        const id = await saveContract(base);
+        const id = await createContract(base);
         this.contractId = id;
       }
     } catch (err: any) {
