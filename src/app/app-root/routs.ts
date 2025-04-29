@@ -54,7 +54,6 @@ export const routes = [
     action: async (context: RouteContext): Promise<HTMLElement> => {
       await import("@features/contracts/pages/contract-view");
       const el = document.createElement("contract-view") as ContractView;
-      console.log("context.params.id", context.params.id);
       el.contractId = context.params.id as string;
       return el;
     },
