@@ -7,4 +7,10 @@ export const AppRootStyles = css`
     padding: 1rem;
     font-family: sans-serif;
   }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+  }
 `;

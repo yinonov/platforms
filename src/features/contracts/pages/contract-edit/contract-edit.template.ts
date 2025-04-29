@@ -6,31 +6,31 @@ export const ContractEditTemplate = html<ContractEdit>`
   ${when((x) => x.loading, html`<p>טוען...</p>`)}
   ${when((x) => x.error, html`<p style="color: red">${(x) => x.error}</p>`)}
   ${when(
-    (x) => !x.contract && !x.selectedType && !x.loading && !x.error,
+    (x) => !x.contract && !x.loading && !x.error,
     html<ContractEdit>`
       <h2>בחר סוג חוזה</h2>
-      <select
-        @change=${(x, c) =>
-          x.handleTemplateSelect((c.event.target as HTMLSelectElement).value)}
+      <sl-radio-group
+        value="${(x) => x.selectedType}"
+        @sl-change=${(x, c) => x.handleTemplateSelect((c.event.target as HTMLInputElement).value)}
+        style="display: flex; flex-direction: row; gap: 2rem; margin-bottom: 2rem;"
       >
-        <option value="">בחר...</option>
         ${repeat(
           (x) => x.templates,
           html<{ type: string; label: string }>`
-            <option value="${(t) => t.type}">${(t) => t.label}</option>
+            <sl-radio-button value="${(t) => t.type}">${(t) => t.label}</sl-radio-button>
           `
         )}
-      </select>
-    `
-  )}
-  ${when(
-    (x) => !x.contract && x.selectedType && !x.loading && !x.error,
-    html<ContractEdit>`
-      <contract-form
-        type="${(x) => x.selectedType}"
-        :metadata=${(x) => ({})}
-        @submit=${(x, c) => x.handleSubmit((c.event as CustomEvent).detail)}
-      ></contract-form>
+      </sl-radio-group>
+      ${when(
+        (x) => x.selectedType,
+        html<ContractEdit>`
+          <contract-form
+            type="${(x) => x.selectedType}"
+            :metadata=${(x) => ({})}
+            @submit=${(x, c) => x.handleSubmit((c.event as CustomEvent).detail)}
+          ></contract-form>
+        `
+      )}
     `
   )}
   ${when(
