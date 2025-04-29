@@ -50,7 +50,7 @@ export const listenToContracts = (
       const contractsRef = collection(db, "contracts");
       const q = query(
         contractsRef,
-        where("userId", "==", user.uid),
+        where("createdBy", "==", user.uid),
         orderBy("createdAt", "desc")
       );
 
