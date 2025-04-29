@@ -11,13 +11,16 @@ export const ContractEditTemplate = html<ContractEdit>`
       <h2>בחר סוג חוזה</h2>
       <sl-radio-group
         value="${(x) => x.selectedType}"
-        @sl-change=${(x, c) => x.handleTemplateSelect((c.event.target as HTMLInputElement).value)}
+        @sl-change=${(x, c) =>
+          x.handleTemplateSelect((c.event.target as HTMLInputElement).value)}
         style="display: flex; flex-direction: row; gap: 2rem; margin-bottom: 2rem;"
       >
         ${repeat(
           (x) => x.templates,
           html<{ type: string; label: string }>`
-            <sl-radio-button value="${(t) => t.type}">${(t) => t.label}</sl-radio-button>
+            <sl-radio-button value="${(t) => t.type}"
+              >${(t) => t.label}</sl-radio-button
+            >
           `
         )}
       </sl-radio-group>
