@@ -1,4 +1,6 @@
+import type { ContractView } from "@features/contracts/pages/contract-view/contract-view";
 import { auth } from "@features/user/services";
+import type { RouteContext } from "@vaadin/router";
 
 const isAuthenticated = async () => {
   return new Promise((resolve) => {
@@ -49,16 +51,19 @@ export const routes = [
   {
     path: "/contract/:id",
     component: "contract-view",
-    action: async () => {
+    action: async (context: RouteContext): Promise<HTMLElement> => {
       await import("@features/contracts/pages/contract-view");
-      return;
+      const el = document.createElement("contract-view") as ContractView;
+      console.log("context.params.id", context.params.id);
+      el.contractId = context.params.id as string;
+      return el;
     },
     conditions: [requireAuth],
   },
   {
     path: "/dashboard",
     component: "user-dashboard",
-    action: async () => {
+    action: async (): Promise<void> => {
       await import("@features/user/pages/user-dashboard");
       return;
     },

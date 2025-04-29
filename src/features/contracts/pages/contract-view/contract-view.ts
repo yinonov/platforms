@@ -3,7 +3,7 @@ import { listenToContract } from "@features/contracts/services/firestore-service
 import type { Contract } from "@features/contracts/models";
 
 export class ContractView extends FASTElement {
-  @attr contractId = "";
+  @attr({ attribute: "contract-id" }) contractId = "";
   @observable contract: Contract | null = null;
   @observable loading = false;
   @observable error: string | null = null;
