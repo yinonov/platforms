@@ -16,8 +16,31 @@ export const AppRootTemplate = html<AppRoot>`
       <sl-button variant="text" href="/create-contract">יצירת חוזה</sl-button>
       <sl-button variant="text" href="/dashboard">האזור האישי</sl-button>
       <sl-divider vertical style="margin: 0 1rem;"></sl-divider>
-      <user-auth></user-auth>
+      ${(x) =>
+        x.currentUser
+          ? html`<span style="font-size: 0.95em;"
+              >${x.currentUser.email || x.currentUser.phoneNumber}</span
+            >`
+          : html`<sl-button
+              variant="primary"
+              @click="${(x) => x.openAuthDialog()}"
+              >Sign In</sl-button
+            >`}
     </nav>
   </header>
+  <sl-dialog
+    ?open="${(x) => x.showAuthDialog}"
+    @sl-after-hide="${(x) => x.closeAuthDialog()}"
+    label="Sign In"
+    style="--width: 400px;"
+  >
+    <user-auth></user-auth>
+    <sl-button
+      slot="footer"
+      variant="text"
+      @click="${(x) => x.closeAuthDialog()}"
+      >Close</sl-button
+    >
+  </sl-dialog>
   <slot></slot>
 `;
