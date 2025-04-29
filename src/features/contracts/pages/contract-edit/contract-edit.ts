@@ -11,6 +11,7 @@ import {
   contractTemplates,
 } from "@features/contracts/templates";
 import { createContract, updateContract } from "@features/contracts/services";
+import { Router } from "@vaadin/router";
 
 export class ContractEdit extends FASTElement {
   @attr contractId?: string;
@@ -93,6 +94,7 @@ export class ContractEdit extends FASTElement {
       } else {
         const id = await createContract(base);
         this.contractId = id;
+        Router.go(`/contract/${id}`);
       }
     } catch (err: any) {
       console.error(err);
