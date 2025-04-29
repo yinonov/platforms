@@ -6,15 +6,9 @@ export default defineConfig({
   plugins: [checker({ typescript: true }), tsconfigPaths()],
   resolve: {
     alias: {
-      "@components": "/src/components",
-      "@pages": "/src/app/pages", // Updated to include "app"
-      "@services": "/src/services",
-      "@models": "/src/models",
-      "@templates": "/src/templates",
-      "@context": "/src/context",
-      "@constants": "/src/constants",
-      "@utils": "/src/utils",
       "@app": "/src/app",
+      "@features": "/src/features",
+      "@services": "/src/services",
     },
   },
   build: { target: "es2015", outDir: "dist" },

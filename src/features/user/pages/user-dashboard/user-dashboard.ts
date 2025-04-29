@@ -1,6 +1,6 @@
+import type { Contract } from "@features/contracts/models";
 import { FASTElement, observable } from "@microsoft/fast-element";
-import { Contract } from "@models/contract";
-import { listenToContracts } from "@services/index";
+import { listenToContracts } from "@features/contracts/services";
 
 export class UserDashboard extends FASTElement {
   @observable contracts: Contract[] = [];

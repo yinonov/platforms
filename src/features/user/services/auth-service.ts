@@ -1,5 +1,7 @@
-import { auth } from "@services/firebase-config";
-import { signOut } from "firebase/auth";
+import { app } from "@services/firebase-config";
+import { getAuth, signOut } from "firebase/auth";
+
+export const auth = getAuth(app);
 
 /**
  * התנתקות מהמערכת (Logout) - תומך בכל סוגי ההתחברות

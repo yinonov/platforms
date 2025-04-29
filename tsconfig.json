@@ -16,15 +16,9 @@
     "lib": ["dom", "esnext"],
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@pages/*": ["src/app/pages/*"], // Updated to include "app"
-      "@services/*": ["src/services/*"],
-      "@models/*": ["src/models/*"],
-      "@templates/*": ["src/templates/*"],
-      "@context/*": ["src/context/*"],
-      "@constants/*": ["src/constants/*"],
-      "@utils/*": ["src/utils/*"],
-      "@app/*": ["src/app/*"]
+      "@app/*": ["src/app/*"],
+      "@features/*": ["src/features/*"],
+      "@services/*": ["src/services/*"]
     }
   },
   "include": ["src"]

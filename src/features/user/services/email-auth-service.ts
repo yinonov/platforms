@@ -1,9 +1,9 @@
-import { auth } from "@services/firebase-config";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
+import { auth } from "./auth-service";
 
 /**
  * כניסה עם אימייל וסיסמה

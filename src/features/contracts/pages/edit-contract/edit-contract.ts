@@ -1,12 +1,16 @@
 // src/app/pages/edit-contract/edit-contract.ts
 import { FASTElement, attr, observable } from "@microsoft/fast-element";
-import { createContract, updateContract } from "@services/index";
-import { contractTemplates, ContractTemplate } from "@templates/index";
-import type { Contract } from "@models/index";
-import { auth, db } from "@services/index";
+import type { Contract } from "@features/contracts/models";
+import { db } from "@services/index";
 import { httpsCallable } from "firebase/functions";
 import { functions } from "@services/index";
 import { doc, onSnapshot } from "firebase/firestore";
+import { auth } from "@features/user/services";
+import {
+  ContractTemplate,
+  contractTemplates,
+} from "@features/contracts/templates";
+import { createContract, updateContract } from "@features/contracts/services";
 
 export class EditContract extends FASTElement {
   @attr contractId?: string;

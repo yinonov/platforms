@@ -1,5 +1,5 @@
-import { auth } from "@services/firebase-config";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
+import { auth } from "./auth-service";
 
 let recaptchaVerifierInstance: RecaptchaVerifier | null = null;
 

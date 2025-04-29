@@ -1,6 +1,6 @@
 // src/components/contract-form/contract-form.ts
 import { FASTElement, attr, observable } from "@microsoft/fast-element";
-import type { ContractTemplate } from "@templates/index";
+import type { ContractTemplate } from "@features/contracts/templates";
 
 export class ContractForm extends FASTElement {
   @attr type = "";
@@ -17,7 +17,7 @@ export class ContractForm extends FASTElement {
   }
 
   updateTemplate() {
-    import("@templates/index").then(({ contractTemplates }) => {
+    import("@features/contracts/templates").then(({ contractTemplates }) => {
       this.template =
         contractTemplates.find((t) => t.type === this.type) || null;
       if (this.template) {

@@ -1,16 +1,12 @@
+import { FASTElement, observable } from "@microsoft/fast-element";
 import {
-  FASTElement,
-  customElement,
-  observable,
-} from "@microsoft/fast-element";
-import { emailLogin } from "@services/email-auth-service";
-import {
+  auth,
+  emailLogin,
+  googleLogin,
+  logout,
   sendPhoneVerification,
   verifyPhoneCode,
-} from "@services/phone-auth-service";
-import { googleLogin } from "@services/google-auth-service";
-import { logout } from "@services/auth-service";
-import { auth } from "@services/firebase-config";
+} from "@features/user/services";
 import { onAuthStateChanged } from "firebase/auth";
 
 export class UserAuth extends FASTElement {
