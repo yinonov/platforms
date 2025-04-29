@@ -1,4 +1,4 @@
-// src/app/pages/edit-contract/edit-contract.ts
+// src/app/pages/contract-edit/contract-edit.ts
 import { FASTElement, attr, observable } from "@microsoft/fast-element";
 import type { Contract } from "@features/contracts/models";
 import { db } from "@services/index";
@@ -12,7 +12,7 @@ import {
 } from "@features/contracts/templates";
 import { createContract, updateContract } from "@features/contracts/services";
 
-export class EditContract extends FASTElement {
+export class ContractEdit extends FASTElement {
   @attr contractId?: string;
   @observable contract: Contract | null = null;
   @observable templates: ContractTemplate[] = contractTemplates;

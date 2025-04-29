@@ -1,7 +1,7 @@
-// src/app/pages/edit-contract/edit-contract.styles.ts
+// src/app/pages/contract-edit/contract-edit.styles.ts
 import { css } from "@microsoft/fast-element";
 
-export const EditContractStyles = css`
+export const ContractEditStyles = css`
   h2 {
     margin-bottom: 1rem;
   }

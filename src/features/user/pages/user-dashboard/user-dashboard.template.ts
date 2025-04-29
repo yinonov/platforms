@@ -14,13 +14,14 @@ export const UserDashboardTemplate = html<UserDashboard>`
                       (x) => x.contracts,
                       html<any>`
                         <li class="contract-item">
-                          <strong
-                            >${(contract) =>
-                              contract.title || "Untitled Contract"}</strong
+                          <a href="/contract/${(x) => x.id}">
+                            <strong
+                              >${(x) => x.title || "Untitled Contract"}</strong
+                            > </a
                           ><br />
                           Created At:
-                          ${(contract) => {
-                            const val = contract.createdAt;
+                          ${(x) => {
+                            const val = x.createdAt;
                             let date: Date | null = null;
                             if (val && typeof val.toDate === "function") {
                               date = val.toDate();

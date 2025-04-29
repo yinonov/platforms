@@ -72,6 +72,32 @@ export const listenToContracts = (
   };
 };
 
+/**
+ * מאזין לחוזה בודד בזמן אמת
+ * @param contractId מזהה החוזה
+ * @param callback פונקציה שמקבלת את החוזה או null אם לא קיים
+ * @returns פונקציית ביטול ההאזנה
+ */
+export const listenToContract = (
+  contractId: string,
+  callback: (contract: Contract | null) => void
+) => {
+  const docRef = doc(db, "contracts", contractId);
+  return onSnapshot(
+    docRef,
+    (snap) => {
+      if (snap.exists()) {
+        callback({ id: snap.id, ...snap.data() } as Contract);
+      } else {
+        callback(null);
+      }
+    },
+    (error) => {
+      callback(null);
+    }
+  );
+};
+
 export const updateContract = async (
   contractId: string,
   data: Partial<Contract>
