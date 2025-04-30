@@ -14,24 +14,43 @@ export const AppRootTemplate = html<AppRoot>`
       ></sl-icon>
       <sl-button variant="text" href="/">בית</sl-button>
       <sl-button variant="text" href="/create-contract">יצירת חוזה</sl-button>
-      <sl-button variant="text" href="/dashboard">האזור האישי</sl-button>
       <sl-divider vertical style="margin: 0 1rem;"></sl-divider>
-      ${(x) =>
-        x.currentUser
-          ? html`<span style="font-size: 0.95em;"
-              >${x.currentUser.email || x.currentUser.phoneNumber}</span
-            >`
-          : html`<sl-button
-              variant="primary"
-              @click="${(x) => x.openAuthDialog()}"
-              >Sign In</sl-button
-            >`}
+      <div
+        style="margin-inline-start: auto; display: flex; gap: 0.5rem; align-items: center;"
+      >
+        ${(x) =>
+          x.currentUser
+            ? html`
+                <span
+                  style="font-size: 0.95em; opacity: 0.8; margin-inline-end: 0.5em;"
+                >
+                  ${x.currentUser.email ||
+                  x.currentUser.phoneNumber ||
+                  x.currentUser.displayName ||
+                  "User"}
+                </span>
+                <sl-button variant="text" href="/dashboard">
+                  אזור אישי
+                </sl-button>
+                <sl-button
+                  variant="primary"
+                  @click="${(x) => x.handleSignOut()}"
+                >
+                  צא
+                </sl-button>
+              `
+            : html`<sl-button
+                variant="primary"
+                @click="${(x) => x.openAuthDialog()}"
+                >כנס</sl-button
+              >`}
+      </div>
     </nav>
   </header>
   <sl-dialog
     ?open="${(x) => x.showAuthDialog}"
     @sl-after-hide="${(x) => x.closeAuthDialog()}"
-    label="Sign In"
+    label="כנס"
     style="--width: 400px;"
   >
     <user-auth></user-auth>

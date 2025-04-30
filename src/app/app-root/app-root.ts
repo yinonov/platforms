@@ -1,8 +1,8 @@
 // src/app/app-root.ts
 import { FASTElement, observable } from "@microsoft/fast-element";
 import { Router } from "@vaadin/router";
-import { routes } from "./routs";
-import { auth } from "@features/user/services";
+import { routes } from "./routes";
+import { auth, logout } from "@features/user/services";
 
 export class AppRoot extends FASTElement {
   @observable showAuthDialog = false;
@@ -24,5 +24,9 @@ export class AppRoot extends FASTElement {
 
   closeAuthDialog() {
     this.showAuthDialog = false;
+  }
+
+  async handleSignOut() {
+    await logout();
   }
 }

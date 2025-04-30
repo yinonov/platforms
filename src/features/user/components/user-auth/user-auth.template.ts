@@ -7,15 +7,15 @@ export const UserAuthTemplate = html<UserAuth>`
       ? html`
           <sl-card class="welcome" style="padding: 1rem; text-align: center;">
             <p>
-              Welcome,
-              ${x.currentUser.phoneNumber || x.currentUser.email || "User"}!
+              ברוך הבא,
+              ${x.currentUser.phoneNumber || x.currentUser.email || "משתמש"}!
             </p>
             <sl-button
               variant="primary"
               @click="${(x) => x.signOut()}"
               ?disabled="${x.loading}"
             >
-              Sign Out
+              התנתק
             </sl-button>
           </sl-card>
         `
@@ -26,7 +26,7 @@ export const UserAuthTemplate = html<UserAuth>`
           >
             ${(x) =>
               x.loading
-                ? html` <div class="spinner">Loading...</div> `
+                ? html` <div class="spinner">טוען...</div> `
                 : html`
                     ${(x) =>
                       x.errorMessage
@@ -45,14 +45,14 @@ export const UserAuthTemplate = html<UserAuth>`
                       @sl-tab-show="${(e, c) =>
                         (x.authMethod = (c.event as CustomEvent).detail.name)}"
                     >
-                      <sl-tab slot="nav" panel="email">📧 Email</sl-tab>
-                      <sl-tab slot="nav" panel="phone">📱 Phone</sl-tab>
-                      <sl-tab slot="nav" panel="google">🔵 Google</sl-tab>
+                      <sl-tab slot="nav" panel="email">📧 אימייל</sl-tab>
+                      <sl-tab slot="nav" panel="phone">📱 טלפון</sl-tab>
+                      <sl-tab slot="nav" panel="google">🔵 גוגל</sl-tab>
 
                       <sl-tab-panel name="email">
                         <sl-input
                           type="email"
-                          placeholder="Email"
+                          placeholder="אימייל"
                           value="${(x) => x.email}"
                           @input="${(e, c) =>
                             (x.email = (
@@ -62,7 +62,7 @@ export const UserAuthTemplate = html<UserAuth>`
                         ></sl-input>
                         <sl-input
                           type="password"
-                          placeholder="Password"
+                          placeholder="סיסמה"
                           value="${(x) => x.password}"
                           @input="${(e, c) =>
                             (x.password = (
@@ -75,13 +75,13 @@ export const UserAuthTemplate = html<UserAuth>`
                           @click="${(x) => x.signIn()}"
                           ?disabled="${x.loading}"
                         >
-                          Sign In
+                          התחבר
                         </sl-button>
                       </sl-tab-panel>
                       <sl-tab-panel name="phone">
                         <sl-input
                           type="tel"
-                          placeholder="Phone Number"
+                          placeholder="מספר טלפון"
                           value="${(x) => x.phoneNumber}"
                           @input="${(e, c) =>
                             (x.phoneNumber = (
@@ -94,11 +94,11 @@ export const UserAuthTemplate = html<UserAuth>`
                           @click="${(x) => x.sendPhoneCode()}"
                           ?disabled="${x.loading}"
                         >
-                          Send Verification Code
+                          שלח קוד אימות
                         </sl-button>
                         <sl-input
                           type="text"
-                          placeholder="Verification Code"
+                          placeholder="קוד אימות"
                           value="${(x) => x.smsCode}"
                           @input="${(e, c) =>
                             (x.smsCode = (
@@ -111,7 +111,7 @@ export const UserAuthTemplate = html<UserAuth>`
                           @click="${(x) => x.signIn()}"
                           ?disabled="${x.loading}"
                         >
-                          Verify and Sign In
+                          אמת והתחבר
                         </sl-button>
                       </sl-tab-panel>
                       <sl-tab-panel name="google">
@@ -120,7 +120,7 @@ export const UserAuthTemplate = html<UserAuth>`
                           @click="${(x) => x.signIn()}"
                           ?disabled="${x.loading}"
                         >
-                          Sign In with Google
+                          התחבר עם גוגל
                         </sl-button>
                       </sl-tab-panel>
                     </sl-tab-group>
