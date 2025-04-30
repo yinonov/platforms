@@ -1,10 +1,6 @@
 // src/components/contract-form/contract-form.ts
 import { FASTElement, attr, observable } from "@microsoft/fast-element";
-import {
-  type ContractField,
-  FieldType,
-} from "@features/contracts/templates/contract-templates";
-import { Timestamp } from "firebase/firestore";
+import { type ContractField } from "@features/contracts/templates/contract-templates";
 
 export class ContractForm extends FASTElement {
   @observable metadata?: ContractField[];

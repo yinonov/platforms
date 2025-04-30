@@ -5,10 +5,9 @@ import { Timestamp } from "firebase/firestore";
 
 const getFieldType = (field: ContractField) => {
   switch (field.type) {
-    case FieldType.Number:
-      return "number";
     case FieldType.Date:
       return "date";
+    case FieldType.Number:
     case FieldType.Text:
     default:
       return "text";
@@ -41,7 +40,7 @@ export const ContractFormTemplate = html<ContractForm>`
   ${when(
     (x: ContractForm) => x.metadata,
     html<ContractForm>`
-      <sl-card style="max-width: 500px; margin: 2rem auto;">
+      <sl-card style="width: 40rem; margin: 2rem auto;">
         <form
           ${ref("form")}
           @submit=${(x: ContractForm, c: { event: Event }) => {
