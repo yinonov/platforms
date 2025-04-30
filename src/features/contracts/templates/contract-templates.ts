@@ -1,46 +1,111 @@
 // src/templates/contractTemplates.ts
 
-export interface ContractTemplate {
-  type: string;
-  label: string;
-  defaultTitle: string;
-  defaultContent: string;
-  defaultMetadata: Record<string, string>;
+import { Timestamp } from "firebase/firestore";
+
+export enum FieldType {
+  Text = "text",
+  Number = "number",
+  Date = "date",
 }
 
-export const contractTemplates: ContractTemplate[] = [
-  {
-    type: "rental",
-    label: "חוזה שכירות",
-    defaultTitle: "הסכם שכירות",
-    defaultContent: `הסכם זה נערך ונחתם ביום {{date}} בין {{landlord}} (להלן: "המשכיר") ובין {{tenant}} (להלן: "השוכר") בכתובת {{address}}.
+export interface ContractField<T = any> {
+  name: string;
+  label: string;
+  type: FieldType;
+  value?: T;
+}
 
-השוכר ישלם דמי שכירות חודשיים בסך {{rent}} ₪ לתקופה של {{period}} חודשים.
+export abstract class ContractTemplate<T extends Record<string, any>> {
+  abstract type: string;
+  abstract label: string;
+  abstract title: string;
+  abstract metadata: ContractField[];
+}
 
-הצדדים מסכימים לתנאים המפורטים לעיל.`,
-    defaultMetadata: {
-      landlord: "",
-      tenant: "",
-      address: "",
-      rent: "",
-      period: "",
-      date: new Date().toLocaleDateString("he-IL"),
+export interface RentalMetadata {
+  landlord: string;
+  tenant: string;
+  address: string;
+  rent: number;
+  startDate: Timestamp;
+  endDate: Timestamp;
+  date: Timestamp;
+}
+
+export class RentalContractTemplate extends ContractTemplate<RentalMetadata> {
+  type = "rental";
+  label = "חוזה שכירות";
+  title = "הסכם שכירות";
+  metadata = [
+    { name: "landlord", label: "המשכיר", type: FieldType.Text },
+    { name: "tenant", label: "השוכר", type: FieldType.Text },
+    { name: "address", label: "כתובת הנכס", type: FieldType.Text },
+    {
+      name: "rent",
+      label: "דמי שכירות חודשי",
+      type: FieldType.Number,
+      value: 0,
     },
-  },
-  {
-    type: "service",
-    label: "הסכם שירות",
-    defaultTitle: "הסכם מתן שירותים",
-    defaultContent: `הסכם זה נערך ביום {{date}} בין {{provider}} (להלן: "הספק") ובין {{client}} (להלן: "הלקוח").
-
-הספק יעניק שירותים בכתובת {{location}} לפי הצורך ולתמורה של {{amount}} ₪ לחודש, לתקופה של {{period}} חודשים.`,
-    defaultMetadata: {
-      provider: "",
-      client: "",
-      location: "",
-      amount: "",
-      period: "",
-      date: new Date().toLocaleDateString("he-IL"),
+    {
+      name: "startDate",
+      label: "תאריך התחלה",
+      type: FieldType.Date,
+      value: Timestamp.fromDate(new Date()),
     },
-  },
+    {
+      name: "endDate",
+      label: "תאריך סיום",
+      type: FieldType.Date,
+      value: Timestamp.fromDate(new Date()),
+    },
+    {
+      name: "date",
+      label: "תאריך יצירה",
+      type: FieldType.Date,
+      value: Timestamp.fromDate(new Date()),
+    },
+  ];
+}
+
+export interface ServiceMetadata {
+  provider: string;
+  client: string;
+  amount: number;
+  startDate: Timestamp;
+  endDate: Timestamp;
+  date: Timestamp;
+}
+
+export class ServiceContractTemplate extends ContractTemplate<ServiceMetadata> {
+  type = "service";
+  label = "הסכם שירות";
+  title = "הסכם מתן שירותים";
+  metadata = [
+    { name: "provider", label: "הספק", type: FieldType.Text },
+    { name: "client", label: "הלקוח", type: FieldType.Text },
+    { name: "amount", label: "סכום", type: FieldType.Number, value: 0 },
+    {
+      name: "startDate",
+      label: "תאריך התחלה",
+      type: FieldType.Date,
+      value: Timestamp.fromDate(new Date()),
+    },
+    {
+      name: "endDate",
+      label: "תאריך סיום",
+      type: FieldType.Date,
+      value: Timestamp.fromDate(new Date()),
+    },
+    {
+      name: "date",
+      label: "תאריך יצירה",
+      type: FieldType.Date,
+      value: Timestamp.fromDate(new Date()),
+    },
+  ];
+}
+
+export const contractTemplates = [
+  new RentalContractTemplate(),
+  new ServiceContractTemplate(),
 ];

@@ -28,8 +28,7 @@ export const ContractEditTemplate = html<ContractEdit>`
         (x) => x.selectedType,
         html<ContractEdit>`
           <contract-form
-            type="${(x) => x.selectedType}"
-            :metadata=${(x) => ({})}
+            :metadata=${(x) => x.template?.metadata}
             @submit=${(x, c) => x.handleSubmit((c.event as CustomEvent).detail)}
           ></contract-form>
         `

@@ -7,7 +7,7 @@ import { functions } from "@services/index";
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth } from "@features/user/services";
 import {
-  ContractTemplate,
+  type ContractTemplate,
   contractTemplates,
 } from "@features/contracts/templates";
 import { createContract, updateContract } from "@features/contracts/services";
@@ -16,11 +16,11 @@ import { Router } from "@vaadin/router";
 export class ContractEdit extends FASTElement {
   @attr contractId?: string;
   @observable contract: Contract | null = null;
-  @observable templates: ContractTemplate[] = contractTemplates;
+  @observable templates: ContractTemplate<any>[] = contractTemplates;
   @observable selectedType = "";
   @observable loading = true;
   @observable error: string | null = null;
-  private template: ContractTemplate | null = null;
+  @observable template: ContractTemplate<any> | null = null;
   private unsubscribe: (() => void) | null = null;
 
   connectedCallback() {
@@ -66,7 +66,7 @@ export class ContractEdit extends FASTElement {
     this.template = this.templates.find((t) => t.type === type) || null;
   }
 
-  async handleSubmit(detail: { metadata: Record<string, string> }) {
+  async handleSubmit(detail: { metadata: Record<string, any> }) {
     if (!auth.currentUser || !this.template) {
       this.error = "אירעה שגיאה, נסה שוב";
       return;
@@ -74,21 +74,30 @@ export class ContractEdit extends FASTElement {
     try {
       this.loading = true;
       const metadata = detail.metadata;
-
-      const generateContract = httpsCallable(functions, "generateContract");
-      const response = await generateContract(metadata);
+      let response;
+      if (this.template.type === "rental") {
+        response = await httpsCallable(
+          functions,
+          "generateRentalContract"
+        )(metadata);
+      } else if (this.template.type === "service") {
+        response = await httpsCallable(
+          functions,
+          "generateServiceContract"
+        )(metadata);
+      } else {
+        throw new Error("סוג חוזה לא נתמך");
+      }
       const content = (response.data as any).contractText;
-
       const base: Omit<Contract, "id"> = {
         type: this.template.type,
-        title: this.template.defaultTitle,
+        title: this.template.title,
         content,
         metadata,
         status: "generated",
         createdBy: auth.currentUser.uid,
         createdAt: this.contract?.createdAt || new Date().toISOString(),
       };
-
       if (this.contractId) {
         await updateContract(this.contractId, base);
       } else {

@@ -1,37 +1,53 @@
 // src/components/contract-form/contract-form.ts
 import { FASTElement, attr, observable } from "@microsoft/fast-element";
-import type { ContractTemplate } from "@features/contracts/templates";
+import {
+  type ContractField,
+  FieldType,
+} from "@features/contracts/templates/contract-templates";
+import { Timestamp } from "firebase/firestore";
 
 export class ContractForm extends FASTElement {
-  @attr type = "";
-  @observable metadata: Record<string, string> = {};
-  @observable template: ContractTemplate | null = null;
+  @observable metadata?: ContractField[];
+  @observable values: Record<string, any> = {};
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.updateTemplate();
+  getDefaultValue(type: FieldType) {
+    switch (type) {
+      case FieldType.Text:
+        return "";
+      case FieldType.Number:
+        return 0;
+      case FieldType.Date:
+        return Timestamp.fromDate(new Date());
+      default:
+        return "";
+    }
   }
 
-  typeChanged() {
-    this.updateTemplate();
+  handleInput(e: Event, field: ContractField) {
+    const target = e.target as HTMLInputElement;
+    if (field.type === FieldType.Number) {
+      this.values[field.name] = target.value === "" ? "" : Number(target.value);
+    } else if (field.type === FieldType.Date) {
+      this.values[field.name] = target.value
+        ? Timestamp.fromDate(new Date(target.value))
+        : null;
+    } else {
+      this.values[field.name] = target.value;
+    }
   }
 
-  updateTemplate() {
-    import("@features/contracts/templates").then(({ contractTemplates }) => {
-      this.template =
-        contractTemplates.find((t) => t.type === this.type) || null;
-      if (this.template) {
-        this.metadata = { ...this.template.defaultMetadata };
+  getInputValue(field: ContractField) {
+    if (field.type === FieldType.Date) {
+      const ts = this.values[field.name];
+      if (ts && typeof ts.toDate === "function") {
+        return ts.toDate().toISOString().slice(0, 10);
       }
-    });
-  }
-
-  handleInput(e: Event, key: string) {
-    const value = (e.target as HTMLInputElement).value;
-    this.metadata[key] = value;
+      return "";
+    }
+    return this.values[field.name] ?? "";
   }
 
   submit() {
-    this.$emit("submit", { metadata: this.metadata });
+    this.$emit("submit", { metadata: { ...this.values } });
   }
 }

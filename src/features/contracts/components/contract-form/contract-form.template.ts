@@ -1,36 +1,28 @@
-import { html, repeat, when } from "@microsoft/fast-element";
+import { html, when, repeat } from "@microsoft/fast-element";
 import type { ContractForm } from "./contract-form";
+import { ContractField } from "@features/contracts/templates";
+
+export const getField = html<string>`${(x: ContractField) => x.label}`;
 
 export const ContractFormTemplate = html<ContractForm>`
   ${when(
-    (x) => x.template,
+    (x: ContractForm) => x.metadata,
     html<ContractForm>`
-      <form
-        @submit=${(x, c) => {
-          c.event.preventDefault();
-          x.submit();
-        }}
-      >
-        <h3>${(x) => x.template!.label}</h3>
+      <sl-card style="max-width: 500px; margin: 2rem auto;">
+        <form
+          @submit=${(x: ContractForm, c: { event: Event }) => {
+            c.event.preventDefault();
+            x.submit();
+          }}
+        >
+          <p>אנא מלא את הפרטים הבאים:</p>
 
-        ${repeat(
-          (x) => Object.entries(x.metadata),
-          html<[string, string]>`
-            <div>
-              <label>
-                ${(x) => x[0]}:<br />
-                <input
-                  type="text"
-                  value="${(x) => x[1]}"
-                  @input="${(x, c) => c.parent.handleInput(c.event, x[0])}"
-                />
-              </label>
-            </div>
-          `
-        )}
-
-        <button type="submit">צור חוזה</button>
-      </form>
+          ${repeat((x) => x.metadata, getField)}
+          <sl-button type="submit" variant="primary" style="width: 100%;"
+            >צור חוזה</sl-button
+          >
+        </form>
+      </sl-card>
     `,
     html`<p>טוען טופס...</p>`
   )}
