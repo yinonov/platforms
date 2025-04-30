@@ -7,7 +7,7 @@ import {
   sendPhoneVerification,
   verifyPhoneCode,
 } from "@features/user/services";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
 
 export class UserAuth extends FASTElement {
   @observable authMethod: "email" | "phone" | "google" = "email";
@@ -96,6 +96,19 @@ export class UserAuth extends FASTElement {
 
   async googleSignIn() {
     await googleLogin();
+  }
+
+  async signInAsGuest() {
+    this.errorMessage = "";
+    this.loading = true;
+    try {
+      await signInAnonymously(auth);
+    } catch (error) {
+      console.error(error);
+      this.errorMessage = (error as Error).message || "Guest sign-in failed.";
+    } finally {
+      this.loading = false;
+    }
   }
 
   async signOut() {

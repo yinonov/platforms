@@ -124,6 +124,17 @@ export const UserAuthTemplate = html<UserAuth>`
                         </sl-button>
                       </sl-tab-panel>
                     </sl-tab-group>
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                      <sl-divider style="margin: 1rem 0;"></sl-divider>
+                      <sl-button
+                        variant="default"
+                        @click="${(x) => x.signInAsGuest()}"
+                        ?disabled="${x.loading}"
+                        style="width: 100%;"
+                      >
+                        המשך כאורח
+                      </sl-button>
+                    </div>
                   `}
           </sl-card>
         `}

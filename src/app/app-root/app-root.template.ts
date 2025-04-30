@@ -58,7 +58,7 @@ export const AppRootTemplate = html<AppRoot>`
       slot="footer"
       variant="text"
       @click="${(x) => x.closeAuthDialog()}"
-      >Close</sl-button
+      >סגור</sl-button
     >
   </sl-dialog>
   <slot></slot>
