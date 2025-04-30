@@ -1,4 +1,4 @@
-import { html, when, repeat } from "@microsoft/fast-element";
+import { html, when, repeat, ref } from "@microsoft/fast-element";
 import type { ContractForm } from "./contract-form";
 import { ContractField } from "@features/contracts/templates";
 
@@ -10,6 +10,7 @@ export const ContractFormTemplate = html<ContractForm>`
     html<ContractForm>`
       <sl-card style="max-width: 500px; margin: 2rem auto;">
         <form
+          ${ref("form")}
           @submit=${(x: ContractForm, c: { event: Event }) => {
             c.event.preventDefault();
             x.submit();
