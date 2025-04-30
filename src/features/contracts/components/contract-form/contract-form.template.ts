@@ -1,9 +1,10 @@
 import { html, when, repeat, ref } from "@microsoft/fast-element";
 import type { ContractForm } from "./contract-form";
 import { FieldType, type ContractField } from "@features/contracts/templates";
+import { Timestamp } from "firebase/firestore";
 
-const getFieldType = (type: FieldType) => {
-  switch (type) {
+const getFieldType = (field: ContractField) => {
+  switch (field.type) {
     case FieldType.Number:
       return "number";
     case FieldType.Date:
@@ -13,11 +14,27 @@ const getFieldType = (type: FieldType) => {
       return "text";
   }
 };
+
+const getFieldValue = (field: ContractField) => {
+  if (
+    field.value === undefined ||
+    [FieldType.Number, FieldType.Text].includes(field.type)
+  ) {
+    return field.value;
+  }
+
+  if (field.type === FieldType.Date && field.value instanceof Timestamp) {
+    return field.value.toDate().toISOString().split("T")[0];
+  }
+
+  return field.value;
+};
+
 const getField = html<string>`<sl-input
-  type="${(x: ContractField) => getFieldType(x.type)}"
+  type="${(x: ContractField) => getFieldType(x)}"
   label="${(x: ContractField) => x.label}"
   name="${(x: ContractField) => x.name}"
-  value="${(x: ContractField) => x.value}"
+  value="${(x: ContractField) => getFieldValue(x)}"
 ></sl-input>`;
 
 export const ContractFormTemplate = html<ContractForm>`
