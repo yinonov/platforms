@@ -26,6 +26,8 @@ export class ContractEdit extends FASTElement {
   connectedCallback() {
     super.connectedCallback();
 
+    this.templates.length && this.handleTemplateSelect(this.templates[0].type);
+
     if (this.contractId) {
       const ref = doc(db, "contracts", this.contractId);
       this.unsubscribe = onSnapshot(
