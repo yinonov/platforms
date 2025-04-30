@@ -16,6 +16,9 @@ export class AppRoot extends FASTElement {
       this.currentUser = user;
       if (user) this.showAuthDialog = false;
     });
+    window.addEventListener("open-auth-dialog", () => {
+      this.openAuthDialog();
+    });
   }
 
   openAuthDialog() {
