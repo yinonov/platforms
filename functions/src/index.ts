@@ -9,19 +9,31 @@ const model = vertexAI.preview.getGenerativeModel({
   model: "gemini-1.5-pro",
 });
 
-type ContractFormData = {
-  landlord: string;
-  tenant: string;
-  address: string;
-  rent: string;
-  period: string;
-  startDate: string;
-};
+/**
+ * Generates contract text based on a given prompt using the Vertex AI model.
+ * @param {string} prompt - The input prompt describing the contract
+ * requirements.
+ * @param {string} errorMsg - The error message to return in case of failure.
+ * @return {Promise<{contractText: string}>} - An object containing the
+ * generated contract text or the error message.
+ */
+async function generateContractText(prompt: string, errorMsg: string) {
+  try {
+    const result = await model.generateContent({
+      contents: [{role: "user", parts: [{text: prompt}]}],
+    });
+    const response = result.response.candidates?.[0]?.content?.parts?.[0]?.text;
+    return {contractText: response || "לא התקבל טקסט מהמודל"};
+  } catch (error) {
+    return {contractText: errorMsg};
+  }
+}
 
-export const generateContract = functions.https.onCall<ContractFormData>(
+// Rental contract generator
+export const generateRentalContract = functions.https.onCall(
   async (request) => {
-    const {landlord, tenant, address, rent, period, startDate} = request.data;
-
+    const {landlord, tenant, address, rent, startDate, endDate} =
+      request.data;
     const prompt = `
 אתה משמש כעורך דין מומחה לדיני מקרקעין ושכירות בישראל,
 עם ניסיון רב בניסוח חוזים תקניים למגורים.
@@ -47,8 +59,8 @@ export const generateContract = functions.https.onCall<ContractFormData>(
 - שוכר: ${tenant}
 - כתובת הנכס: ${address}
 - דמי שכירות חודשיים: ${rent} ש"ח
-- תקופת השכירות: ${period}
 - תאריך התחלה: ${startDate}
+- תאריך סיום: ${endDate}
 
 יש לנסח את החוזה בצורה מקצועית, בשפה משפטית ברורה אך נגישה,
 בסעיפים ממוספרים וללא תוספות מיותרות או הסברים כלליים.
@@ -56,24 +68,35 @@ export const generateContract = functions.https.onCall<ContractFormData>(
 
 השב רק עם טקסט החוזה עצמו, מוכן להצגה במסמך PDF או מסך.
 `;
+    return generateContractText(prompt, "אירעה שגיאה ביצירת החוזה");
+  }
+);
 
-    try {
-      const result = await model.generateContent({
-        contents: [{role: "user", parts: [{text: prompt}]}],
-      });
+// Service contract generator
+export const generateServiceContract = functions.https.onCall(
+  async (request) => {
+    const {provider, client, amount, startDate, endDate} = request.data;
+    const prompt = `
+אתה משמש כעורך דין מומחה לדיני חוזים ושירותים בישראל.
+כתוב הסכם מתן שירותים מקצועי וברור בין ספק ללקוח, כולל הסעיפים הבאים:
 
-      const response =
-        result.response.candidates?.[0]?.content?.parts?.[0]?.text;
-      return {contractText: response || "לא התקבל טקסט מהמודל"};
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error("Gemini error:", error.message);
-        console.error("Full error:", error);
-      } else {
-        console.error("שגיאה לא צפויה:", error);
-      }
+1. פרטי הצדדים
+2. תיאור השירותים
+3. תקופת ההסכם (תאריך התחלה: ${startDate}, תאריך סיום: ${endDate})
+4. סכום ותנאי תשלום: ${amount} ש"ח
+5. אחריות, סודיות, קניין רוחני
+6. סיום מוקדם, הפרות וסעדים
+7. סמכות שיפוט וחתימות
 
-      return {contractText: "אירעה שגיאה ביצירת החוזה"};
-    }
+פרטי ההסכם:
+- ספק: ${provider}
+- לקוח: ${client}
+
+יש לנסח את ההסכם בשפה משפטית ברורה, בסעיפים ממוספרים, וללא הסברים כלליים.
+ההסכם יסתיים בסעיף חתימות עבור שני הצדדים.
+
+השב רק עם טקסט ההסכם עצמו, מוכן להצגה במסמך PDF או מסך.
+`;
+    return generateContractText(prompt, "אירעה שגיאה ביצירת ההסכם");
   }
 );

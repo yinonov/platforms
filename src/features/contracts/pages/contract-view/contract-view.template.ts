@@ -19,15 +19,28 @@ export const ContractViewTemplate = html<ContractView>`
       (x) => x.contract,
       html<ContractView>`
         <sl-card style="max-width: 700px; margin: 2rem auto; display: block;">
-          <h2 style="margin-top: 0;">${(x) => x.contract!.title || "Untitled Contract"}</h2>
+          <h2 style="margin-top: 0;">
+            ${(x) => x.contract!.title || "Untitled Contract"}
+          </h2>
           <div class="contract-details" style="margin-bottom: 1.5rem;">
-            <pre style="background: #f8f8f8; border-radius: 8px; padding: 1rem; overflow-x: auto;">
-              ${(x) => x.contract!.content || JSON.stringify(x.contract, null, 2)}
-            </pre>
+            <pre
+              style="background: #f8f8f8; border-radius: 8px; padding: 1rem; overflow-x: auto;"
+            >
+              ${(x) =>
+                x.contract!.content || JSON.stringify(x.contract, null, 2)}
+            </pre
+            >
           </div>
-          <div class="contract-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
-            <sl-button variant="primary" @click="${(x) => x.shareContract()}">שתף</sl-button>
-            <sl-button variant="success" @click="${(x) => x.signContract()}">חתום</sl-button>
+          <div
+            class="contract-actions"
+            style="display: flex; gap: 1rem; justify-content: flex-end;"
+          >
+            <sl-button variant="primary" @click="${(x) => x.shareContract()}"
+              >שתף</sl-button
+            >
+            <sl-button variant="success" @click="${(x) => x.signContract()}"
+              >חתום</sl-button
+            >
           </div>
         </sl-card>
       `
