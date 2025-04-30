@@ -27,6 +27,7 @@ export class UserAuth extends FASTElement {
 
     this.recaptchaContainer = document.createElement("div");
     this.recaptchaContainer.style.display = "none";
+    this.recaptchaContainer.setAttribute("recaptcha-container", "");
     document.body.appendChild(this.recaptchaContainer);
 
     onAuthStateChanged(auth, (user) => {
