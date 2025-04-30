@@ -1,8 +1,24 @@
 import { html, when, repeat, ref } from "@microsoft/fast-element";
 import type { ContractForm } from "./contract-form";
-import { ContractField } from "@features/contracts/templates";
+import { FieldType, type ContractField } from "@features/contracts/templates";
 
-export const getField = html<string>`${(x: ContractField) => x.label}`;
+const getFieldType = (type: FieldType) => {
+  switch (type) {
+    case FieldType.Number:
+      return "number";
+    case FieldType.Date:
+      return "date";
+    case FieldType.Text:
+    default:
+      return "text";
+  }
+};
+const getField = html<string>`<sl-input
+  type="${(x: ContractField) => getFieldType(x.type)}"
+  label="${(x: ContractField) => x.label}"
+  name="${(x: ContractField) => x.name}"
+  value="${(x: ContractField) => x.value}"
+></sl-input>`;
 
 export const ContractFormTemplate = html<ContractForm>`
   ${when(
