@@ -40,7 +40,7 @@ export const ContractFormTemplate = html<ContractForm>`
   ${when(
     (x: ContractForm) => x.metadata,
     html<ContractForm>`
-      <sl-card style="width: 40rem; margin: 2rem auto;">
+      <sl-card style="max-width: 100%; width: 40rem; margin: 2rem auto;">
         <form
           ${ref("form")}
           @submit=${(x: ContractForm, c: { event: Event }) => {
