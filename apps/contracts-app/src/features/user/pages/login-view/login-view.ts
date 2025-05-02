@@ -1,6 +1,7 @@
 import { FASTElement, observable } from "@microsoft/fast-element";
-
+import { app } from "@services/firebase-config";
 export class LoginView extends FASTElement {
+  @observable app = app;
   @observable returnTo: string = "/";
 
   connectedCallback() {
