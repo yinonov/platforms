@@ -5,7 +5,6 @@ import { routes } from "./routes";
 import { auth, logout } from "@features/user/services";
 
 export class AppRoot extends FASTElement {
-  @observable showAuthDialog = false;
   @observable currentUser: any = null;
 
   connectedCallback() {
@@ -14,22 +13,19 @@ export class AppRoot extends FASTElement {
     router.setRoutes(routes);
     auth.onAuthStateChanged((user) => {
       this.currentUser = user;
-      if (user) this.showAuthDialog = false;
     });
-    window.addEventListener("open-auth-dialog", () => {
-      this.openAuthDialog();
-    });
-  }
-
-  openAuthDialog() {
-    this.showAuthDialog = true;
-  }
-
-  closeAuthDialog() {
-    this.showAuthDialog = false;
   }
 
   async handleSignOut() {
     await logout();
+  }
+
+  onBeforeEnter(location: any, commands: any) {
+    console.log("onBeforeEnter", location);
+    // if (!window.authorized) {
+    //   return commands.redirect(
+    //     "/login/" + encodeURIComponent(location.pathname)
+    //   );
+    // }
   }
 }

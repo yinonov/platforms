@@ -1,6 +1,6 @@
 import type { ContractView } from "@features/contracts/pages/contract-view/contract-view";
-import { auth } from "@features/user/services";
-import type { RouteContext } from "@vaadin/router";
+import { auth, logout } from "@features/user/services";
+import type { Commands, RouteContext } from "@vaadin/router";
 
 const isAuthenticated = async () => {
   return new Promise((resolve) => {
@@ -21,13 +21,27 @@ const requireAuth = async () => {
 };
 
 export const routes = [
-  { path: "/", redirect: "/home" },
   {
-    path: "/home",
+    path: "/",
     component: "home-view",
     action: async () => {
       await import("@app/pages/home-view");
       return;
+    },
+  },
+  {
+    path: "/login/:to?",
+    component: "login-view",
+    action: async () => {
+      await import("@features/user/pages/login-view");
+      return;
+    },
+  },
+  {
+    path: "/logout",
+    action: async (context: RouteContext, commands: Commands) => {
+      await logout();
+      return commands.redirect("/");
     },
   },
   {
@@ -37,7 +51,6 @@ export const routes = [
       await import("@features/contracts/pages/contract-edit");
       return;
     },
-    conditions: [requireAuth],
   },
   {
     path: "/edit-contract/:id",
@@ -46,7 +59,6 @@ export const routes = [
       await import("@features/contracts/pages/contract-edit");
       return;
     },
-    conditions: [requireAuth],
   },
   {
     path: "/contract/:id",
@@ -57,16 +69,19 @@ export const routes = [
       el.contractId = context.params.id as string;
       return el;
     },
-    conditions: [requireAuth],
   },
   {
     path: "/dashboard",
     component: "user-dashboard",
-    action: async (): Promise<void> => {
+    action: async (context: RouteContext, commands: Commands) => {
+      if (!(await isAuthenticated())) {
+        return commands.redirect(
+          "/login/" + encodeURIComponent(location.pathname)
+        );
+      }
       await import("@features/user/pages/user-dashboard");
       return;
     },
-    conditions: [requireAuth],
   },
   // {
   //   path: "/contract-view",

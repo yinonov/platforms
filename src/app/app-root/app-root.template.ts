@@ -14,6 +14,7 @@ export const AppRootTemplate = html<AppRoot>`
       ></sl-icon>
       <sl-button variant="text" href="/">בית</sl-button>
       <sl-button variant="text" href="/create-contract">יצירת חוזה</sl-button>
+      <sl-button variant="text" href="/dashboard">אזור אישי</sl-button>
       <sl-divider vertical style="margin: 0 1rem;"></sl-divider>
       <div
         style="margin-inline-start: auto; display: flex; gap: 0.5rem; align-items: center;"
@@ -21,45 +22,31 @@ export const AppRootTemplate = html<AppRoot>`
         ${(x) =>
           x.currentUser
             ? html`
-                <span
-                  style="font-size: 0.95em; opacity: 0.8; margin-inline-end: 0.5em;"
-                >
-                  ${x.currentUser.email ||
-                  x.currentUser.phoneNumber ||
-                  x.currentUser.displayName ||
-                  "User"}
-                </span>
-                <sl-button variant="text" href="/dashboard">
-                  אזור אישי
-                </sl-button>
-                <sl-button
-                  variant="primary"
-                  @click="${(x) => x.handleSignOut()}"
-                >
-                  צא
-                </sl-button>
+                <sl-dropdown>
+                  <sl-avatar
+                    slot="trigger"
+                    image="${x.currentUser.photoURL || ""}"
+                    initials="${(x.currentUser.displayName &&
+                      x.currentUser.displayName
+                        .split(" ")
+                        .map((n: string) => n[0])
+                        .join("")) ||
+                    (x.currentUser.email &&
+                      x.currentUser.email[0].toUpperCase()) ||
+                    (x.currentUser.phoneNumber &&
+                      x.currentUser.phoneNumber.slice(-2)) ||
+                    "U"}"
+                    shape="circle"
+                    style="margin-inline-end: 0.5em; cursor: pointer;"
+                  ></sl-avatar>
+                  <sl-menu>
+                    <sl-menu-item value="signout">התנתק</sl-menu-item>
+                  </sl-menu>
+                </sl-dropdown>
               `
-            : html`<sl-button
-                variant="primary"
-                @click="${(x) => x.openAuthDialog()}"
-                >כנס</sl-button
-              >`}
+            : html`<sl-button variant="primary" href="/login">כנס</sl-button>`}
       </div>
     </nav>
   </header>
-  <sl-dialog
-    ?open="${(x) => x.showAuthDialog}"
-    @sl-after-hide="${(x) => x.closeAuthDialog()}"
-    label="כנס"
-    style="--width: 400px;"
-  >
-    <user-auth></user-auth>
-    <sl-button
-      slot="footer"
-      variant="text"
-      @click="${(x) => x.closeAuthDialog()}"
-      >סגור</sl-button
-    >
-  </sl-dialog>
   <slot></slot>
 `;

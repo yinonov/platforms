@@ -71,10 +71,7 @@ export class ContractEdit extends FASTElement {
   async handleSubmit(detail: { metadata: Record<string, any> }) {
     if (!auth.currentUser) {
       // Not authenticated: prompt for auth dialog
-      this.$emit("open-auth-dialog", undefined, {
-        bubbles: true,
-        composed: true,
-      });
+      this.error = "נא להתחבר כדי להמשיך";
       return;
     }
     if (!this.template) {

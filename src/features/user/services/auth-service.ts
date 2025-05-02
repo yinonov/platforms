@@ -7,5 +7,5 @@ export const auth = getAuth(app);
  * התנתקות מהמערכת (Logout) - תומך בכל סוגי ההתחברות
  */
 export const logout = async () => {
-  return signOut(auth);
+  return await signOut(auth);
 };
