@@ -12,7 +12,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "dev:contracts-app": "turbo run dev --filter=contracts-app",
+    "dev:smart-contracts": "turbo run dev --filter=smart-contracts",
     "lint": "turbo run lint",
     "test": "turbo run test"
   }

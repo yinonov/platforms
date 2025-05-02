@@ -1,6 +1,6 @@
 import type { ContractView } from "@features/contracts/pages/contract-view/contract-view";
 import { auth, logout } from "@features/user/services";
-import type { Commands, RouteContext } from "@vaadin/router";
+import type { Commands, Route, RouteContext } from "@vaadin/router";
 
 const isAuthenticated = async () => {
   return new Promise((resolve) => {
@@ -20,7 +20,7 @@ const requireAuth = async () => {
   return true;
 };
 
-export const routes = [
+export const routes: Route[] = [
   {
     path: "/",
     component: "home-view",

@@ -19,13 +19,4 @@ export class AppRoot extends FASTElement {
   async handleSignOut() {
     await logout();
   }
-
-  onBeforeEnter(location: any, commands: any) {
-    console.log("onBeforeEnter", location);
-    // if (!window.authorized) {
-    //   return commands.redirect(
-    //     "/login/" + encodeURIComponent(location.pathname)
-    //   );
-    // }
-  }
 }
