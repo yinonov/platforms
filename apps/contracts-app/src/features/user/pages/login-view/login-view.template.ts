@@ -4,6 +4,6 @@ import type { LoginView } from "./login-view";
 export const LoginViewTemplate = html<LoginView>`
   <div class="login-container">
     <h2>התחברות</h2>
-    <user-auth></user-auth>
+    <firebase-auth></firebase-auth>
   </div>
 `;
