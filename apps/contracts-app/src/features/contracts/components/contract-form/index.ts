@@ -1,3 +1,5 @@
+import "@shoelace-style/shoelace/dist/components/input/input.js";
+
 import { ContractForm } from "./contract-form";
 import { ContractFormTemplate as template } from "./contract-form.template";
 import { ContractFormStyles as styles } from "./contract-form.styles";

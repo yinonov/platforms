@@ -1,24 +1,19 @@
 {
-  "name": "contracts-app",
+  "name": "contracts-monorepo",
+  "packageManager": "npm@10.5.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "devDependencies": {
-    "typescript": "~5.7.2",
-    "vite": "^6.3.1",
-    "vite-plugin-checker": "^0.9.1",
-    "vite-tsconfig-paths": "^5.1.4"
+    "turbo": "^2.5.2"
   },
-  "dependencies": {
-    "@microsoft/fast-element": "^2.2.1",
-    "@shoelace-style/shoelace": "^2.20.1",
-    "@vaadin/router": "^2.0.0",
-    "firebase": "^11.6.0",
-    "tslib": "^2.8.1"
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "dev:contracts-app": "turbo run dev --filter=contracts-app",
+    "lint": "turbo run lint",
+    "test": "turbo run test"
   }
 }
