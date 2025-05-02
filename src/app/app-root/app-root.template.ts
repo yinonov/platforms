@@ -40,7 +40,7 @@ export const AppRootTemplate = html<AppRoot>`
                     style="margin-inline-end: 0.5em; cursor: pointer;"
                   ></sl-avatar>
                   <sl-menu>
-                    <sl-menu-item value="signout">התנתק</sl-menu-item>
+                    <sl-button href="/logout">התנתק</sl-button>
                   </sl-menu>
                 </sl-dropdown>
               `
