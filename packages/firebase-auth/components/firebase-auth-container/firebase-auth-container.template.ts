@@ -1,7 +1,9 @@
 import { html } from "@microsoft/fast-element";
-import type { FirebaseAuth } from "./firebase-auth";
+import type { FirebaseAuthContainer } from "./firebase-auth-container";
 
-export const FirebaseAuthTemplate = html<FirebaseAuth>` ${(x) =>
+export const FirebaseAuthContainerTemplate = html<FirebaseAuthContainer>` ${(
+  x
+) =>
   x.currentUser
     ? html`
         <sl-card class="welcome" style="padding: 1rem; text-align: center;">

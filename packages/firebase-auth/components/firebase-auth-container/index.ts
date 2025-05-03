@@ -6,12 +6,12 @@ import "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
 import "@shoelace-style/shoelace/dist/components/tab/tab.js";
 import "@shoelace-style/shoelace/dist/components/alert/alert.js";
 
-import { FirebaseAuth } from "./firebase-auth";
-import { FirebaseAuthTemplate as template } from "./firebase-auth.template";
-import { FirebaseAuthStyles as styles } from "./firebase-auth.styles";
+import { FirebaseAuthContainer } from "./firebase-auth-container";
+import { FirebaseAuthContainerTemplate as template } from "./firebase-auth-container.template";
+import { FirebaseAuthContainerStyles as styles } from "./firebase-auth-container.styles";
 
-FirebaseAuth.define({
-  name: "firebase-auth",
+FirebaseAuthContainer.define({
+  name: "firebase-auth-container",
   template,
   styles,
 });

@@ -13,7 +13,7 @@ import {
   onAuthStateChanged,
   signInAnonymously,
 } from "firebase/auth";
-export class FirebaseAuth extends FASTElement {
+export class FirebaseAuthContainer extends FASTElement {
   @observable app?: FirebaseApp;
   @observable auth?: Auth;
   appChanged(_: any, newApp: FirebaseApp) {
