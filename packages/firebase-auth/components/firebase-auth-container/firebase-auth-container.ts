@@ -1,5 +1,4 @@
 import { FASTElement, observable } from "@microsoft/fast-element";
-import { FirebaseApp } from "firebase/app";
 import {
   emailLogin,
   googleLogin,
@@ -7,20 +6,9 @@ import {
   sendPhoneVerification,
   verifyPhoneCode,
 } from "../../services";
-import {
-  Auth,
-  getAuth,
-  onAuthStateChanged,
-  signInAnonymously,
-} from "firebase/auth";
+import { Auth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
 export class FirebaseAuthContainer extends FASTElement {
-  @observable app?: FirebaseApp;
   @observable auth?: Auth;
-  appChanged(_: any, newApp: FirebaseApp) {
-    if (newApp) {
-      this.auth = getAuth(this.app);
-    }
-  }
 
   @observable authMethod: "email" | "phone" | "google" = "email";
   @observable email = "";
