@@ -2,21 +2,14 @@
 import { FASTElement, observable } from "@microsoft/fast-element";
 import { Router } from "@vaadin/router";
 import { routes } from "./routes";
-import { auth, logout } from "@features/user/services";
+import { auth } from "@features/user/services";
 
 export class AppRoot extends FASTElement {
-  @observable currentUser: any = null;
+  @observable auth = auth;
 
   connectedCallback() {
     super.connectedCallback();
     const router = new Router(this);
     router.setRoutes(routes);
-    auth.onAuthStateChanged((user) => {
-      this.currentUser = user;
-    });
-  }
-
-  async handleSignOut() {
-    await logout();
   }
 }
