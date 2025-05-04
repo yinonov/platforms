@@ -99,6 +99,14 @@ export const routes: Route[] = [
     },
   },
   {
+    path: "/campaigns/create",
+    component: "campaign-create-view",
+    action: async () => {
+      await import("@features/campaigns/pages/campaign-create-view");
+      return;
+    },
+  },
+  {
     path: "/campaigns/:id",
     component: "campaign-detail-view",
     action: async (context: RouteContext) => {
@@ -110,6 +118,7 @@ export const routes: Route[] = [
       return el;
     },
   },
+
   // { path: 'about', component: AboutView },
   // { path: 'campaigns', component: CampaignsListView },
   // { path: 'campaigns/:id', component: CampaignDetailView },
