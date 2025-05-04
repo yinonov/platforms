@@ -6,7 +6,7 @@ export class AppNavigation extends FASTElement {
   auth?: Auth;
   drawer?: HTMLElement;
   drawerLinksContainer?: HTMLElement;
-  linksNodes?: HTMLElement[];
+  linksNodes?: HTMLElement[] = [];
 
   connectedCallback() {
     console.log("AppNavigation connectedCallback");
@@ -15,6 +15,14 @@ export class AppNavigation extends FASTElement {
 
   openDrawer() {
     console.log("openDrawer");
+    // clone the linksNodes to the drawerLinksContainer
+    if (this.drawerLinksContainer && this.linksNodes) {
+      this.drawerLinksContainer.innerHTML = "";
+      this.linksNodes.forEach((node) => {
+        const clone = node.cloneNode(true);
+        this.drawerLinksContainer?.appendChild(clone);
+      });
+    }
     (this.drawer as SlDrawer).show();
   }
 
