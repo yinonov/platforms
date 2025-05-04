@@ -1,3 +1,4 @@
+import type { CampaignDetailView } from "@features/campaigns/pages/campaign-detail-view/campaign-detail-view";
 import { auth } from "@services/firebase-config";
 import type { Commands, Route, RouteContext } from "@vaadin/router";
 import { signOut } from "firebase/auth";
@@ -89,6 +90,26 @@ export const routes: Route[] = [
   //     return;
   //   },
   // },
+  {
+    path: "/campaigns",
+    component: "campaigns-list-view",
+    action: async () => {
+      await import("@features/campaigns/pages/campaigns-list-view");
+      return;
+    },
+  },
+  {
+    path: "/campaigns/:id",
+    component: "campaign-detail-view",
+    action: async (context: RouteContext) => {
+      await import("@features/campaigns/pages/campaign-detail-view");
+      const el = document.createElement(
+        "campaign-detail-view"
+      ) as CampaignDetailView;
+      el.campaignId = context.params.id as string;
+      return el;
+    },
+  },
   // { path: 'about', component: AboutView },
   // { path: 'campaigns', component: CampaignsListView },
   // { path: 'campaigns/:id', component: CampaignDetailView },

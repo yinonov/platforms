@@ -7,7 +7,10 @@ export const AppRootTemplate = html<AppRoot>`
   <header>
     <app-navigation
       :auth="${(x) => x.auth}"
-      :links="${() => [{ label: "בית", href: "/" }] as NavLink[]}"
+      :links="${() => [
+        { label: "בית", href: "/" },
+        { label: "קמפיינים", href: "/campaigns" }
+      ] as NavLink[]}"
     >
       <firebase-auth-menu
         slot="end"
