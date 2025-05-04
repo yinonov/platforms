@@ -15,10 +15,6 @@ on:
         required: false
         type: string
         default: ""
-      function_name:
-        required: false
-        type: string
-        default: ""
       function_runtime:
         required: false
         type: string
@@ -56,13 +52,15 @@ jobs:
         run: |
           cd ${{ inputs.app_dir }}/functions
           npm ci
+      - name: Build Functions (TypeScript)
+        run: |
+          cd ${{ inputs.app_dir }}/functions
+          npm run build
       - name: Write service account key
         run: echo "${{ secrets.firebase_service_account }}" > ${{ inputs.app_dir }}/functions/sa-key.json
       - name: Deploy Firebase Functions
-        if: ${{ inputs.function_name != '' }}
         uses: google-github-actions/deploy-cloud-functions@v2
         with:
-          name: ${{ inputs.function_name }}
           runtime: ${{ inputs.function_runtime }}
           project_id: ${{ inputs.project_id }}
           source_dir: ${{ inputs.app_dir }}/functions
