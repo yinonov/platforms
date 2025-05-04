@@ -105,7 +105,34 @@ export class ServiceContractTemplate extends ContractTemplate<ServiceMetadata> {
   ];
 }
 
+export interface LastWillMetadata {
+  testator: string;
+  heirs: string;
+  executor: string;
+  assets: string;
+  date: Timestamp;
+}
+
+export class LastWillContractTemplate extends ContractTemplate<LastWillMetadata> {
+  type = "last-will";
+  label = "צוואה";
+  title = "צוואה";
+  metadata = [
+    { name: "testator", label: "המצווה", type: FieldType.Text },
+    { name: "heirs", label: "יורשים", type: FieldType.Text },
+    { name: "executor", label: "מבצע צוואה", type: FieldType.Text },
+    { name: "assets", label: "נכסים/רכוש", type: FieldType.Text },
+    {
+      name: "date",
+      label: "תאריך עריכת הצוואה",
+      type: FieldType.Date,
+      value: Timestamp.fromDate(new Date()),
+    },
+  ];
+}
+
 export const contractTemplates = [
   new RentalContractTemplate(),
   new ServiceContractTemplate(),
+  new LastWillContractTemplate(),
 ];

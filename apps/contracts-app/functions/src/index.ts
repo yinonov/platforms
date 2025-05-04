@@ -100,3 +100,28 @@ export const generateServiceContract = functions.https.onCall(
     return generateContractText(prompt, "אירעה שגיאה ביצירת ההסכם");
   }
 );
+
+// Last will contract generator
+export const generateLastWillContract = functions.https.onCall(
+  async (request) => {
+    const {testator, heirs, executor, assets, date} = request.data;
+    const prompt = `
+אתה משמש כעורך דין מומחה לדיני ירושה וצוואות בישראל.
+כתוב נוסח צוואה תקני וברור, הכולל את הסעיפים הבאים:
+
+1. פרטי המצווה: ${testator}
+2. פרטי היורשים: ${heirs}
+3. מינוי מבצע צוואה: ${executor}
+4. פירוט הנכסים והרכוש: ${assets}
+5. תאריך עריכת הצוואה: ${date}
+
+הצוואה תכלול הצהרה על כשירות המצווה, רצונו החופשי,
+חלוקת הרכוש, הוראות מיוחדות (אם יש), מינוי מבצע,
+ותסתיים בסעיף חתימה.
+
+יש לנסח את הצוואה בשפה משפטית ברורה, בסעיפים ממוספרים, וללא הסברים כלליים.
+השב רק עם טקסט הצוואה עצמו, מוכן להצגה במסמך PDF או מסך.
+`;
+    return generateContractText(prompt, "אירעה שגיאה ביצירת הצוואה");
+  }
+);

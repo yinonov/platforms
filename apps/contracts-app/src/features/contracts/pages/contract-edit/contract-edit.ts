@@ -92,6 +92,11 @@ export class ContractEdit extends FASTElement {
           functions,
           "generateServiceContract"
         )(metadata);
+      } else if (this.template.type === "last-will") {
+        response = await httpsCallable(
+          functions,
+          "generateLastWillContract"
+        )(metadata);
       } else {
         throw new Error("סוג חוזה לא נתמך");
       }
