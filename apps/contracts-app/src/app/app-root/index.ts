@@ -1,5 +1,5 @@
-import "@shoelace-style/shoelace/dist/components/button/button.js";
 import "@components/firebase-auth/components/firebase-auth-menu";
+import "@app/app-navigation";
 
 import { AppRoot } from "./app-root";
 import { AppRootTemplate as template } from "./app-root.template";
