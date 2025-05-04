@@ -58,11 +58,8 @@ jobs:
           npm run build
       - name: Write service account key
         run: echo "${{ secrets.firebase_service_account }}" > ${{ inputs.app_dir }}/functions/sa-key.json
-      - name: Deploy Firebase Functions
-        uses: google-github-actions/deploy-cloud-functions@v2
-        with:
-          runtime: ${{ inputs.function_runtime }}
-          project_id: ${{ inputs.project_id }}
-          source_dir: ${{ inputs.app_dir }}/functions
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.app_dir }}/functions/sa-key.json
+      - name: Deploy Firebase Functions (all)
+        run: |
+          cd ${{ inputs.app_dir }}/functions
+          export GOOGLE_APPLICATION_CREDENTIALS=./sa-key.json
+          firebase deploy --only functions --project ${{ inputs.project_id }}
