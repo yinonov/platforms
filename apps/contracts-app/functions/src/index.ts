@@ -17,7 +17,10 @@ const model = vertexAI.preview.getGenerativeModel({
  * @return {Promise<{contractText: string}>} - An object containing the
  * generated contract text or the error message.
  */
-async function generateContractText(prompt: string, errorMsg: string) {
+async function generateContractText(
+  prompt: string,
+  errorMsg: string
+): Promise<{ contractText: string }> {
   try {
     const result = await model.generateContent({
       contents: [{role: "user", parts: [{text: prompt}]}],
