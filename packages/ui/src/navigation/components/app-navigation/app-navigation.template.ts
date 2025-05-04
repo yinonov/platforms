@@ -1,4 +1,4 @@
-import { html, ref, slotted } from "@microsoft/fast-element";
+import { html, ref, repeat } from "@microsoft/fast-element";
 import type { AppNavigation } from "./app-navigation";
 
 export const AppNavigationTemplate = html<AppNavigation>`
@@ -14,7 +14,12 @@ export const AppNavigationTemplate = html<AppNavigation>`
       aria-label="Open menu"
     ></sl-icon-button>
     <div class="nav-links">
-      <slot name="links" ${slotted("linksNodes")}></slot>
+      ${repeat(
+        (x) => x.links,
+        html`<sl-button variant="text" href="${(x) => x.href}"
+          >${(x) => x.label}</sl-button
+        >`
+      )}
     </div>
     <div
       style="margin-inline-start: auto; display: flex; gap: 0.5rem; align-items: center;"
@@ -28,6 +33,11 @@ export const AppNavigationTemplate = html<AppNavigation>`
     placement="start"
     ${ref("drawer")}
   >
-    <div class="drawer-links" ${ref("drawerLinksContainer")}></div>
+    ${repeat(
+      (x) => x.links,
+      html`<sl-button variant="text" href="${(x) => x.href}"
+        >${(x) => x.label}</sl-button
+      >`
+    )}
   </sl-drawer>
 `;
