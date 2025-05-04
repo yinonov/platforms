@@ -15,6 +15,14 @@ on:
         required: false
         type: string
         default: ""
+      function_name:
+        required: false
+        type: string
+        default: ""
+      function_runtime:
+        required: false
+        type: string
+        default: "nodejs20"
     secrets:
       repo_token:
         required: true
@@ -48,11 +56,15 @@ jobs:
         run: |
           cd ${{ inputs.app_dir }}/functions
           npm ci
+      - name: Write service account key
+        run: echo "${{ secrets.firebase_service_account }}" > ${{ inputs.app_dir }}/functions/sa-key.json
       - name: Deploy Firebase Functions
+        if: ${{ inputs.function_name != '' }}
         uses: google-github-actions/deploy-cloud-functions@v2
         with:
-          name: contractsApp
-          runtime: nodejs20
+          name: ${{ inputs.function_name }}
+          runtime: ${{ inputs.function_runtime }}
           project_id: ${{ inputs.project_id }}
-          credentials_json: ${{ secrets.firebase_service_account }}
           source_dir: ${{ inputs.app_dir }}/functions
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ inputs.app_dir }}/functions/sa-key.json
