@@ -10,7 +10,7 @@ jobs:
   build_and_deploy:
     uses: ./.github/workflows/reusable-firebase-deploy.yml
     with:
-      app_dir: apps/contracts-app
+      app_dir: apps/smart-contracts
       project_id: smart-contracts-254e8
       channel_id: live
     secrets:

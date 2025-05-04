@@ -12,7 +12,7 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     uses: ./.github/workflows/reusable-firebase-deploy.yml
     with:
-      app_dir: apps/contracts-app
+      app_dir: apps/smart-contracts
       project_id: smart-contracts-254e8
     secrets:
       repo_token: ${{ secrets.GITHUB_TOKEN }}
