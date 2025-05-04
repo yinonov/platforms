@@ -44,6 +44,10 @@ jobs:
           channelId: ${{ inputs.channel_id }}
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
+      - name: Install Functions dependencies
+        run: |
+          cd ${{ inputs.app_dir }}/functions
+          npm ci
       - name: Deploy Firebase Functions
         run: |
           cd ${{ inputs.app_dir }}/functions
