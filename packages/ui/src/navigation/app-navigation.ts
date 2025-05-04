@@ -20,6 +20,9 @@ export class AppNavigation extends FASTElement {
       this.drawerLinksContainer.innerHTML = "";
       this.linksNodes.forEach((node) => {
         const clone = node.cloneNode(true);
+        clone.addEventListener("click", (event) => {
+          this.closeDrawer();
+        });
         this.drawerLinksContainer?.appendChild(clone);
       });
     }
