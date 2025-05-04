@@ -1,4 +1,4 @@
-import "@components/firebase-auth/components/firebase-auth-container";
+import "@components/ui/src/firebase-auth/components/firebase-auth-container/index";
 
 import { LoginView } from "./login-view";
 import { LoginViewTemplate as template } from "./login-view.template";

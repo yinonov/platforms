@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --parallel",
     "dev:smart-contracts": "turbo run dev --filter=smart-contracts",
     "dev:charity": "turbo run dev --filter=charity",
     "lint": "turbo run lint",
