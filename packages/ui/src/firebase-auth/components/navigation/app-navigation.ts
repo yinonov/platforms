@@ -8,8 +8,10 @@ export class AppNavigation extends FASTElement {
   }
 
   openDrawer() {
-    if (this.drawer) {
-      (this.drawer as any).open = true;
-    }
+    (this.drawer as any).open = true;
+  }
+
+  closeDrawer() {
+    (this.drawer as any).open = false;
   }
 }

@@ -2,9 +2,18 @@ import { html, ref } from "@microsoft/fast-element";
 import type { AppNavigation } from "./app-navigation";
 
 const LinksTemplate = html<AppNavigation>`
-  <sl-button variant="text" href="/">בית</sl-button>
-  <sl-button variant="text" href="/create-contract">יצירת חוזה</sl-button>
-  <sl-button variant="text" href="/dashboard">אזור אישי</sl-button>
+  <sl-button variant="text" @click="${(x) => x.closeDrawer()}" href="/"
+    >בית</sl-button
+  >
+  <sl-button
+    variant="text"
+    @click="${(x) => x.closeDrawer()}"
+    href="/create-contract"
+    >יצירת חוזה</sl-button
+  >
+  <sl-button variant="text" @click="${(x) => x.closeDrawer()}" href="/dashboard"
+    >אזור אישי</sl-button
+  >
 `;
 
 export const AppNavigationTemplate = html<AppNavigation>`

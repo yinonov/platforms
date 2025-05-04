@@ -1,5 +1,5 @@
-import "@components/firebase-auth/components/firebase-auth-menu";
-import "@app/app-navigation";
+// import "@components/firebase-auth/components/firebase-auth-menu";
+// import "@components/ui/dist/navigation";
 
 import { AppRoot } from "./app-root";
 import { AppRootTemplate as template } from "./app-root.template";
