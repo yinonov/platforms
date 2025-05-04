@@ -49,6 +49,10 @@ jobs:
           cd ${{ inputs.app_dir }}/functions
           npm ci
       - name: Deploy Firebase Functions
-        run: |
-          cd ${{ inputs.app_dir }}/functions
-          firebase deploy --only functions --project ${{ inputs.project_id }} --token ${{ secrets.firebase_service_account }}
+        uses: google-github-actions/deploy-cloud-functions@v2
+        with:
+          name: contractsApp
+          runtime: nodejs20
+          project_id: ${{ inputs.project_id }}
+          credentials_json: ${{ secrets.firebase_service_account }}
+          source_dir: ${{ inputs.app_dir }}/functions
