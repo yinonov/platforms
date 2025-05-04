@@ -13,7 +13,7 @@ jobs:
     uses: ./.github/workflows/reusable-firebase-deploy.yml
     with:
       app_dir: apps/contracts-app
-      firebase_service_account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SMART_CONTRACTS_254E8 }}
       project_id: smart-contracts-254e8
     secrets:
       repo_token: ${{ secrets.GITHUB_TOKEN }}
+      firebase_service_account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SMART_CONTRACTS_254E8 }}
