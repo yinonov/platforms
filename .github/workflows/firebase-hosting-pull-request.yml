@@ -10,7 +10,7 @@ permissions:
 jobs:
   build_and_preview:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
-    uses: ./.github/workflows/reusable/firebase-deploy.yml
+    uses: ./.github/workflows/reusable-firebase-deploy.yml
     with:
       app_dir: apps/contracts-app
       firebase_service_account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SMART_CONTRACTS_254E8 }}
