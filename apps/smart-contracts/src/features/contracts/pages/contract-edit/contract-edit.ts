@@ -1,11 +1,9 @@
 // src/app/pages/contract-edit/contract-edit.ts
 import { FASTElement, attr, observable } from "@microsoft/fast-element";
 import type { Contract } from "@features/contracts/models";
-import { db } from "@services/index";
+import { auth, db, functions } from "@services/index";
 import { httpsCallable } from "firebase/functions";
-import { functions } from "@services/index";
 import { doc, onSnapshot } from "firebase/firestore";
-import { auth } from "@features/user/services";
 import {
   type ContractTemplate,
   contractTemplates,

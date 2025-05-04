@@ -1,4 +1,4 @@
-import { db } from "@services/firebase-config";
+import { auth, db } from "@services/firebase-config";
 import {
   collection,
   doc,
@@ -13,7 +13,6 @@ import {
 } from "firebase/firestore";
 import type { Contract } from "@features/contracts/models";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@features/user/services";
 
 const contractsCollection = collection(db, "contracts");
 

@@ -1,0 +1,17 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /contracts/{contractId} {
+      // Only allow the creator to read
+      allow read: if request.auth != null && resource.data.createdBy == request.auth.uid;
+
+      // Only allow users to create contracts with their own UID
+      allow create: if request.auth != null && request.resource.data.createdBy == request.auth.uid;
+
+      // Only allow users to update/delete their own contracts
+      allow update, delete: if request.auth != null && resource.data.createdBy == request.auth.uid;
+    }
+    // Add other collections/rules as needed
+  }
+}

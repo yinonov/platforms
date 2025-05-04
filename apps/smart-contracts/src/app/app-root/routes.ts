@@ -1,6 +1,7 @@
 import type { ContractView } from "@features/contracts/pages/contract-view/contract-view";
-import { auth, logout } from "@features/user/services";
+import { auth } from "@services/firebase-config";
 import type { Commands, Route, RouteContext } from "@vaadin/router";
+import { signOut } from "firebase/auth";
 
 const isAuthenticated = async () => {
   return new Promise((resolve) => {
@@ -40,7 +41,7 @@ export const routes: Route[] = [
   {
     path: "/logout",
     action: async (context: RouteContext, commands: Commands) => {
-      await logout();
+      await signOut(auth);
       return commands.redirect("/");
     },
   },
