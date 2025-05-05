@@ -8,9 +8,9 @@ export const LoginTemplate = html<Login>`
         style="max-width: 400px; margin: 2rem auto; display: block; text-align: center;"
       >
         <h1>התחברות</h1>
-        <firebase-auth-container
+        <ui-firebase-auth-container
           :auth="${(x) => x.auth}"
-        ></firebase-auth-container>
+        ></ui-firebase-auth-container>
       </sl-card>
     </section>
   </main>

@@ -2,6 +2,7 @@ import type { CampaignDetail } from "@features/campaigns/pages/campaign-detail/c
 import { auth } from "@services/firebase-config";
 import type { Commands, Route, RouteContext } from "@vaadin/router";
 import { signOut } from "firebase/auth";
+import { notificationService } from "@services/notification-service";
 // import { About } from '../pages/about';
 // import { CampaignsList } from '../pages/campaigns-list';
 // import { CampaignDetail } from '../pages/campaign-detail';
@@ -101,7 +102,28 @@ export const routes: Route[] = [
   {
     path: "/campaigns/create",
     component: "c-campaign-create",
-    action: async () => {
+    action: async (context: RouteContext, commands: Commands) => {
+      // Wait for auth state
+      const user = await new Promise<any>((resolve) => {
+        const unsub = auth.onAuthStateChanged((u) => {
+          unsub();
+          resolve(u);
+        });
+      });
+      if (!user) {
+        return commands.redirect(
+          "/login" +
+            (location.pathname
+              ? "/" + encodeURIComponent(location.pathname)
+              : "")
+        );
+      }
+      // Get custom claims
+      const tokenResult = await user.getIdTokenResult();
+      if (tokenResult.claims.role !== "admin") {
+        notificationService.show("רק אדמין יכול ליצור קמפיין", "warning");
+        return commands.redirect("/campaigns");
+      }
       await import("@features/campaigns/pages/campaign-create");
       return;
     },
@@ -116,7 +138,6 @@ export const routes: Route[] = [
       return el;
     },
   },
-
   // { path: 'about', component: About },
   // { path: 'campaigns', component: CampaignsList },
   // { path: 'campaigns/:id', component: CampaignDetail },
