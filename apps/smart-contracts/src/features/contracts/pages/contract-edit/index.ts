@@ -5,9 +5,10 @@ import "@features/contracts/components/contract-form";
 import { ContractEdit } from "./contract-edit";
 import { ContractEditTemplate as template } from "./contract-edit.template";
 import { ContractEditStyles as styles } from "./contract-edit.styles";
+import { CUSTOM_ELEMENT_PREFIX } from "@services/system";
 
 ContractEdit.define({
-  name: "contract-edit",
+  name: `${CUSTOM_ELEMENT_PREFIX}-contract-edit`,
   template,
   styles,
 });

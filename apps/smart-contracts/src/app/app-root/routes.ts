@@ -1,4 +1,4 @@
-import type { ContractView } from "@features/contracts/pages/contract-view/contract-view";
+import type { ContractDetail } from "@features/contracts/pages/contract-detail/contract-detail";
 import { auth } from "@services/firebase-config";
 import type { Commands, Route, RouteContext } from "@vaadin/router";
 import { signOut } from "firebase/auth";
@@ -24,17 +24,17 @@ const requireAuth = async () => {
 export const routes: Route[] = [
   {
     path: "/",
-    component: "home-view",
+    component: "sc-home",
     action: async () => {
-      await import("@app/pages/home-view");
+      await import("@app/pages/home");
       return;
     },
   },
   {
     path: "/login/:to?",
-    component: "login-view",
+    component: "sc-login",
     action: async () => {
-      await import("@features/user/pages/login-view");
+      await import("@features/user/pages/login");
       return;
     },
   },
@@ -47,7 +47,7 @@ export const routes: Route[] = [
   },
   {
     path: "/create-contract",
-    component: "contract-edit",
+    component: "sc-contract-edit",
     action: async () => {
       await import("@features/contracts/pages/contract-edit");
       return;
@@ -55,7 +55,7 @@ export const routes: Route[] = [
   },
   {
     path: "/edit-contract/:id",
-    component: "contract-edit",
+    component: "sc-contract-edit",
     action: async () => {
       await import("@features/contracts/pages/contract-edit");
       return;
@@ -63,17 +63,15 @@ export const routes: Route[] = [
   },
   {
     path: "/contract/:id",
-    component: "contract-view",
-    action: async (context: RouteContext): Promise<HTMLElement> => {
-      await import("@features/contracts/pages/contract-view");
-      const el = document.createElement("contract-view") as ContractView;
-      el.contractId = context.params.id as string;
-      return el;
+    component: "sc-contract-detail",
+    action: async () => {
+      await import("@features/contracts/pages/contract-detail");
+      return;
     },
   },
   {
     path: "/dashboard",
-    component: "user-dashboard",
+    component: "sc-user-dashboard",
     action: async (context: RouteContext, commands: Commands) => {
       if (!(await isAuthenticated())) {
         return commands.redirect(
@@ -85,7 +83,7 @@ export const routes: Route[] = [
     },
   },
   // {
-  //   path: "/contract-view",
-  //   component: "contract-view",
+  //   path: "/contract",
+  //   component: "sc-contract",
   // },
 ];

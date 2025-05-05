@@ -27,10 +27,10 @@ export const ContractEditTemplate = html<ContractEdit>`
       ${when(
         (x) => x.selectedType,
         html<ContractEdit>`
-          <contract-form
+          <sc-contract-form
             :metadata=${(x) => x.template?.metadata}
             @submit=${(x, c) => x.handleSubmit((c.event as CustomEvent).detail)}
-          ></contract-form>
+          ></sc-contract-form>
         `
       )}
     `

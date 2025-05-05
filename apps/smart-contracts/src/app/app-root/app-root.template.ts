@@ -5,7 +5,7 @@ import { NavLink } from "@components/ui/src/navigation/models";
 
 export const AppRootTemplate = html<AppRoot>`
   <header>
-    <app-navigation
+    <ui-app-navigation
       :auth="${(x) => x.auth}"
       :links="${() =>
         [
@@ -14,11 +14,11 @@ export const AppRootTemplate = html<AppRoot>`
           { label: "אזור אישי", href: "/dashboard" },
         ] as NavLink[]}"
     >
-      <firebase-auth-menu
+      <ui-firebase-auth-menu
         slot="end"
         :auth="${(x) => x.auth}"
-      ></firebase-auth-menu>
-    </app-navigation>
+      ></ui-firebase-auth-menu>
+    </ui-app-navigation>
   </header>
   <slot></slot>
 `;

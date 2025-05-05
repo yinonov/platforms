@@ -6,9 +6,10 @@ import "@shoelace-style/shoelace/dist/components/menu-item/menu-item.js";
 import { FirebaseAuthMenu } from "./firebase-auth-menu";
 import { FirebaseAuthMenuTemplate as template } from "./firebase-auth-menu.template";
 import { FirebaseAuthMenuStyles as styles } from "./firebase-auth-menu.styles";
+import { CUSTOM_ELEMENT_PREFIX } from "../../../services/system";
 
 FirebaseAuthMenu.define({
-  name: "firebase-auth-menu",
+  name: `${CUSTOM_ELEMENT_PREFIX}-firebase-auth-menu`,
   template,
   styles,
 });

@@ -6,12 +6,13 @@ import "@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js";
 import "@shoelace-style/shoelace/dist/components/tab/tab.js";
 import "@shoelace-style/shoelace/dist/components/alert/alert.js";
 
+import { CUSTOM_ELEMENT_PREFIX } from "@services/system";
 import { FirebaseAuthContainer } from "./firebase-auth-container";
 import { FirebaseAuthContainerTemplate as template } from "./firebase-auth-container.template";
 import { FirebaseAuthContainerStyles as styles } from "./firebase-auth-container.styles";
 
 FirebaseAuthContainer.define({
-  name: "firebase-auth-container",
+  name: `${CUSTOM_ELEMENT_PREFIX}-firebase-auth-container`,
   template,
   styles,
 });

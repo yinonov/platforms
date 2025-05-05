@@ -1,13 +1,13 @@
-import type { CampaignDetailView } from "@features/campaigns/pages/campaign-detail-view/campaign-detail-view";
+import type { CampaignDetail } from "@features/campaigns/pages/campaign-detail/campaign-detail";
 import { auth } from "@services/firebase-config";
 import type { Commands, Route, RouteContext } from "@vaadin/router";
 import { signOut } from "firebase/auth";
-// import { AboutView } from '../pages/about-view';
-// import { CampaignsListView } from '../pages/campaigns-list-view';
-// import { CampaignDetailView } from '../pages/campaign-detail-view';
-// import { UserDashboardView } from '../pages/user-dashboard-view';
-// import { AdminDashboardView } from '../pages/admin-dashboard-view';
-// import { DonationFormView } from '../pages/donation-form-view';
+// import { About } from '../pages/about';
+// import { CampaignsList } from '../pages/campaigns-list';
+// import { CampaignDetail } from '../pages/campaign-detail';
+// import { UserDashboard } from '../pages/user-dashboard';
+// import { AdminDashboard } from '../pages/admin-dashboard';
+// import { DonationForm } from '../pages/donation-form';
 
 const isAuthenticated = async () => {
   return new Promise((resolve) => {
@@ -30,17 +30,17 @@ const requireAuth = async () => {
 export const routes: Route[] = [
   {
     path: "/",
-    component: "home-view",
+    component: "c-home",
     action: async () => {
-      await import("@app/pages/home-view");
+      await import("@app/pages/home");
       return;
     },
   },
   {
     path: "/login/:to?",
-    component: "login-view",
+    component: "c-login",
     action: async () => {
-      await import("@features/user/pages/login-view");
+      await import("@features/user/pages/login");
       return;
     },
   },
@@ -53,7 +53,7 @@ export const routes: Route[] = [
   },
   // {
   //   path: "/create-contract",
-  //   component: "contract-edit",
+  //   component: "c-contract-edit",
   //   action: async () => {
   //     await import("@features/contracts/pages/contract-edit");
   //     return;
@@ -61,7 +61,7 @@ export const routes: Route[] = [
   // },
   // {
   //   path: "/edit-contract/:id",
-  //   component: "contract-edit",
+  //   component: "c-contract-edit",
   //   action: async () => {
   //     await import("@features/contracts/pages/contract-edit");
   //     return;
@@ -69,17 +69,17 @@ export const routes: Route[] = [
   // },
   // {
   //   path: "/contract/:id",
-  //   component: "contract-view",
+  //   component: "c-contract",
   //   action: async (context: RouteContext): Promise<HTMLElement> => {
-  //     await import("@features/contracts/pages/contract-view");
-  //     const el = document.createElement("contract-view") as ContractView;
+  //     await import("@features/contracts/pages/contract");
+  //     const el = document.createElement("contract") as Contract;
   //     el.contractId = context.params.id as string;
   //     return el;
   //   },
   // },
   // {
   //   path: "/dashboard",
-  //   component: "user-dashboard",
+  //   component: "c-user-dashboard",
   //   action: async (context: RouteContext, commands: Commands) => {
   //     if (!(await isAuthenticated())) {
   //       return commands.redirect(
@@ -92,37 +92,35 @@ export const routes: Route[] = [
   // },
   {
     path: "/campaigns",
-    component: "campaigns-list-view",
+    component: "c-campaigns-list",
     action: async () => {
-      await import("@features/campaigns/pages/campaigns-list-view");
+      await import("@features/campaigns/pages/campaigns-list");
       return;
     },
   },
   {
     path: "/campaigns/create",
-    component: "campaign-create-view",
+    component: "c-campaign-create",
     action: async () => {
-      await import("@features/campaigns/pages/campaign-create-view");
+      await import("@features/campaigns/pages/campaign-create");
       return;
     },
   },
   {
     path: "/campaigns/:id",
-    component: "campaign-detail-view",
+    component: "c-campaign-detail",
     action: async (context: RouteContext) => {
-      await import("@features/campaigns/pages/campaign-detail-view");
-      const el = document.createElement(
-        "campaign-detail-view"
-      ) as CampaignDetailView;
+      await import("@features/campaigns/pages/campaign-detail");
+      const el = document.createElement("campaign-detail") as CampaignDetail;
       el.campaignId = context.params.id as string;
       return el;
     },
   },
 
-  // { path: 'about', component: AboutView },
-  // { path: 'campaigns', component: CampaignsListView },
-  // { path: 'campaigns/:id', component: CampaignDetailView },
-  // { path: 'dashboard', component: UserDashboardView },
-  // { path: 'admin', component: AdminDashboardView },
-  // { path: 'donate', component: DonationFormView },
+  // { path: 'about', component: About },
+  // { path: 'campaigns', component: CampaignsList },
+  // { path: 'campaigns/:id', component: CampaignDetail },
+  // { path: 'dashboard', component: UserDashboard },
+  // { path: 'admin', component: AdminDashboard },
+  // { path: 'donate', component: DonationForm },
 ];
