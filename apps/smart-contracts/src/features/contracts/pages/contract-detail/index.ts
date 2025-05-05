@@ -9,7 +9,7 @@ import { ContractDetailStyles as styles } from "./contract-detail.styles";
 import { CUSTOM_ELEMENT_PREFIX } from "@services/system";
 
 ContractDetail.define({
-  name: `${CUSTOM_ELEMENT_PREFIX}-contract`,
+  name: `${CUSTOM_ELEMENT_PREFIX}-contract-detail`,
   template,
   styles,
 });

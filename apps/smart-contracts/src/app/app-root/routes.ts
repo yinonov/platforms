@@ -63,10 +63,12 @@ export const routes: Route[] = [
   },
   {
     path: "/contract/:id",
-    component: "sc-contract-detail",
-    action: async () => {
+    // component: "sc-contract-detail",
+    action: async (context: RouteContext) => {
       await import("@features/contracts/pages/contract-detail");
-      return;
+      const el = document.createElement("sc-contract-detail") as ContractDetail;
+      el.contractId = context.params.id as string;
+      return el;
     },
   },
   {
