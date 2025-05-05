@@ -2,43 +2,44 @@
 
 ## Phase 1: Core Product & MVP
 
--[x] User authentication (email, phone, Google, guest)
--[x] Contract creation from vetted templates (rental, service, etc.)
--[x] AI-powered contract generation (Vertex AI integration)
--[x] User dashboard for managing contracts
--[x] Real-time Firestore storage and retrieval
--[x] Basic access control (only creator can view/edit/delete)
--[x] Responsive UI with Shoelace and FASTElement
+- [x] User authentication (email, phone, Google, guest)
+- [x] Charity campaign creation and management
+- [x] Donation flow (one-time and recurring)
+- [x] User dashboard for tracking donations
+- [x] Real-time Firestore storage and retrieval
+- [x] Basic access control (only campaign creator can edit/delete)
+- [x] Responsive UI with Shoelace and FASTElement
 
-## Phase 2: Trust & Legal Quality
+## Phase 2: Trust, Transparency & Impact
 
--[ ] “Reviewed by Legal Expert” badge for templates
--[ ] Option to request human legal review (paid add-on)
--[ ] Clear disclaimers and risk assessment for AI-generated contracts
--[ ] Version history and change tracking for contracts
+- [ ] Verified charity/campaign badges
+- [ ] Public donation history (with privacy controls)
+- [ ] Impact reporting for campaigns (updates, milestones, outcomes)
+- [ ] Option for anonymous donations
+- [ ] Clear fee breakdown and transparency for donors
 
-## Phase 3: Collaboration & Workflow
+## Phase 3: Community & Engagement
 
--[ ] Multi-user editing and comments on contracts
--[ ] Approval workflows and e-signature integration
--[ ] Audit trails for contract changes and signatures
--[ ] Reminders and contract lifecycle management
+- [ ] Social sharing and campaign promotion tools
+- [ ] Donor recognition (badges, leaderboards)
+- [ ] Comments and updates on campaigns
+- [ ] Matching donations and fundraising challenges
 
 ## Phase 4: Compliance & Localization
 
--[ ] Templates tailored to specific jurisdictions and industries
--[ ] Compliance checks (e.g., GDPR, HIPAA) and flagging risky clauses
--[ ] Support for multiple languages
+- [ ] Support for multiple currencies and payment methods
+- [ ] Compliance checks (e.g., anti-fraud, KYC for large donations)
+- [ ] Support for multiple languages
 
 ## Phase 5: Integrations & Analytics
 
--[ ] Integrations with CRM, accounting, and cloud storage tools
--[ ] Analytics dashboard for contract status, deadlines, and key metrics
+- [ ] Integrations with payment providers (Stripe, PayPal, etc.)
+- [ ] Analytics dashboard for campaign performance and donor insights
+- [ ] Export donation receipts and reports
 
 ## Phase 6: Monetization & Scaling
 
--[ ] Freemium model: free basic use, paid advanced features
--[ ] Pay-per-contract or per-signature pricing
--[ ] B2B SaaS offering for teams/businesses
--[ ] Marketplace for connecting with legal professionals
--[ ] White-label solution for law firms/enterprises
+- [ ] Freemium model: free for basic campaigns, paid for advanced features
+- [ ] Platform fee or optional tip for platform sustainability
+- [ ] B2B offering for large charities or organizations
+- [ ] API for third-party integrations
