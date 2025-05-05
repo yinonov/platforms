@@ -2,18 +2,32 @@ import { html, repeat } from "@microsoft/fast-element";
 import type { CampaignsListView } from "./campaigns-list-view";
 
 export const CampaignsListViewTemplate = html<CampaignsListView>`
-  <h2>קמפיינים</h2>
-  <a href="/campaigns/create">
-    <button style="margin-bottom:1rem;">צור קמפיין חדש</button>
-  </a>
-  <ul>
-    ${repeat(
-      (x) => x.campaigns,
-      html<any>`
-        <li>
-          <a href="/campaigns/${(x) => x.id}">${(x) => x.title || x.id}</a>
-        </li>
-      `
-    )}
-  </ul>
+  <main>
+    <section>
+      <sl-card style="max-width: 600px; margin: 2rem auto; display: block;">
+        <header>
+          <h1>קמפיינים</h1>
+        </header>
+        <a href="/campaigns/create">
+          <sl-button variant="primary" style="margin-bottom:1rem; width: 100%;">
+            צור קמפיין חדש
+          </sl-button>
+        </a>
+        <ul style="list-style: none; padding: 0;">
+          ${repeat(
+            (x) => x.campaigns,
+            html<any>`
+              <li style="margin-bottom: 1rem;">
+                <sl-card>
+                  <a href="/campaigns/${(x) => x.id}">
+                    <strong>${(x) => x.title || x.id}</strong>
+                  </a>
+                </sl-card>
+              </li>
+            `
+          )}
+        </ul>
+      </sl-card>
+    </section>
+  </main>
 `;

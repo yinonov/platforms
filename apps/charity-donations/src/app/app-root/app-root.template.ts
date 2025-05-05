@@ -19,5 +19,7 @@ export const AppRootTemplate = html<AppRoot>`
       ></firebase-auth-menu>
     </app-navigation>
   </header>
-  <slot></slot>
+  <main>
+    <slot></slot>
+  </main>
 `;
