@@ -8,8 +8,8 @@ export class CampaignDetail extends FASTElement {
 
   async connectedCallback() {
     super.connectedCallback();
-    if (this.id) {
-      const snap = await getDoc(doc(db, "campaigns", this.id));
+    if (this.campaignId) {
+      const snap = await getDoc(doc(db, "campaigns", this.campaignId));
       this.campaign = snap.exists() ? { id: snap.id, ...snap.data() } : null;
     }
   }

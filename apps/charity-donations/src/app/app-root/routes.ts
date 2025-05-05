@@ -108,10 +108,10 @@ export const routes: Route[] = [
   },
   {
     path: "/campaigns/:id",
-    component: "c-campaign-detail",
+    // component: "c-campaign-detail",
     action: async (context: RouteContext) => {
       await import("@features/campaigns/pages/campaign-detail");
-      const el = document.createElement("campaign-detail") as CampaignDetail;
+      const el = document.createElement("c-campaign-detail") as CampaignDetail;
       el.campaignId = context.params.id as string;
       return el;
     },
