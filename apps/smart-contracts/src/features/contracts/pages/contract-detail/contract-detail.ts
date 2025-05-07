@@ -1,6 +1,9 @@
 import { FASTElement, attr, observable } from "@microsoft/fast-element";
 import { listenToContract } from "@features/contracts/services/firestore-service";
 import type { Contract } from "@features/contracts/models";
+import { functions } from "@services/firebase-config";
+import { httpsCallable } from "firebase/functions";
+import { textToPdfBase64 } from "@features/contracts/services/pdf-utils";
 
 export class ContractDetail extends FASTElement {
   @attr({ attribute: "contract-id" }) contractId = "";
@@ -34,8 +37,39 @@ export class ContractDetail extends FASTElement {
     // TODO: Implement sharing logic
   }
 
-  // Placeholder for signature logic
-  signContract() {
-    // TODO: Implement signature logic
+  async signContract() {
+    if (!this.contract) {
+      this.error = "No contract loaded.";
+      return;
+    }
+    this.loading = true;
+    this.error = null;
+    try {
+      // Adjust these fields as needed based on your contract model
+      const signerEmail = "yinon@hotmail.com";
+      const signerName = "Yinon";
+      // const signerEmail = this.contract.signerEmail || this.contract.userEmail;
+      // const signerName = this.contract.signerName || this.contract.userName;
+      const documentBase64 = textToPdfBase64(this.contract.content);
+      const documentName = this.contract.title || "contract.pdf";
+      if (!signerEmail || !signerName || !documentBase64) {
+        this.error = "Missing contract data for signature.";
+        this.loading = false;
+        return;
+      }
+      const sendForSignature = httpsCallable(functions, "sendForSignature");
+      const result = await sendForSignature({
+        signerEmail,
+        signerName,
+        documentBase64,
+        documentName,
+      });
+      // Optionally handle result.data.envelopeId
+      this.loading = false;
+      // You may want to show a notification or update contract status here
+    } catch (err: any) {
+      this.error = err.message || "Failed to send for signature.";
+      this.loading = false;
+    }
   }
 }
