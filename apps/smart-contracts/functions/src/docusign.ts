@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import docusign from "docusign-esign";
-import { onCall } from "firebase-functions/v2/https";
-import { defineSecret } from "firebase-functions/params";
+import {onCall} from "firebase-functions/v2/https";
+import {defineSecret} from "firebase-functions/params";
 
 const DOCUSIGN_API_ACCOUNT_ID = defineSecret("DOCUSIGN_API_ACCOUNT_ID");
 const DOCUSIGN_INTEGRATOR_KEY = defineSecret("DOCUSIGN_INTEGRATOR_KEY");
@@ -53,7 +53,7 @@ export const sendForSignature = onCall(
     ],
   },
   async (request) => {
-    const { signerEmail, signerName, documentBase64, documentName } =
+    const {signerEmail, signerName, documentBase64, documentName} =
       request.data as SendForSignatureData;
     if (!signerEmail || !signerName || !documentBase64 || !documentName) {
       throw new functions.https.HttpsError(
@@ -100,7 +100,7 @@ export const sendForSignature = onCall(
       const result = await envelopesApi.createEnvelope(apiAccountId, {
         envelopeDefinition,
       });
-      return { envelopeId: result.envelopeId };
+      return {envelopeId: result.envelopeId};
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : "An unknown error occurred";
