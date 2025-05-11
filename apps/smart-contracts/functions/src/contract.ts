@@ -1,5 +1,7 @@
 import * as functions from "firebase-functions";
 import {VertexAI} from "@google-cloud/vertexai";
+// import {nanoid} from "nanoid";
+// import * as admin from "firebase-admin";
 
 const project = "smart-contracts-254e8";
 const location = "us-central1";
@@ -8,6 +10,9 @@ const vertexAI = new VertexAI({project, location});
 const model = vertexAI.preview.getGenerativeModel({
   model: "gemini-1.5-pro",
 });
+
+// const db = admin.firestore();
+// const CONTRACT_SHARES_COLLECTION = "contractShares";
 
 /**
  * Generates contract text based on a given prompt using the Vertex AI model.
@@ -128,3 +133,31 @@ export const generateLastWillContract = functions.https.onCall(
     return generateContractText(prompt, "אירעה שגיאה ביצירת הצוואה");
   }
 );
+
+// Create contract share link
+// export const createContractShare = functions.https.onCall(
+//   async (data, context) => {
+//     const {contractId, recipientEmail, expiresInHours = 72} = data;
+//     if (!contractId || !recipientEmail) {
+//       throw new functions.https.HttpsError(
+//         "invalid-argument",
+//         "Missing contractId or recipientEmail"
+//       );
+//     }
+//     const linkId = nanoid(32);
+//     const createdAt = admin.firestore.Timestamp.now();
+//     const expiresAt = admin.firestore.Timestamp.fromDate(
+//       new Date(Date.now() + expiresInHours * 60 * 60 * 1000)
+//     );
+//     const share = {
+//       contractId,
+//       recipientEmail,
+//       linkId,
+//       createdAt,
+//       expiresAt,
+//       status: "pending",
+//     };
+//     await db.collection(CONTRACT_SHARES_COLLECTION).add(share);
+//     return {...share};
+//   }
+// );

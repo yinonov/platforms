@@ -16,6 +16,32 @@ export const ContractDetailTemplate = html<ContractDetail>`
       </sl-alert>`
     )}
     ${when(
+      (x) => x.shareLink,
+      html<ContractDetail>`
+        <sl-alert open variant="primary" style="margin-bottom: 1rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span>קישור לשיתוף:</span>
+            <sl-input
+              readonly
+              value="${(x) => x.shareLink}"
+              style="width: 350px;"
+            ></sl-input>
+            <sl-button
+              size="small"
+              @click="${(x) => navigator.clipboard.writeText(x.shareLink!)}"
+              >העתק</sl-button
+            >
+          </div>
+        </sl-alert>
+      `
+    )}
+    ${when(
+      (x) => x.shareError,
+      html`<sl-alert open variant="danger" style="margin-bottom: 1rem;">
+        ${(x) => x.shareError}
+      </sl-alert>`
+    )}
+    ${when(
       (x) => x.contract,
       html<ContractDetail>`
         <sl-card style="max-width: 700px; margin: 2rem auto; display: block;">
