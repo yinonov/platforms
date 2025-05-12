@@ -3,7 +3,10 @@ import { listenToContract } from "@features/contracts/services/firestore-service
 import type { Contract } from "@features/contracts/models";
 import { functions } from "@services/firebase-config";
 import { httpsCallable } from "firebase/functions";
-import { textToPdfBase64 } from "@features/contracts/services/pdf-utils";
+import {
+  textToPdfBase64,
+  textToPdfDownload,
+} from "@features/contracts/services/pdf-utils";
 import {
   createContractShare,
   getShareLink,
@@ -98,6 +101,22 @@ export class ContractDetail extends FASTElement {
       // You may want to show a notification or update contract status here
     } catch (err: any) {
       this.error = err.message || "Failed to send for signature.";
+      this.loading = false;
+    }
+  }
+
+  downloadContract() {
+    if (!this.contract) {
+      this.error = "No contract loaded.";
+      return;
+    }
+    this.loading = true;
+    this.error = null;
+    try {
+      textToPdfDownload(this.contract.content);
+    } catch (err: any) {
+      this.error = err.message || "Failed to download contract.";
+    } finally {
       this.loading = false;
     }
   }

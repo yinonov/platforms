@@ -67,6 +67,9 @@ export const ContractDetailTemplate = html<ContractDetail>`
             <sl-button variant="success" @click="${(x) => x.signContract()}"
               >חתום</sl-button
             >
+            <sl-button variant="success" @click="${(x) => x.downloadContract()}"
+              >הורד</sl-button
+            >
           </div>
         </sl-card>
       `
