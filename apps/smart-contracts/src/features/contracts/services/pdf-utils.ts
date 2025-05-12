@@ -2,6 +2,13 @@ import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 //@ts-ignore
 import fontkit from "@pdf-lib/fontkit";
 
+async function loadOpenSansFont(): Promise<Uint8Array> {
+  // Use the regular (non-condensed, non-bold) font for better Hebrew readability
+  const res = await fetch('/fonts/OpenSans-Static/OpenSans_Condensed-Regular.ttf');
+  if (!res.ok) throw new Error('Font file not found or not accessible');
+  return new Uint8Array(await res.arrayBuffer());
+}
+
 /**
  * Converts a plain text contract to a PDF and returns a base64 string.
  * @param content The contract text content
@@ -9,9 +16,11 @@ import fontkit from "@pdf-lib/fontkit";
  */
 export async function textToPdfBase64(content: string): Promise<string> {
   const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage();
+  pdfDoc.registerFontkit(fontkit);
+  let page = pdfDoc.addPage();
   const { width, height } = page.getSize();
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const fontBytes = await loadOpenSansFont();
+  const font = await pdfDoc.embedFont(fontBytes);
   const fontSize = 12;
   const margin = 40;
   const maxWidth = width - margin * 2;
@@ -33,25 +42,19 @@ export async function textToPdfBase64(content: string): Promise<string> {
     });
     if (currentLine) lines.push(currentLine);
     currentLine = "";
-    // Add empty line for paragraph break
     lines.push("");
   });
 
   let y = height - margin;
   for (const line of lines) {
     if (y < margin + fontSize) {
-      // Add new page if needed
-      page.drawText("...", {
-        x: margin,
-        y,
-        size: fontSize,
-        font,
-        color: rgb(0, 0, 0),
-      });
-      break;
+      // Add a new page and reset y
+      page = pdfDoc.addPage();
+      y = height - margin;
     }
+    const textWidth = font.widthOfTextAtSize(line, fontSize);
     page.drawText(line, {
-      x: margin,
+      x: width - margin - textWidth,
       y,
       size: fontSize,
       font,
@@ -59,7 +62,6 @@ export async function textToPdfBase64(content: string): Promise<string> {
     });
     y -= fontSize + 4;
   }
-
   const pdfBytes = await pdfDoc.save();
   return Buffer.from(pdfBytes).toString("base64");
 }
@@ -71,11 +73,10 @@ export async function textToPdfBase64(content: string): Promise<string> {
 export async function textToPdfDownload(content: string) {
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
-  const fontUrl = "/fonts/OpenSans-Static/OpenSans_Condensed-ExtraBold.ttf";
-  const OpenSans = await fetch(fontUrl).then((res) => res.arrayBuffer());
-  const page = pdfDoc.addPage();
+  let page = pdfDoc.addPage();
   const { width, height } = page.getSize();
-  const font = await pdfDoc.embedFont(OpenSans);
+  const fontBytes = await loadOpenSansFont();
+  const font = await pdfDoc.embedFont(fontBytes);
   const fontSize = 12;
   const margin = 40;
   const maxWidth = width - margin * 2;
@@ -97,25 +98,19 @@ export async function textToPdfDownload(content: string) {
     });
     if (currentLine) lines.push(currentLine);
     currentLine = "";
-    // Add empty line for paragraph break
     lines.push("");
   });
 
   let y = height - margin;
   for (const line of lines) {
     if (y < margin + fontSize) {
-      // Add new page if needed
-      page.drawText("...", {
-        x: margin,
-        y,
-        size: fontSize,
-        font,
-        color: rgb(0, 0, 0),
-      });
-      break;
+      // Add a new page and reset y
+      page = pdfDoc.addPage();
+      y = height - margin;
     }
+    const textWidth = font.widthOfTextAtSize(line, fontSize);
     page.drawText(line, {
-      x: margin,
+      x: width - margin - textWidth,
       y,
       size: fontSize,
       font,
@@ -123,7 +118,6 @@ export async function textToPdfDownload(content: string) {
     });
     y -= fontSize + 4;
   }
-
   const pdfBytes = await pdfDoc.save();
   const blob = new Blob([pdfBytes], { type: "application/pdf" });
   const url = URL.createObjectURL(blob);
