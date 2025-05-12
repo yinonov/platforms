@@ -4,8 +4,9 @@ import type { Contract } from "@features/contracts/models";
 import { functions } from "@services/firebase-config";
 import { httpsCallable } from "firebase/functions";
 import {
-  textToPdfBase64,
-  textToPdfDownload,
+  pdfToBase64,
+  pdfDownload,
+  textToPdf,
 } from "@features/contracts/services/pdf-utils";
 import {
   createContractShare,
@@ -77,12 +78,11 @@ export class ContractDetail extends FASTElement {
     this.loading = true;
     this.error = null;
     try {
-      // Adjust these fields as needed based on your contract model
       const signerEmail = "yinon@hotmail.com";
       const signerName = "Yinon";
-      // const signerEmail = this.contract.signerEmail || this.contract.userEmail;
-      // const signerName = this.contract.signerName || this.contract.userName;
-      const documentBase64 = textToPdfBase64(this.contract.content);
+      // Generate PDF bytes from contract content
+      const pdfBytes = await textToPdf(this.contract.content);
+      const documentBase64 = await pdfToBase64(pdfBytes);
       const documentName = this.contract.title || "contract.pdf";
       if (!signerEmail || !signerName || !documentBase64) {
         this.error = "Missing contract data for signature.";
@@ -96,16 +96,14 @@ export class ContractDetail extends FASTElement {
         documentBase64,
         documentName,
       });
-      // Optionally handle result.data.envelopeId
       this.loading = false;
-      // You may want to show a notification or update contract status here
     } catch (err: any) {
       this.error = err.message || "Failed to send for signature.";
       this.loading = false;
     }
   }
 
-  downloadContract() {
+  async downloadContract() {
     if (!this.contract) {
       this.error = "No contract loaded.";
       return;
@@ -113,7 +111,8 @@ export class ContractDetail extends FASTElement {
     this.loading = true;
     this.error = null;
     try {
-      textToPdfDownload(this.contract.content);
+      const pdfBytes = await textToPdf(this.contract.content);
+      await pdfDownload(pdfBytes);
     } catch (err: any) {
       this.error = err.message || "Failed to download contract.";
     } finally {
