@@ -6,7 +6,7 @@ import fontkit from "@pdf-lib/fontkit";
 export async function textToPdf(content: string): Promise<Uint8Array> {
   // Load font as an implementation detail
   const res = await fetch(
-    "/fonts/OpenSans-Static/OpenSans_Condensed-Regular.ttf"
+    "/fonts/OpenSans/static/OpenSans_Condensed-Regular.ttf"
   );
   if (!res.ok) throw new Error("Font file not found or not accessible");
   const fontBytes = new Uint8Array(await res.arrayBuffer());

@@ -5,7 +5,6 @@ export const AppRootStyles = css`
   :host {
     display: block;
     padding: 1rem;
-    font-family: sans-serif;
   }
 
   header {
