@@ -1,12 +1,12 @@
 import * as functions from "firebase-functions";
-import {VertexAI} from "@google-cloud/vertexai";
+import { VertexAI } from "@google-cloud/vertexai";
 // import {nanoid} from "nanoid";
 // import * as admin from "firebase-admin";
 
 const project = "smart-contracts-254e8";
 const location = "us-central1";
 
-const vertexAI = new VertexAI({project, location});
+const vertexAI = new VertexAI({ project, location });
 const model = vertexAI.preview.getGenerativeModel({
   model: "gemini-1.5-pro",
 });
@@ -28,39 +28,29 @@ async function generateContractText(
 ): Promise<{ contractText: string }> {
   try {
     const result = await model.generateContent({
-      contents: [{role: "user", parts: [{text: prompt}]}],
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
     });
     const response = result.response.candidates?.[0]?.content?.parts?.[0]?.text;
-    return {contractText: response || "לא התקבל טקסט מהמודל"};
+    return { contractText: response || "לא התקבל טקסט מהמודל" };
   } catch (error) {
-    return {contractText: errorMsg};
+    return { contractText: errorMsg };
   }
 }
 
 // Rental contract generator
 export const generateRentalContract = functions.https.onCall(
   async (request) => {
-    const {landlord, tenant, address, rent, startDate, endDate} =
+    const { landlord, tenant, address, rent, startDate, endDate } =
       request.data;
     const prompt = `
 אתה משמש כעורך דין מומחה לדיני מקרקעין ושכירות בישראל,
 עם ניסיון רב בניסוח חוזים תקניים למגורים.
-כתוב חוזה שכירות לדירה בהתאם למבנה המקובל על לשכת עורכי הדין בישראל,
-בהשראת חוזה השכירות לדוגמה של עיריית תל אביב (2023).
+כתוב חוזה שכירות לדירה בהתאם למבנה ולניסוח
+של חוזה השכירות לדוגמה של עיריית תל אביב (2023),
+הנמצא בקישור: https://www.tel-aviv.gov.il/Forms/%D7%97%D7%95%D7%96%D7%94%20%D7%A2%D7%99%D7%A8%D7%95%D7%A0%D7%99%20%D7%9E%D7%95%D7%9E%D7%9C%D7%A5%20-%20%D7%A2%D7%93%D7%9B%D7%95%D7%9F%202023.pdf
 
-מטרתך: ליצור חוזה ברור, מדויק ומלא,
-המיועד לשימוש מעשי בין שני צדדים, כולל כל הסעיפים הבאים:
-
-1. פרטי הצדדים
-2. תיאור הנכס
-3. מועד תחילת וסיום תקופת השכירות
-4. דמי שכירות, אופן תשלום, עדכון
-5. ערבויות וביטחונות
-6. תיקונים, תחזוקה ושיפוצים
-7. הגבלת שימוש והחזקת בעלי חיים
-8. אחריות לנזקים וביטוחים
-9. פינוי מוקדם / הפרת חוזה
-10. סמכות שיפוט וחתימות
+מטרתך: ליצור חוזה ברור, מדויק ומלא, המיועד לשימוש מעשי בין שני צדדים,
+תוך שמירה על מבנה, כותרות וסעיפים כפי שמופיעים בחוזה המקורי.
 
 פרטי השכירות:
 - משכיר: ${landlord}
@@ -83,7 +73,7 @@ export const generateRentalContract = functions.https.onCall(
 // Service contract generator
 export const generateServiceContract = functions.https.onCall(
   async (request) => {
-    const {provider, client, amount, startDate, endDate} = request.data;
+    const { provider, client, amount, startDate, endDate } = request.data;
     const prompt = `
 אתה משמש כעורך דין מומחה לדיני חוזים ושירותים בישראל.
 כתוב הסכם מתן שירותים מקצועי וברור בין ספק ללקוח, כולל הסעיפים הבאים:
@@ -112,7 +102,7 @@ export const generateServiceContract = functions.https.onCall(
 // Last will contract generator
 export const generateLastWillContract = functions.https.onCall(
   async (request) => {
-    const {testator, heirs, executor, assets, date} = request.data;
+    const { testator, heirs, executor, assets, date } = request.data;
     const prompt = `
 אתה משמש כעורך דין מומחה לדיני ירושה וצוואות בישראל.
 כתוב נוסח צוואה תקני וברור, הכולל את הסעיפים הבאים:
