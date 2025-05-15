@@ -38,7 +38,7 @@ const getField = html<string>`<sl-input
 
 export const ContractFormTemplate = html<ContractForm>`
   ${when(
-    (x: ContractForm) => x.metadata,
+    (x: ContractForm) => x.fields,
     html<ContractForm>`
       <sl-card style="max-width: 100%; width: 40rem; display: block;">
         <form
@@ -50,10 +50,7 @@ export const ContractFormTemplate = html<ContractForm>`
         >
           <p>אנא מלא את הפרטים הבאים:</p>
 
-          ${repeat((x) => x.metadata, getField)}
-          <sl-button type="submit" variant="primary" style="width: 100%;"
-            >צור חוזה</sl-button
-          >
+          ${repeat((x) => x.fields, getField)}
         </form>
       </sl-card>
     `,

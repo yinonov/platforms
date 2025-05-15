@@ -3,12 +3,17 @@ import { FASTElement, attr, observable } from "@microsoft/fast-element";
 import { type ContractField } from "@features/contracts/templates/contract-templates";
 
 export class ContractForm extends FASTElement {
-  @observable metadata?: ContractField[];
+  @observable fields: ContractField[] = [];
+  @observable values: Record<string, any> = {};
   form?: HTMLFormElement;
 
+  handleInput(e: Event) {
+    const target = e.target as HTMLInputElement;
+    this.values[target.name] = target.value;
+    this.$emit("change", { values: { ...this.values } });
+  }
+
   submit() {
-    const formData = new FormData(this.form);
-    const metadata = Object.fromEntries((formData as any).entries());
-    this.$emit("submit", { metadata });
+    this.$emit("submit", { values: { ...this.values } });
   }
 }

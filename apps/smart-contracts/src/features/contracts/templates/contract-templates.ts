@@ -8,131 +8,160 @@ export enum FieldType {
   Date = "date",
 }
 
-export interface ContractField<T = any> {
+export interface ContractField {
   name: string;
   label: string;
   type: FieldType;
-  value?: T;
+  value?: any;
 }
 
-export abstract class ContractTemplate<T extends Record<string, any>> {
+export interface ContractStep {
+  title: string;
+  fields: ContractField[];
+}
+
+export abstract class ContractTemplate {
   abstract type: string;
-  abstract label: string;
   abstract title: string;
-  abstract metadata: ContractField[];
+  abstract steps: ContractStep[];
 }
 
-export interface RentalMetadata {
-  landlord: string;
-  tenant: string;
-  address: string;
-  rent: number;
-  startDate: Timestamp;
-  endDate: Timestamp;
-  date: Timestamp;
-}
-
-export class RentalContractTemplate extends ContractTemplate<RentalMetadata> {
+export class RentalContractTemplate extends ContractTemplate {
   type = "rental";
-  label = "חוזה שכירות";
   title = "הסכם שכירות";
-  metadata = [
-    { name: "landlord", label: "המשכיר", type: FieldType.Text },
-    { name: "tenant", label: "השוכר", type: FieldType.Text },
-    { name: "address", label: "כתובת הנכס", type: FieldType.Text },
+  steps = [
     {
-      name: "rent",
-      label: "דמי שכירות חודשי",
-      type: FieldType.Number,
-      value: 0,
+      title: "פרטי הצדדים",
+      fields: [
+        { name: "landlord", label: "המשכיר", type: FieldType.Text },
+        { name: "tenant", label: "השוכר", type: FieldType.Text },
+      ],
     },
     {
-      name: "startDate",
-      label: "תאריך התחלה",
-      type: FieldType.Date,
-      value: Timestamp.fromDate(new Date()),
+      title: "פרטי הנכס",
+      fields: [{ name: "address", label: "כתובת הנכס", type: FieldType.Text }],
     },
     {
-      name: "endDate",
-      label: "תאריך סיום",
-      type: FieldType.Date,
-      value: Timestamp.fromDate(new Date()),
+      title: "פרטי השכירות",
+      fields: [
+        {
+          name: "rent",
+          label: "דמי שכירות חודשי",
+          type: FieldType.Number,
+          value: 0,
+        },
+        {
+          name: "startDate",
+          label: "תאריך התחלה",
+          type: FieldType.Date,
+          value: Timestamp.fromDate(new Date()),
+        },
+        {
+          name: "endDate",
+          label: "תאריך סיום",
+          type: FieldType.Date,
+          value: Timestamp.fromDate(new Date()),
+        },
+      ],
     },
     {
-      name: "date",
-      label: "תאריך יצירה",
-      type: FieldType.Date,
-      value: Timestamp.fromDate(new Date()),
+      title: "תאריך יצירה",
+      fields: [
+        {
+          name: "date",
+          label: "תאריך יצירה",
+          type: FieldType.Date,
+          value: Timestamp.fromDate(new Date()),
+        },
+      ],
     },
   ];
 }
 
-export interface ServiceMetadata {
-  provider: string;
-  client: string;
-  amount: number;
-  startDate: Timestamp;
-  endDate: Timestamp;
-  date: Timestamp;
-}
-
-export class ServiceContractTemplate extends ContractTemplate<ServiceMetadata> {
+export class ServiceContractTemplate extends ContractTemplate {
   type = "service";
-  label = "הסכם שירות";
   title = "הסכם מתן שירותים";
-  metadata = [
-    { name: "provider", label: "הספק", type: FieldType.Text },
-    { name: "client", label: "הלקוח", type: FieldType.Text },
-    { name: "amount", label: "סכום", type: FieldType.Number, value: 0 },
+  steps = [
     {
-      name: "startDate",
-      label: "תאריך התחלה",
-      type: FieldType.Date,
-      value: Timestamp.fromDate(new Date()),
+      title: "פרטי הצדדים",
+      fields: [
+        { name: "provider", label: "הספק", type: FieldType.Text },
+        { name: "client", label: "הלקוח", type: FieldType.Text },
+      ],
     },
     {
-      name: "endDate",
-      label: "תאריך סיום",
-      type: FieldType.Date,
-      value: Timestamp.fromDate(new Date()),
+      title: "פרטי השירות",
+      fields: [
+        { name: "amount", label: "סכום", type: FieldType.Number, value: 0 },
+      ],
     },
     {
-      name: "date",
-      label: "תאריך יצירה",
-      type: FieldType.Date,
-      value: Timestamp.fromDate(new Date()),
+      title: "תקופת השירות",
+      fields: [
+        {
+          name: "startDate",
+          label: "תאריך התחלה",
+          type: FieldType.Date,
+          value: Timestamp.fromDate(new Date()),
+        },
+        {
+          name: "endDate",
+          label: "תאריך סיום",
+          type: FieldType.Date,
+          value: Timestamp.fromDate(new Date()),
+        },
+      ],
+    },
+    {
+      title: "תאריך יצירה",
+      fields: [
+        {
+          name: "date",
+          label: "תאריך יצירה",
+          type: FieldType.Date,
+          value: Timestamp.fromDate(new Date()),
+        },
+      ],
     },
   ];
 }
 
-export interface LastWillMetadata {
-  testator: string;
-  heirs: string;
-  executor: string;
-  assets: string;
-  date: Timestamp;
-}
-
-export class LastWillContractTemplate extends ContractTemplate<LastWillMetadata> {
+export class LastWillContractTemplate extends ContractTemplate {
   type = "last-will";
-  label = "צוואה";
   title = "צוואה";
-  metadata = [
-    { name: "testator", label: "המצווה", type: FieldType.Text },
-    { name: "heirs", label: "יורשים", type: FieldType.Text },
-    { name: "executor", label: "מבצע צוואה", type: FieldType.Text },
-    { name: "assets", label: "נכסים/רכוש", type: FieldType.Text },
+  steps = [
     {
-      name: "date",
-      label: "תאריך עריכת הצוואה",
-      type: FieldType.Date,
-      value: Timestamp.fromDate(new Date()),
+      title: "פרטי המצווה",
+      fields: [{ name: "testator", label: "המצווה", type: FieldType.Text }],
+    },
+    {
+      title: "פרטי היורשים",
+      fields: [{ name: "heirs", label: "יורשים", type: FieldType.Text }],
+    },
+    {
+      title: "פרטי המוציא לפועל",
+      fields: [{ name: "executor", label: "מבצע צוואה", type: FieldType.Text }],
+    },
+    {
+      title: "נכסים/רכוש",
+      fields: [{ name: "assets", label: "נכסים/רכוש", type: FieldType.Text }],
+    },
+    {
+      title: "תאריך עריכת הצוואה",
+      fields: [
+        {
+          name: "date",
+          label: "תאריך עריכת הצוואה",
+          type: FieldType.Date,
+          value: Timestamp.fromDate(new Date()),
+        },
+      ],
     },
   ];
 }
 
-export const contractTemplates = [
-  new RentalContractTemplate(),
-  new ServiceContractTemplate(),
-  new LastWillContractTemplate(),
-];
+export const contractTemplateMap: Record<string, ContractTemplate> = {
+  rental: new RentalContractTemplate(),
+  service: new ServiceContractTemplate(),
+  "last-will": new LastWillContractTemplate(),
+};

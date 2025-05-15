@@ -53,14 +53,15 @@ export const routes: Route[] = [
       return;
     },
   },
-  {
-    path: "/edit-contract/:id",
-    component: "sc-contract-edit",
-    action: async () => {
-      await import("@features/contracts/pages/contract-edit");
-      return;
-    },
-  },
+  // ! not sure this is correct at this point
+  // {
+  //   path: "/edit-contract/:id",
+  //   component: "sc-contract-edit",
+  //   action: async () => {
+  //     await import("@features/contracts/pages/contract-edit");
+  //     return;
+  //   },
+  // },
   {
     path: "/contract/:id",
     // component: "sc-contract-detail",

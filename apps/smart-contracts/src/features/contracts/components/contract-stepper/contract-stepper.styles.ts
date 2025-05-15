@@ -1,3 +1,3 @@
 import { css } from "@microsoft/fast-element";
 
-export const ContractEditStyles = css``;
+export const ContractStepperStyles = css``;
