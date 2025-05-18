@@ -2,16 +2,33 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Contract documents
     match /contracts/{contractId} {
-      // Only allow the creator to read
-      allow read: if request.auth != null && resource.data.createdBy == request.auth.uid;
+      // Allow read if user has access (viewer/editor/owner)
+      allow read: if exists(/databases/$(database)/documents/contractAccess/$(contractId + '_' + request.auth.uid)) &&
+        get(/databases/$(database)/documents/contractAccess/$(contractId + '_' + request.auth.uid)).data.role in ['viewer', 'editor', 'owner'];
 
-      // Only allow users to create contracts with their own UID
+      // Allow update if user is editor or owner
+      allow update: if exists(/databases/$(database)/documents/contractAccess/$(contractId + '_' + request.auth.uid)) &&
+        get(/databases/$(database)/documents/contractAccess/$(contractId + '_' + request.auth.uid)).data.role in ['editor', 'owner'];
+
+      // Allow delete if user is owner
+      allow delete: if exists(/databases/$(database)/documents/contractAccess/$(contractId + '_' + request.auth.uid)) &&
+        get(/databases/$(database)/documents/contractAccess/$(contractId + '_' + request.auth.uid)).data.role == 'owner';
+
+      // Allow create if user is authenticated and is the creator
       allow create: if request.auth != null && request.resource.data.createdBy == request.auth.uid;
-
-      // Only allow users to update/delete their own contracts
-      allow update, delete: if request.auth != null && resource.data.createdBy == request.auth.uid;
     }
-    // Add other collections/rules as needed
+
+    // ContractAccess join collection
+    match /contractAccess/{accessId} {
+      // Allow users to read their own access records
+      allow read: if request.auth != null && resource.data.uid == request.auth.uid;
+      // Allow users to create access records for themselves (e.g., accepting an invite or owner on contract creation)
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      // Allow users to delete their own access record (e.g., leave contract), but only if not owner
+      allow delete: if request.auth != null && resource.data.uid == request.auth.uid && resource.data.role != 'owner';
+      // Only allow role changes by owner (not implemented here, but can be added as needed)
+    }
   }
 }

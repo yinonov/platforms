@@ -1,3 +1,5 @@
+import "@features/contracts/components/contract-access-manager";
+
 import "@shoelace-style/shoelace/dist/components/card/card.js";
 import "@shoelace-style/shoelace/dist/components/button/button.js";
 import "@shoelace-style/shoelace/dist/components/spinner/spinner.js";

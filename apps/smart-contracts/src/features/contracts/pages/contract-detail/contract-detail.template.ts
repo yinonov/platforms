@@ -57,6 +57,9 @@ export const ContractDetailTemplate = html<ContractDetail>`
             </pre
             >
           </div>
+          <sc-contract-access-manager
+            contract-id="${(x) => x.contractId}"
+          ></sc-contract-access-manager>
           <div
             class="contract-actions"
             style="display: flex; gap: 1rem; justify-content: flex-end;"

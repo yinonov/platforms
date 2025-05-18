@@ -21,6 +21,7 @@ export class ContractDetail extends FASTElement {
   @observable shareLink: string | null = null;
   @observable shareError: string | null = null;
   @observable shareLoading = false;
+
   private unsubscribe: (() => void) | null = null;
 
   connectedCallback() {

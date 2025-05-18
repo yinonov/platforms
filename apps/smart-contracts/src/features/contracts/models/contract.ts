@@ -1,4 +1,5 @@
 // src/models/contract.ts
+export type Role = "viewer" | "editor" | "owner";
 
 export interface Contract {
   id?: string;
@@ -8,5 +9,23 @@ export interface Contract {
   metadata: Record<string, string>;
   status: "draft" | "generated" | "signed";
   createdBy: string;
+  createdAt: string;
+}
+
+// Join collection for contract-user access
+export interface ContractAccess {
+  contractId: string;
+  uid: string;
+  role: Role;
+  addedAt: string;
+}
+
+export interface Invitation {
+  id?: string;
+  contractId: string;
+  email: string;
+  role: Role;
+  status: "pending" | "accepted" | "expired";
+  expiry: string; // ISO date string
   createdAt: string;
 }

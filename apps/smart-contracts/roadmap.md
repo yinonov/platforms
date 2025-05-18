@@ -19,8 +19,20 @@
 
 ## Phase 3: Collaboration & Workflow
 
+-[ ] Break contract generation to sections
+-[ ] Share contract with users
+    - [ ] Design contract-user sharing data model (many-to-many)
+    - [ ] Implement invitation flow (invite by email, handle new/existing users)
+    - [ ] UI for managing shared users (add/remove, view permissions)
+    - [ ] Access control enforcement in backend and frontend
+    - [ ] Notification/email for invitations and sharing events
 -[ ] Multi-user editing and comments on contracts
--[ ] Approval workflows and e-signature integration
+    - [ ] Real-time collaborative editing (Firestore or similar)
+    - [ ] User presence indicators (who is viewing/editing)
+    - [ ] Inline and thread-based comments on contract sections
+    - [ ] Comment notification system
+    - [ ] Versioning and conflict resolution for edits
+-[x] Approval workflows and e-signature integration
 -[ ] Audit trails for contract changes and signatures
 -[ ] Reminders and contract lifecycle management
 

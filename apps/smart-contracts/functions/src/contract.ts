@@ -1,18 +1,18 @@
 import * as functions from "firebase-functions";
-import { VertexAI } from "@google-cloud/vertexai";
-// import {nanoid} from "nanoid";
-// import * as admin from "firebase-admin";
+import {VertexAI} from "@google-cloud/vertexai";
+import * as admin from "firebase-admin";
 
 const project = "smart-contracts-254e8";
 const location = "us-central1";
 
-const vertexAI = new VertexAI({ project, location });
+const vertexAI = new VertexAI({project, location});
 const model = vertexAI.preview.getGenerativeModel({
   model: "gemini-1.5-pro",
 });
 
-// const db = admin.firestore();
-// const CONTRACT_SHARES_COLLECTION = "contractShares";
+if (!admin.apps.length) {
+  admin.initializeApp();
+}
 
 /**
  * Generates contract text based on a given prompt using the Vertex AI model.
@@ -28,19 +28,19 @@ async function generateContractText(
 ): Promise<{ contractText: string }> {
   try {
     const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      contents: [{role: "user", parts: [{text: prompt}]}],
     });
     const response = result.response.candidates?.[0]?.content?.parts?.[0]?.text;
-    return { contractText: response || "לא התקבל טקסט מהמודל" };
+    return {contractText: response || "לא התקבל טקסט מהמודל"};
   } catch (error) {
-    return { contractText: errorMsg };
+    return {contractText: errorMsg};
   }
 }
 
 // Rental contract generator
 export const generateRentalContract = functions.https.onCall(
   async (request) => {
-    const { landlord, tenant, address, rent, startDate, endDate } =
+    const {landlord, tenant, address, rent, startDate, endDate} =
       request.data;
     const prompt = `
 אתה משמש כעורך דין מומחה לדיני מקרקעין ושכירות בישראל,
@@ -73,7 +73,7 @@ export const generateRentalContract = functions.https.onCall(
 // Service contract generator
 export const generateServiceContract = functions.https.onCall(
   async (request) => {
-    const { provider, client, amount, startDate, endDate } = request.data;
+    const {provider, client, amount, startDate, endDate} = request.data;
     const prompt = `
 אתה משמש כעורך דין מומחה לדיני חוזים ושירותים בישראל.
 כתוב הסכם מתן שירותים מקצועי וברור בין ספק ללקוח, כולל הסעיפים הבאים:
@@ -102,7 +102,7 @@ export const generateServiceContract = functions.https.onCall(
 // Last will contract generator
 export const generateLastWillContract = functions.https.onCall(
   async (request) => {
-    const { testator, heirs, executor, assets, date } = request.data;
+    const {testator, heirs, executor, assets, date} = request.data;
     const prompt = `
 אתה משמש כעורך דין מומחה לדיני ירושה וצוואות בישראל.
 כתוב נוסח צוואה תקני וברור, הכולל את הסעיפים הבאים:
@@ -123,31 +123,3 @@ export const generateLastWillContract = functions.https.onCall(
     return generateContractText(prompt, "אירעה שגיאה ביצירת הצוואה");
   }
 );
-
-// Create contract share link
-// export const createContractShare = functions.https.onCall(
-//   async (data, context) => {
-//     const {contractId, recipientEmail, expiresInHours = 72} = data;
-//     if (!contractId || !recipientEmail) {
-//       throw new functions.https.HttpsError(
-//         "invalid-argument",
-//         "Missing contractId or recipientEmail"
-//       );
-//     }
-//     const linkId = nanoid(32);
-//     const createdAt = admin.firestore.Timestamp.now();
-//     const expiresAt = admin.firestore.Timestamp.fromDate(
-//       new Date(Date.now() + expiresInHours * 60 * 60 * 1000)
-//     );
-//     const share = {
-//       contractId,
-//       recipientEmail,
-//       linkId,
-//       createdAt,
-//       expiresAt,
-//       status: "pending",
-//     };
-//     await db.collection(CONTRACT_SHARES_COLLECTION).add(share);
-//     return {...share};
-//   }
-// );
