@@ -84,7 +84,7 @@ export const ContractAccessManagerTemplate = html<ContractAccessManager>`
                       html<any>`<sl-button
                         size="small"
                         variant="danger"
-                        @click=${(x, c) => x.removeUser(c.parent?.uid)}
+                        @click=${(x, c) => c.parent.removeUser(c.parent?.uid)}
                         >הסר</sl-button
                       >`
                     )}
