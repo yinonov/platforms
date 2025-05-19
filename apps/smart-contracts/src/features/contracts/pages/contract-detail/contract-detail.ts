@@ -8,6 +8,7 @@ import {
   pdfDownload,
   textToPdf,
 } from "@features/contracts/services/pdf-utils";
+import { notificationService } from "@components/ui/src/services";
 
 export class ContractDetail extends FASTElement {
   @attr({ attribute: "contract-id" }) contractId = "";
@@ -63,7 +64,16 @@ export class ContractDetail extends FASTElement {
         documentBase64,
         documentName,
       });
+
       this.loading = false;
+
+      notificationService.showToast(
+        "Contract sent for signature to " + signerEmail,
+        {
+          variant: "success",
+          duration: 3000,
+        }
+      );
     } catch (err: any) {
       this.error = err.message || "Failed to send for signature.";
       this.loading = false;
