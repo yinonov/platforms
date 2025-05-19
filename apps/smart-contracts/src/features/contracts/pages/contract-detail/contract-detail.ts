@@ -8,19 +8,12 @@ import {
   pdfDownload,
   textToPdf,
 } from "@features/contracts/services/pdf-utils";
-import {
-  createContractShare,
-  getShareLink,
-} from "@features/contracts/services/contract-share-service";
 
 export class ContractDetail extends FASTElement {
   @attr({ attribute: "contract-id" }) contractId = "";
   @observable contract: Contract | null = null;
   @observable loading = false;
   @observable error: string | null = null;
-  @observable shareLink: string | null = null;
-  @observable shareError: string | null = null;
-  @observable shareLoading = false;
 
   private unsubscribe: (() => void) | null = null;
 
@@ -41,33 +34,6 @@ export class ContractDetail extends FASTElement {
     if (this.unsubscribe) {
       this.unsubscribe();
       this.unsubscribe = null;
-    }
-  }
-
-  async shareContract() {
-    if (!this.contract) {
-      this.shareError = "No contract loaded.";
-      return;
-    }
-    this.shareLoading = true;
-    this.shareError = null;
-    try {
-      // Prompt for recipient email (replace with UI input as needed)
-      const recipientEmail = prompt("Enter recipient email:");
-      if (!recipientEmail) {
-        this.shareError = "Recipient email is required.";
-        this.shareLoading = false;
-        return;
-      }
-      const share = await createContractShare({
-        contractId: this.contract.id ?? "",
-        recipientEmail,
-      });
-      this.shareLink = getShareLink(share.linkId);
-    } catch (err: any) {
-      this.shareError = err.message || "Failed to create share link.";
-    } finally {
-      this.shareLoading = false;
     }
   }
 

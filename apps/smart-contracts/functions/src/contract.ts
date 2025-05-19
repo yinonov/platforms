@@ -123,3 +123,42 @@ export const generateLastWillContract = functions.https.onCall(
     return generateContractText(prompt, "אירעה שגיאה ביצירת הצוואה");
   }
 );
+
+// Create contract and contractAccess atomically
+export const createContractWithAccess = functions.https.onCall(
+  async (request) => {
+    if (!request.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "User must be authenticated"
+      );
+    }
+    const uid = request.auth.uid;
+    const {contractData} = request.data;
+
+    const db = admin.firestore();
+    const contractRef = db.collection("contracts").doc();
+    const accessRef = db
+      .collection("contractAccess")
+      .doc(`${contractRef.id}_${uid}`);
+    const now = new Date().toISOString();
+
+    const contract = {
+      ...contractData,
+      createdAt: now,
+    };
+    const access = {
+      contractId: contractRef.id,
+      uid,
+      role: "owner",
+      addedAt: now,
+    };
+
+    const batch = db.batch();
+    batch.set(contractRef, contract);
+    batch.set(accessRef, access);
+    await batch.commit();
+
+    return {contractId: contractRef.id};
+  }
+);

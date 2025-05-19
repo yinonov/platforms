@@ -1,5 +1,6 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+import {onDocumentCreated} from "firebase-functions/v2/firestore";
 
 const db = admin.firestore();
 const CONTRACT_ACCESS_COLLECTION = "contractAccess";
@@ -90,3 +91,24 @@ export const createContractShare = functions.https.onCall(async (data: any) => {
   await db.collection("contractShares").doc(linkId).set(share);
   return {...share};
 });
+
+// Firestore trigger: when a contract is created,
+// add contractAccess for the creator
+export const onContractCreated = onDocumentCreated(
+  "contracts/{contractId}",
+  async (event) => {
+    const contract = event.data?.data();
+    const contractId = event.params.contractId;
+    const uid = contract?.createdBy;
+    if (!uid) return;
+    await db
+      .collection(CONTRACT_ACCESS_COLLECTION)
+      .doc(`${contractId}_${uid}`)
+      .set({
+        contractId,
+        uid,
+        role: "owner",
+        addedAt: new Date().toISOString(),
+      });
+  }
+);

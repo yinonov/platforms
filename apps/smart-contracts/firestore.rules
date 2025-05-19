@@ -16,8 +16,8 @@ service cloud.firestore {
       allow delete: if exists(/databases/$(database)/documents/contractAccess/$(contractId + '_' + request.auth.uid)) &&
         get(/databases/$(database)/documents/contractAccess/$(contractId + '_' + request.auth.uid)).data.role == 'owner';
 
-      // Allow create if user is authenticated and is the creator
-      allow create: if request.auth != null && request.resource.data.createdBy == request.auth.uid;
+      // Allow create if user is authenticated
+      allow create: if request.auth != null;
     }
 
     // ContractAccess join collection

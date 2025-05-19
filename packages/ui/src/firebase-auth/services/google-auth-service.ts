@@ -7,6 +7,10 @@ import {
 
 const provider = new GoogleAuthProvider();
 
+provider.setCustomParameters({
+  prompt: "select_account",
+});
+
 /**
  * התחברות עם חשבון Google
  */

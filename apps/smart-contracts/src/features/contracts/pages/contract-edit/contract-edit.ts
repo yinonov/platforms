@@ -6,7 +6,6 @@ import {
 import { auth, functions } from "@services/index";
 import { httpsCallable } from "firebase/functions";
 import type { Contract } from "@features/contracts/models";
-import { createContract } from "@features/contracts/services";
 import { Router } from "@vaadin/router";
 
 export class ContractEdit extends FASTElement {
@@ -52,16 +51,24 @@ export class ContractEdit extends FASTElement {
       return;
     }
     const content = (response.data as any).contractText;
-    const base = {
-      type: this.template.type,
-      title: this.template.title,
-      content,
-      metadata: values,
-      status: "generated" as const, // <-- fix here
-      createdBy: auth.currentUser.uid,
-      createdAt: new Date().toISOString(),
+    // Call backend function to create contract and contractAccess atomically
+    const createContractWithAccess = httpsCallable(
+      functions,
+      "createContractWithAccess"
+    );
+    const contractData = {
+      contractType: this.template.type,
+      contractData: {
+        type: this.template.type,
+        title: this.template.title,
+        content,
+        metadata: values,
+        status: "generated",
+        createdAt: new Date().toISOString(),
+      },
     };
-    const contractId = await createContract(base);
+    const result = await createContractWithAccess(contractData);
+    const contractId = (result.data as { contractId?: string })?.contractId;
     Router.go(`/contract/${contractId}`);
   }
 }

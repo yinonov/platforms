@@ -8,7 +8,7 @@ export interface Contract {
   content: string;
   metadata: Record<string, string>;
   status: "draft" | "generated" | "signed";
-  createdBy: string;
+  // createdBy: string; // using contractAccess collection instead
   createdAt: string;
 }
 

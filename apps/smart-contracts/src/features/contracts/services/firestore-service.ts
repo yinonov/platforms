@@ -10,6 +10,7 @@ import {
   query,
   where,
   orderBy,
+  documentId,
 } from "firebase/firestore";
 import type { Contract } from "@features/contracts/models";
 import { onAuthStateChanged } from "firebase/auth";
@@ -37,28 +38,68 @@ export const getContract = async (contractId: string) => {
 export const listenToContracts = (
   callback: (contracts: Contract[]) => void
 ) => {
-  let unsubscribeFirestore: (() => void) | null = null;
+  let unsubscribeAccess: (() => void) | null = null;
+  let unsubscribeContracts: (() => void) | null = null;
 
   const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-    if (unsubscribeFirestore) {
-      unsubscribeFirestore();
-      unsubscribeFirestore = null;
+    if (unsubscribeAccess) {
+      unsubscribeAccess();
+      unsubscribeAccess = null;
+    }
+    if (unsubscribeContracts) {
+      unsubscribeContracts();
+      unsubscribeContracts = null;
     }
 
     if (user) {
-      const contractsRef = collection(db, "contracts");
-      const q = query(
-        contractsRef,
-        where("createdBy", "==", user.uid),
-        orderBy("createdAt", "desc")
-      );
-
-      unsubscribeFirestore = onSnapshot(q, (querySnapshot) => {
-        const contracts: Contract[] = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...(doc.data() as Omit<Contract, "id">),
-        }));
-        callback(contracts);
+      const accessRef = collection(db, "contractAccess");
+      const accessQuery = query(accessRef, where("uid", "==", user.uid));
+      unsubscribeAccess = onSnapshot(accessQuery, async (accessSnapshot) => {
+        const contractIds = accessSnapshot.docs.map(
+          (doc) => doc.data().contractId
+        );
+        if (unsubscribeContracts) {
+          unsubscribeContracts();
+          unsubscribeContracts = null;
+        }
+        if (contractIds.length === 0) {
+          callback([]);
+          return;
+        }
+        // Firestore 'in' queries are limited to 10 items. If more, split into chunks.
+        const chunkSize = 10;
+        const chunks = [];
+        for (let i = 0; i < contractIds.length; i += chunkSize) {
+          chunks.push(contractIds.slice(i, i + chunkSize));
+        }
+        let allContracts: Contract[] = [];
+        let unsubscribers: (() => void)[] = [];
+        let completed = 0;
+        chunks.forEach((chunk) => {
+          const contractsRef = collection(db, "contracts");
+          const contractsQuery = query(contractsRef, where(documentId(), "in", chunk));
+          console.log("contractsQuery", contractsQuery);
+          const unsub = onSnapshot(contractsQuery, (contractsSnapshot) => {
+            // Merge all contracts from all chunks
+            const contracts: Contract[] = contractsSnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...(doc.data() as Omit<Contract, "id">),
+            }));
+            // Replace contracts from this chunk in allContracts
+            allContracts = allContracts.filter(
+              (c) => !chunk.includes(c.id as string)
+            );
+            allContracts = allContracts.concat(contracts);
+            completed++;
+            if (completed === chunks.length) {
+              callback(allContracts);
+            }
+          });
+          unsubscribers.push(unsub);
+        });
+        unsubscribeContracts = () => {
+          unsubscribers.forEach((u) => u());
+        };
       });
     } else {
       callback([]); // אין יוזר? רשימה ריקה
@@ -66,7 +107,8 @@ export const listenToContracts = (
   });
 
   return () => {
-    if (unsubscribeFirestore) unsubscribeFirestore();
+    if (unsubscribeAccess) unsubscribeAccess();
+    if (unsubscribeContracts) unsubscribeContracts();
     unsubscribeAuth();
   };
 };

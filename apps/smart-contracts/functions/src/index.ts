@@ -2,6 +2,7 @@ export {
   generateRentalContract,
   generateServiceContract,
   generateLastWillContract,
+  createContractWithAccess,
 } from "./contract";
 export {
   grantContractAccess,
