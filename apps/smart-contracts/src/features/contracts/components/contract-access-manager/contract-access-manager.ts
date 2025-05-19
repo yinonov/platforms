@@ -1,5 +1,5 @@
 import { FASTElement, attr, observable } from "@microsoft/fast-element";
-import { functions } from "@services/firebase-config";
+import { auth, functions } from "@services/firebase-config";
 import { httpsCallable } from "firebase/functions";
 import type { ContractAccess, Role } from "@features/contracts/models";
 
@@ -70,5 +70,12 @@ export class ContractAccessManager extends FASTElement {
     } catch (err: any) {
       this.accessError = err.message || "Failed to remove user.";
     }
+  }
+
+  // Returns true if the current viewer is the contract owner
+  get viewerIsOwner(): boolean {
+    return this.accessUsers.some(
+      ({ role, uid }) => role === "owner" && uid === auth?.currentUser?.uid
+    );
   }
 }

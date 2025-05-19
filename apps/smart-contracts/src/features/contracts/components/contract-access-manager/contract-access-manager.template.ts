@@ -4,45 +4,48 @@ import { Role } from "@features/contracts/models";
 
 export const ContractAccessManagerTemplate = html<ContractAccessManager>`
   <div style="margin-bottom: 2rem;">
-    <h3>ניהול שיתוף החוזה</h3>
-    <form
-      @submit=${(x, c) => {
-        c.event.preventDefault();
-        x.inviteUser();
-      }}
-      style="display: flex; gap: 0.5rem; align-items: flex-end; margin-bottom: 1rem;"
-    >
-      <sl-input
-        label="UID משתמש"
-        placeholder="הכנס UID"
-        value="${(x) => x.inviteUid}"
-        @input=${(x, c) => {
-          const target = c.event.target as HTMLInputElement;
-          if (target) x.inviteUid = target.value;
+    ${when(
+      (x) => x.viewerIsOwner,
+      html`<h3>ניהול שיתוף החוזה</h3>
+        <form
+          @submit=${(x, c) => {
+            c.event.preventDefault();
+            x.inviteUser();
+          }}
+          style="display: flex; gap: 0.5rem; align-items: flex-end; margin-bottom: 1rem;"
+        >
+          <sl-input
+            label="UID משתמש"
+            placeholder="הכנס UID"
+            value="${(x) => x.inviteUid}"
+            @input=${(x, c) => {
+              const target = c.event.target as HTMLInputElement;
+              if (target) x.inviteUid = target.value;
 
-          x.inviteUid = target.value;
-        }}
-        style="width: 200px;"
-      ></sl-input>
-      <sl-select
-        label="הרשאה"
-        value="${(x) => x.inviteRole}"
-        @sl-change=${(x, c) => {
-          const target = c.event.target as HTMLSelectElement;
-          x.inviteRole = target.value as Role;
-        }}
-        style="width: 120px;"
-      >
-        <sl-option value="viewer">צפייה</sl-option>
-        <sl-option value="editor">עריכה</sl-option>
-      </sl-select>
-      <sl-button
-        variant="primary"
-        type="submit"
-        ?loading="${(x) => x.inviteLoading}"
-        >הזמן</sl-button
-      >
-    </form>
+              x.inviteUid = target.value;
+            }}
+            style="width: 200px;"
+          ></sl-input>
+          <sl-select
+            label="הרשאה"
+            value="${(x) => x.inviteRole}"
+            @sl-change=${(x, c) => {
+              const target = c.event.target as HTMLSelectElement;
+              x.inviteRole = target.value as Role;
+            }}
+            style="width: 120px;"
+          >
+            <sl-option value="viewer">צפייה</sl-option>
+            <sl-option value="editor">עריכה</sl-option>
+          </sl-select>
+          <sl-button
+            variant="primary"
+            type="submit"
+            ?loading="${(x) => x.inviteLoading}"
+            >הזמן</sl-button
+          >
+        </form>`
+    )}
     ${when(
       (x) => x.inviteError,
       html`<sl-alert open variant="danger" style="margin-bottom: 1rem;"
@@ -80,7 +83,7 @@ export const ContractAccessManagerTemplate = html<ContractAccessManager>`
                   <td>${(u) => new Date(u.addedAt).toLocaleString()}</td>
                   <td>
                     ${when(
-                      (u) => u.role !== "owner",
+                      (u, c) => u.role !== "owner" && c.parent.viewerIsOwner,
                       html<any>`<sl-button
                         size="small"
                         variant="danger"

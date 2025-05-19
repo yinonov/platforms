@@ -77,8 +77,10 @@ export const listenToContracts = (
         let completed = 0;
         chunks.forEach((chunk) => {
           const contractsRef = collection(db, "contracts");
-          const contractsQuery = query(contractsRef, where(documentId(), "in", chunk));
-          console.log("contractsQuery", contractsQuery);
+          const contractsQuery = query(
+            contractsRef,
+            where(documentId(), "in", chunk)
+          );
           const unsub = onSnapshot(contractsQuery, (contractsSnapshot) => {
             // Merge all contracts from all chunks
             const contracts: Contract[] = contractsSnapshot.docs.map((doc) => ({
