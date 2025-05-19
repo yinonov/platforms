@@ -1,5 +1,8 @@
 import { FASTElement, observable } from "@microsoft/fast-element";
-import type { ContractTemplate } from "@features/contracts/templates/contract-templates";
+import type {
+  ContractField,
+  ContractTemplate,
+} from "@features/contracts/templates/contract-templates";
 
 export class ContractStepper extends FASTElement {
   @observable template: ContractTemplate | null = null;
@@ -12,6 +15,10 @@ export class ContractStepper extends FASTElement {
 
   get currentFields() {
     return this.template?.steps[this.currentStep]?.fields || [];
+  }
+
+  currentStepChanged() {
+    console.log("Updating current fields", this.values);
   }
 
   handleFieldChange(e: CustomEvent) {
@@ -34,7 +41,7 @@ export class ContractStepper extends FASTElement {
 
   updateUrl() {
     // Example: update the URL with the current step index (implement with your router as needed)
-    window.history.replaceState({}, '', `?step=${this.currentStep}`);
+    window.history.replaceState({}, "", `?step=${this.currentStep}`);
   }
 
   submit() {
