@@ -50,7 +50,7 @@ export const ContractFormTemplate = html<ContractForm>`
         >
           <p>אנא מלא את הפרטים הבאים:</p>
 
-          ${repeat((x) => x.fields, getField)}
+          ${repeat((x) => x.fields, getField, { recycle: false })}
         </form>
       </sl-card>
     `,

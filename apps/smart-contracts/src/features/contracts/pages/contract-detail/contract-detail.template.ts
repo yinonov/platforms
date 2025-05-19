@@ -39,7 +39,7 @@ export const ContractDetailTemplate = html<ContractDetail>`
             style="display: flex; gap: 1rem; justify-content: flex-end;"
           >
             <sl-button variant="success" @click="${(x) => x.signContract()}"
-              >חתום</sl-button
+              >דרוש חתימה</sl-button
             >
             <sl-button variant="success" @click="${(x) => x.downloadContract()}"
               >הורד</sl-button
