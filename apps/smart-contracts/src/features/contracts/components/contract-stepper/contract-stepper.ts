@@ -16,11 +16,6 @@ export class ContractStepper extends FASTElement {
   get currentFields() {
     return this.template?.steps[this.currentStep]?.fields || [];
   }
-
-  currentStepChanged() {
-    console.log("Updating current fields", this.values);
-  }
-
   handleFieldChange(e: CustomEvent) {
     Object.assign(this.values, e.detail.values);
   }
