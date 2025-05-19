@@ -2,10 +2,10 @@
 
 ## Data Model
 
-- [ ] Define Firestore data models:
-  - contracts/{contractId}/sharedWith: array of { uid, role }
-  - invitations/{invitationId}: { contractId, email, role, status, expiry }
-  - users/{uid}/contracts: array or subcollection of { contractId, role }
+- [x] Define Firestore data models:
+  - [x] contracts/{contractId}: contract document
+  - [x] contractAccess/{contractId_uid}: { contractId, uid, role, addedAt }
+  - [ ] invitations/{invitationId} or contractShares/{linkId}: { contractId, email, role, status, expiry, createdAt }
 
 ## Backend Implementation
 
@@ -25,7 +25,7 @@
 
 ## Security & Access Control
 
-- [ ] Update Firestore security rules to enforce access based on sharedWith
+- [ ] Update Firestore security rules
 - [ ] Ensure only invited users can accept invitations
 - [ ] Enforce role-based permissions (edit/view)
 
