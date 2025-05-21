@@ -66,7 +66,9 @@ export const ContractAccessManagerTemplate = html<ContractAccessManager>`
               <tr>
                 <th style="text-align: right; max-width: 20ch;">UID</th>
                 <th style="text-align: right; max-width: 10ch;">הרשאה</th>
-                <th style="text-align: right; max-width: 18ch;">הצטרף בתאריך</th>
+                <th style="text-align: right; max-width: 18ch;">
+                  הצטרף בתאריך
+                </th>
                 <th style="max-width: 6ch;"></th>
               </tr>
             </thead>
@@ -75,8 +77,14 @@ export const ContractAccessManagerTemplate = html<ContractAccessManager>`
                 (x) => x.accessUsers,
                 html<any>`
                   <tr>
-                    <td style="max-width: 20ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(u: ContractAccess) => u.uid}</td>
-                    <td style="max-width: 10ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    <td
+                      style="max-width: 20ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                    >
+                      ${(u: ContractAccess) => u.uid}
+                    </td>
+                    <td
+                      style="max-width: 10ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                    >
                       ${(u) =>
                         u.role === "owner"
                           ? "בעלים"
@@ -84,8 +92,14 @@ export const ContractAccessManagerTemplate = html<ContractAccessManager>`
                           ? "עורך"
                           : "צופה"}
                     </td>
-                    <td style="max-width: 18ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(u) => new Date(u.addedAt).toLocaleString()}</td>
-                    <td style="max-width: 6ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    <td
+                      style="max-width: 18ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                    >
+                      ${(u) => new Date(u.addedAt).toLocaleString()}
+                    </td>
+                    <td
+                      style="max-width: 6ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                    >
                       ${when(
                         (u, c) => u.role !== "owner" && c.parent.viewerIsOwner,
                         html<any>`<sl-button
