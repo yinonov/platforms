@@ -41,8 +41,11 @@ export const ContractStepperTemplate = html<ContractStepper>`
             type="button"
             variant="primary"
             @click=${(x) => x.submit()}
-            >סיום</sl-button
-          >`
+            ?disabled=${(x) => x.generating}
+            ?loading=${(x) => x.generating}
+          >
+            סיום
+          </sl-button>`
         )}
       </div>
     `,

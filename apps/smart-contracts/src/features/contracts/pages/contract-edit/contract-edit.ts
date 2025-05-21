@@ -12,6 +12,8 @@ export class ContractEdit extends FASTElement {
   @observable contractTypes = Object.keys(contractTemplateMap);
   @observable selectedType = this.contractTypes[0] || "";
   @observable template?: ContractTemplate;
+  @observable loading = false; // Add loading state
+  @observable error: string | null = null;
 
   connectedCallback() {
     super.connectedCallback();
@@ -30,45 +32,54 @@ export class ContractEdit extends FASTElement {
       alert("נא להתחבר כדי להמשיך");
       return;
     }
+    this.loading = true;
+    this.error = null;
     let response;
-    if (this.template?.type === "rental") {
-      response = await httpsCallable(
+    try {
+      if (this.template?.type === "rental") {
+        response = await httpsCallable(
+          functions,
+          "generateRentalContract"
+        )(values);
+      } else if (this.template?.type === "service") {
+        response = await httpsCallable(
+          functions,
+          "generateServiceContract"
+        )(values);
+      } else if (this.template?.type === "last-will") {
+        response = await httpsCallable(
+          functions,
+          "generateLastWillContract"
+        )(values);
+      } else {
+        alert("סוג חוזה לא נתמך");
+        this.loading = false;
+        return;
+      }
+      const content = (response.data as any).contractText;
+      // Call backend function to create contract and contractAccess atomically
+      const createContractWithAccess = httpsCallable(
         functions,
-        "generateRentalContract"
-      )(values);
-    } else if (this.template?.type === "service") {
-      response = await httpsCallable(
-        functions,
-        "generateServiceContract"
-      )(values);
-    } else if (this.template?.type === "last-will") {
-      response = await httpsCallable(
-        functions,
-        "generateLastWillContract"
-      )(values);
-    } else {
-      alert("סוג חוזה לא נתמך");
-      return;
+        "createContractWithAccess"
+      );
+      const contractData = {
+        contractType: this.template.type,
+        contractData: {
+          type: this.template.type,
+          title: this.template.title,
+          content,
+          metadata: values,
+          status: "generated",
+          createdAt: new Date().toISOString(),
+        },
+      };
+      const result = await createContractWithAccess(contractData);
+      const contractId = (result.data as { contractId?: string })?.contractId;
+      Router.go(`/contract/${contractId}`);
+    } catch (err: any) {
+      this.error = err.message || "אירעה שגיאה ביצירת החוזה";
+    } finally {
+      this.loading = false;
     }
-    const content = (response.data as any).contractText;
-    // Call backend function to create contract and contractAccess atomically
-    const createContractWithAccess = httpsCallable(
-      functions,
-      "createContractWithAccess"
-    );
-    const contractData = {
-      contractType: this.template.type,
-      contractData: {
-        type: this.template.type,
-        title: this.template.title,
-        content,
-        metadata: values,
-        status: "generated",
-        createdAt: new Date().toISOString(),
-      },
-    };
-    const result = await createContractWithAccess(contractData);
-    const contractId = (result.data as { contractId?: string })?.contractId;
-    Router.go(`/contract/${contractId}`);
   }
 }

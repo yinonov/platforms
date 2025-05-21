@@ -1,13 +1,18 @@
 import { FASTElement, observable } from "@microsoft/fast-element";
-import type {
-  ContractField,
-  ContractTemplate,
-} from "@features/contracts/templates/contract-templates";
+import type { ContractTemplate } from "@features/contracts/templates/contract-templates";
 
 export class ContractStepper extends FASTElement {
   @observable template: ContractTemplate | null = null;
   @observable currentStep = 0;
   @observable values: Record<string, any> = {};
+  @observable _loading = false;
+
+  get generating() {
+    return this._loading;
+  }
+  set generating(val: boolean) {
+    this._loading = val;
+  }
 
   get stepCount() {
     return this.template?.steps.length || 0;
@@ -40,6 +45,7 @@ export class ContractStepper extends FASTElement {
   }
 
   submit() {
+    this.generating = true; // Set loading to true when submitting
     this.$emit("submit", { values: { ...this.values } });
   }
 }

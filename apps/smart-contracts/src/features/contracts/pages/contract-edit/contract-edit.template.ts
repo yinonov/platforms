@@ -22,10 +22,23 @@ export const ContractEditTemplate = html<ContractEdit>`
     )}
   </sl-radio-group>
   ${when(
+    (x) => x.loading,
+    html`<div style="display: flex; justify-content: center; margin: 2rem 0;">
+      <sl-spinner style="font-size: 2rem;"></sl-spinner>
+    </div>`
+  )}
+  ${when(
+    (x) => x.error,
+    html`<sl-alert open variant="danger" style="margin-bottom: 1rem;">
+      ${(x) => x.error}
+    </sl-alert>`
+  )}
+  ${when(
     (x) => x.template,
     html<ContractEdit>`
       <sc-contract-stepper
         :template=${(x) => x.template}
+        :loading=${(x) => x.loading}
         @submit=${(x, c) => x.handleSubmit((c.event as CustomEvent).detail.values)}
       ></sc-contract-stepper>
     `
