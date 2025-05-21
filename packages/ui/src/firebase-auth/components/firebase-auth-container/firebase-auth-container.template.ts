@@ -1,5 +1,6 @@
 import { html, when } from "@microsoft/fast-element";
 import type { FirebaseAuthContainer } from "./firebase-auth-container";
+import { getDisplayName } from "../../../services/user-display-name";
 
 export const FirebaseAuthContainerTemplate = html<FirebaseAuthContainer>` ${(
   x: FirebaseAuthContainer
@@ -9,7 +10,7 @@ export const FirebaseAuthContainerTemplate = html<FirebaseAuthContainer>` ${(
         <sl-card class="welcome" style="padding: 1rem; text-align: center;">
           <p>
             ברוך הבא,
-            ${x.currentUser.phoneNumber || x.currentUser.email || "משתמש"}!
+            ${getDisplayName(x.currentUser)}!
           </p>
           <sl-button
             variant="primary"

@@ -6,7 +6,12 @@ import {
   sendPhoneVerification,
   verifyPhoneCode,
 } from "../../services";
-import { Auth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
+import {
+  Auth,
+  onAuthStateChanged,
+  signInAnonymously,
+  type User,
+} from "firebase/auth";
 export class FirebaseAuthContainer extends FASTElement {
   @observable auth?: Auth;
 
@@ -17,7 +22,7 @@ export class FirebaseAuthContainer extends FASTElement {
   @observable smsCode = "";
   @observable loading = false;
   @observable errorMessage = "";
-  @observable currentUser: any = null;
+  @observable currentUser: User | null = null;
   @observable phoneCodeSent = false;
 
   private confirmationResult: any = null;

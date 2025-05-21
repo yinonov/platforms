@@ -1,6 +1,6 @@
 import { html, repeat, when } from "@microsoft/fast-element";
 import type { ContractAccessManager } from "./contract-access-manager";
-import { Role } from "@features/contracts/models";
+import { type ContractAccess, Role } from "@features/contracts/models";
 
 export const ContractAccessManagerTemplate = html<ContractAccessManager>`
   <div style="margin-bottom: 2rem;">
@@ -71,7 +71,7 @@ export const ContractAccessManagerTemplate = html<ContractAccessManager>`
               (x) => x.accessUsers,
               html<any>`
                 <tr>
-                  <td>${(u) => u.uid}</td>
+                  <td>${(u: ContractAccess) => u.uid}</td>
                   <td>
                     ${(u) =>
                       u.role === "owner"
