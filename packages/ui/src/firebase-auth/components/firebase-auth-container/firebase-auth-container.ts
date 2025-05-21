@@ -18,6 +18,7 @@ export class FirebaseAuthContainer extends FASTElement {
   @observable loading = false;
   @observable errorMessage = "";
   @observable currentUser: any = null;
+  @observable phoneCodeSent = false;
 
   private confirmationResult: any = null;
   private recaptchaContainer: HTMLDivElement | null = null;
@@ -47,25 +48,6 @@ export class FirebaseAuthContainer extends FASTElement {
     }
   }
 
-  async signIn() {
-    this.errorMessage = "";
-    this.loading = true;
-    try {
-      if (this.authMethod === "email") {
-        await this.emailLogin();
-      } else if (this.authMethod === "phone") {
-        await this.verifyPhoneLogin();
-      } else if (this.authMethod === "google") {
-        await this.googleSignIn();
-      }
-    } catch (error) {
-      console.error(error);
-      this.errorMessage = (error as Error).message || "Sign in failed.";
-    } finally {
-      this.loading = false;
-    }
-  }
-
   async emailLogin() {
     if (!this.auth) {
       throw new Error("No auth instance available.");
@@ -88,10 +70,32 @@ export class FirebaseAuthContainer extends FASTElement {
         this.phoneNumber,
         this.recaptchaContainer
       );
+      this.phoneCodeSent = true;
     } catch (error) {
       console.error(error);
       this.errorMessage =
         (error as Error).message || "Failed to send verification code.";
+      this.phoneCodeSent = false;
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async signIn() {
+    this.errorMessage = "";
+    this.loading = true;
+    try {
+      if (this.authMethod === "email") {
+        await this.emailLogin();
+      } else if (this.authMethod === "phone") {
+        await this.verifyPhoneLogin();
+        this.phoneCodeSent = false;
+      } else if (this.authMethod === "google") {
+        await this.googleSignIn();
+      }
+    } catch (error) {
+      console.error(error);
+      this.errorMessage = (error as Error).message || "Sign in failed.";
     } finally {
       this.loading = false;
     }
@@ -141,5 +145,11 @@ export class FirebaseAuthContainer extends FASTElement {
     } finally {
       this.loading = false;
     }
+  }
+
+  // Add a method to handle tab change and reset phoneCodeSent
+  handleTabChange(method: "email" | "phone" | "google") {
+    this.authMethod = method;
+    this.phoneCodeSent = false;
   }
 }
