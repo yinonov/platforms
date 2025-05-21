@@ -3,6 +3,9 @@ import checker from "vite-plugin-checker";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
+  server: {
+    port: 2020,
+  },
   plugins: [checker({ typescript: true }), tsconfigPaths()],
   resolve: {
     alias: {
