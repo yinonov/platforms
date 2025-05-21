@@ -9,7 +9,11 @@ export const AppRootTemplate = html<AppRoot>`
       :auth="${(x) => x.auth}"
       :links="${() =>
         [
-          { label: "בית", href: "/" },
+          {
+            label: html`בית
+              <sl-icon slot="prefix" name="house-dash" label="Home"></sl-icon>`,
+            href: "/",
+          },
           { label: "יצירת חוזה", href: "/create-contract" },
           { label: "אזור אישי", href: "/dashboard" },
         ] as NavLink[]}"
