@@ -28,16 +28,23 @@ export const AppNavigationTemplate = html<AppNavigation>`
     </div>
   </nav>
   <sl-drawer
-    label="Navigation"
+    label="ניווט"
     class="nav-drawer"
     placement="start"
+    style="--size: 40vw;"
     ${ref("drawer")}
   >
-    ${repeat(
-      (x) => x.links,
-      html`<sl-button variant="text" href="${(x) => x.href}"
-        >${(x) => x.label}</sl-button
-      >`
-    )}
+    <nav>
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        ${repeat(
+          (x) => x.links,
+          html`<li>
+            <sl-button variant="text" href="${(x) => x.href}"
+              >${(x) => x.label}</sl-button
+            >
+          </li>`
+        )}
+      </ul>
+    </nav>
   </sl-drawer>
 `;
