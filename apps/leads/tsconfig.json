@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "pretty": true,
+    "target": "ES2017", // according to https://fast.design/docs/integrations#typescript. changing this will break decorators
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "importHelpers": true, // when using decorators this allows for the smallest footprint using tslib
+    "experimentalDecorators": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noEmitOnError": true,
+    "strict": true,
+    "outDir": "dist/build",
+    "rootDir": "src",
+    "lib": ["dom", "esnext"],
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": ["src/app/*"],
+      "@features/*": ["src/features/*"],
+      "@services/*": ["src/services/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
