@@ -1,9 +1,6 @@
 import { html, repeat, when } from "@microsoft/fast-element";
 import type { ContractEdit } from "./contract-edit";
-import {
-  type ContractTemplate,
-  contractTemplateMap,
-} from "@features/contracts/templates/contract-templates";
+import { contractTemplateMap } from "@features/contracts/templates/contract-templates";
 
 export const ContractEditTemplate = html<ContractEdit>`
   <h2>בחר סוג חוזה</h2>
@@ -39,7 +36,8 @@ export const ContractEditTemplate = html<ContractEdit>`
       <sc-contract-stepper
         :template=${(x) => x.template}
         :loading=${(x) => x.loading}
-        @submit=${(x, c) => x.handleSubmit((c.event as CustomEvent).detail.values)}
+        @submit=${(x, c) =>
+          x.handleSubmit((c.event as CustomEvent).detail.values)}
       ></sc-contract-stepper>
     `
   )}

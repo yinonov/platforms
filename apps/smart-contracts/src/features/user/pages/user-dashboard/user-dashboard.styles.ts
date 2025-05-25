@@ -3,7 +3,6 @@ import { css } from "@microsoft/fast-element";
 export const UserDashboardStyles = css`
   .dashboard-container {
     padding: 2rem;
-    max-width: 800px;
     margin: 0 auto;
     background: #fff;
     border-radius: 12px;

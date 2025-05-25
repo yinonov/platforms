@@ -18,7 +18,7 @@ export const ContractDetailTemplate = html<ContractDetail>`
     ${when(
       (x) => x.contract,
       html<ContractDetail>`
-        <sl-card style="max-width: 700px; margin: 2rem auto; display: block;">
+        <sl-card style=" margin: 2rem auto; display: block;">
           <h2 style="margin-top: 0;">
             ${(x) => x.contract!.title || "Untitled Contract"}
           </h2>

@@ -5,14 +5,7 @@ export class ContractStepper extends FASTElement {
   @observable template: ContractTemplate | null = null;
   @observable currentStep = 0;
   @observable values: Record<string, any> = {};
-  @observable _loading = false;
-
-  get generating() {
-    return this._loading;
-  }
-  set generating(val: boolean) {
-    this._loading = val;
-  }
+  @observable loading = false;
 
   get stepCount() {
     return this.template?.steps.length || 0;
@@ -21,6 +14,7 @@ export class ContractStepper extends FASTElement {
   get currentFields() {
     return this.template?.steps[this.currentStep]?.fields || [];
   }
+
   handleFieldChange(e: CustomEvent) {
     Object.assign(this.values, e.detail.values);
   }
@@ -44,8 +38,16 @@ export class ContractStepper extends FASTElement {
     window.history.replaceState({}, "", `?step=${this.currentStep}`);
   }
 
-  submit() {
-    this.generating = true; // Set loading to true when submitting
-    this.$emit("submit", { values: { ...this.values } });
+  submissionHandler(event?: Event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    if (this.currentStep === this.stepCount - 1) {
+      this.loading = true;
+      this.$emit("submit", { values: { ...this.values } });
+    } else {
+      this.nextStep();
+    }
   }
 }

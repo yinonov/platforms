@@ -2,6 +2,8 @@ import { html, repeat } from "@microsoft/fast-element";
 import type { UserDashboard } from "./user-dashboard";
 
 export const UserDashboardTemplate = html<UserDashboard>`
+  <h2>חוזים</h2>
+
   <div class="dashboard-container">
     ${(x) =>
       x.loading

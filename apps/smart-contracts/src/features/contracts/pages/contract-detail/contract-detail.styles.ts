@@ -2,7 +2,6 @@ import { css } from "@microsoft/fast-element";
 
 export const ContractDetailStyles = css`
   .contract {
-    padding: 2rem;
     background: var(--sl-color-neutral-0);
     min-height: 60vh;
   }

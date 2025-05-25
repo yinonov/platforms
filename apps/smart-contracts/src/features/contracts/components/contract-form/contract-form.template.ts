@@ -25,7 +25,7 @@ export const ContractFormTemplate = html<ContractForm>`
   ${when(
     (x: ContractForm) => x.fields,
     html<ContractForm>`
-      <sl-card style="max-width: 100%; width: 40rem; display: block;">
+      <sl-card style="max-width: 100%;  display: block;">
         <form
           ${ref("form")}
           @submit=${(x: ContractForm, c: { event: Event }) => {
