@@ -198,7 +198,8 @@ export const UserDashboardStyles = css`
     border-top: 1px solid var(--sl-color-neutral-200);
   }
 
-  .view-btn, .edit-btn {
+  .view-btn,
+  .edit-btn {
     flex: 1;
     transition: all 0.3s ease;
   }

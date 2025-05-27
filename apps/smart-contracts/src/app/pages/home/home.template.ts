@@ -11,11 +11,21 @@ export const HomeTemplate = html<Home>`
             צור, נהל וחתום על חוזים בקלות ובמהירות עם הטכנולוגיה המתקדמת ביותר
           </p>
           <div class="hero-actions">
-            <sl-button variant="primary" size="large" href="/create-contract" class="cta-primary">
+            <sl-button
+              variant="primary"
+              size="large"
+              href="/create-contract"
+              class="cta-primary"
+            >
               <sl-icon slot="prefix" name="plus-circle"></sl-icon>
               התחל עכשיו
             </sl-button>
-            <sl-button variant="default" size="large" href="/dashboard" class="cta-secondary">
+            <sl-button
+              variant="default"
+              size="large"
+              href="/dashboard"
+              class="cta-secondary"
+            >
               <sl-icon slot="prefix" name="list"></sl-icon>
               החוזים שלי
             </sl-button>
@@ -92,7 +102,12 @@ export const HomeTemplate = html<Home>`
       <div class="cta-content">
         <h2>מוכן להתחיל?</h2>
         <p>הצטרף לאלפי משתמשים שכבר משתמשים במערכת שלנו</p>
-        <sl-button variant="primary" size="large" href="/create-contract" class="cta-final">
+        <sl-button
+          variant="primary"
+          size="large"
+          href="/create-contract"
+          class="cta-final"
+        >
           <sl-icon slot="prefix" name="rocket"></sl-icon>
           צור את החוזה הראשון שלך
         </sl-button>

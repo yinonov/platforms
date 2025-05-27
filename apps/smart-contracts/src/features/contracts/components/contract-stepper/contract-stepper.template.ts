@@ -23,7 +23,7 @@ export const ContractStepperTemplate = html<ContractStepper>`
         <sl-progress-bar 
           class="progress-bar"
           value="${(x) =>
-          x.currentStep * (100 / (x.stepCount - 1))}"></sl-progress-bar>
+            x.currentStep * (100 / (x.stepCount - 1))}"></sl-progress-bar>
       </div>
 
         <h3 style="margin-bottom: 1rem;">
