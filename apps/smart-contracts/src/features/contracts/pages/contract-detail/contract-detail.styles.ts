@@ -5,10 +5,7 @@ export const ContractDetailStyles = css`
     background: var(--sl-color-neutral-0);
     min-height: 60vh;
   }
-  sl-card {
-    box-shadow: 0 2px 8px #0001;
-    border-radius: 1rem;
-  }
+  /* Removed direct sl-card styling - use .glass-card class instead */
   .contract-details pre {
     font-size: 1rem;
     line-height: 1.6;

@@ -131,9 +131,8 @@ export const ContractAccessManagerTemplate = html<ContractAccessManager>`
         flex-direction: column !important;
         align-items: stretch !important;
       }
-      .responsive-invite-form sl-input,
-      .responsive-invite-form sl-select,
-      .responsive-invite-form sl-button {
+      /* Use utility classes instead of direct component styling */
+      .responsive-invite-form > * {
         width: 100% !important;
         min-width: 0 !important;
         flex: 1 1 100% !important;

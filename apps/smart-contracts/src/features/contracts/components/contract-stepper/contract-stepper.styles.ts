@@ -10,13 +10,14 @@ export const ContractStepperStyles = css`
     position: relative;
   }
 
-  .progress-container sl-badge {
+  /* Specific positioning styles - keep these as they're functional, not visual */
+  .progress-badge {
     position: relative;
     z-index: 2;
     flex-shrink: 0;
   }
 
-  .progress-container sl-progress-bar {
+  .progress-bar {
     flex: 1;
     position: absolute;
     left: 0;

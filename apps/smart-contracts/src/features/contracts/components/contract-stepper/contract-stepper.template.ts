@@ -11,6 +11,7 @@ export const ContractStepperTemplate = html<ContractStepper>`
           (x) => Array.from({ length: x.stepCount }),
 
           html` <sl-badge
+            class="progress-badge"
             variant="${(_, c) =>
               c.index <= c.parent.currentStep ? "primary" : "neutral"}"
             pill
@@ -19,7 +20,9 @@ export const ContractStepperTemplate = html<ContractStepper>`
           { positioning: true }
         )}
 
-        <sl-progress-bar value="${(x) =>
+        <sl-progress-bar 
+          class="progress-bar"
+          value="${(x) =>
           x.currentStep * (100 / (x.stepCount - 1))}"></sl-progress-bar>
       </div>
 

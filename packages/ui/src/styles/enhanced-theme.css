@@ -1,0 +1,23 @@
+@font-face {
+  font-family: "Open Sans Variable";
+  src: url("/fonts/OpenSans/variable/OpenSans-VariableFont_wdth,wght.ttf")
+    format("truetype");
+  font-weight: 300 700;
+  font-stretch: 75% 100%;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Font family */
+  --sl-font-sans: "Open Sans Variable", "Segoe UI", Arial, sans-serif;
+}
+
+html {
+  font-family: var(--sl-font-sans);
+}
+
+body {
+  background: var(--sl-color-neutral-0);
+  font-family: var(--sl-font-sans);
+}
