@@ -1,4 +1,4 @@
-import { html, when } from "@microsoft/fast-element";
+import { html, when, InlineTemplateDirective } from "@microsoft/fast-element";
 import type { ContractDetail } from "./contract-detail";
 
 export const ContractDetailTemplate = html<ContractDetail>`
@@ -22,15 +22,11 @@ export const ContractDetailTemplate = html<ContractDetail>`
           <h2 style="margin-top: 0;">
             ${(x) => x.contract!.title || "Untitled Contract"}
           </h2>
-          <div class="contract-details" style="margin-bottom: 1.5rem;">
-            <pre
-              style="background: #f8f8f8; border-radius: 8px; padding: 1rem; overflow-x: auto;"
-            >
-              ${(x) =>
-                x.contract!.content || JSON.stringify(x.contract, null, 2)}
-            </pre
-            >
-          </div>
+          <div
+            class="contract-details"
+            style="margin-bottom: 1.5rem;"
+            :innerHTML="${(x) => x.contract!.content}"
+          ></div>
           <sc-contract-access-manager
             contract-id="${(x) => x.contractId}"
           ></sc-contract-access-manager>
