@@ -22,11 +22,9 @@ export const ContractDetailTemplate = html<ContractDetail>`
           <h2 style="margin-top: 0;">
             ${(x) => x.contract!.title || "Untitled Contract"}
           </h2>
-          <div
-            class="contract-details"
-            style="margin-bottom: 1.5rem;"
-            :innerHTML="${(x) => x.contract!.content}"
-          ></div>
+          <sc-contract-document
+            html="${(x) => x.contract!.content}"
+          ></sc-contract-document>
           <sc-contract-access-manager
             contract-id="${(x) => x.contractId}"
           ></sc-contract-access-manager>
