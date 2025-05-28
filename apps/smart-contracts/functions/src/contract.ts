@@ -1,11 +1,11 @@
 import * as functions from "firebase-functions";
-import { VertexAI } from "@google-cloud/vertexai";
+import {VertexAI} from "@google-cloud/vertexai";
 import * as admin from "firebase-admin";
 
 const project = "smart-contracts-254e8";
 const location = "us-central1";
 
-const vertexAI = new VertexAI({ project, location });
+const vertexAI = new VertexAI({project, location});
 const model = vertexAI.preview.getGenerativeModel({
   model: "gemini-2.5-flash-preview-05-20",
 });
@@ -36,18 +36,21 @@ async function generateContractText(
 ): Promise<{ contractText: string }> {
   try {
     const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      contents: [{role: "user", parts: [{text: prompt}]}],
     });
     const response = result.response.candidates?.[0]?.content?.parts?.[0]?.text;
-    return { contractText: response || "לא התקבל טקסט מהמודל" };
+    return {contractText: response || "לא התקבל טקסט מהמודל"};
   } catch (error) {
-    return { contractText: errorMsg };
+    return {contractText: errorMsg};
   }
 }
 
 // Rental contract generator
-export const generateRentalContract = functions.https.onCall(async () => {
-  const prompt = `
+export const generateRentalContract = functions.https.onCall(
+  async (request) => {
+    const {landlord, tenant, address, rent, startDate, endDate} =
+      request.data || {};
+    const prompt = `
 אתה משמש כעורך דין מומחה לדיני מקרקעין ושכירות בישראל,
 עם ניסיון רב בניסוח חוזים תקניים למגורים.
 כתוב חוזה שכירות לדירה בהתאם למבנה ולניסוח
@@ -58,57 +61,65 @@ export const generateRentalContract = functions.https.onCall(async () => {
 תוך שמירה על מבנה, כותרות וסעיפים כפי שמופיעים בחוזה המקורי.
 
 פרטי השכירות:
-- משכיר: {{landlord}}
-- שוכר: {{tenant}}
-- כתובת הנכס: {{address}}
-- דמי שכירות חודשיים: {{rent}} ש"ח
-- תאריך התחלה: {{startDate}}
-- תאריך סיום: {{endDate}}
+- משכיר: ${landlord || "landlord"}
+- שוכר: ${tenant || "tenant"}
+- כתובת הנכס: ${address || "address"}
+- דמי שכירות חודשיים: ${rent || "rent"} ש"ח
+- תאריך התחלה: ${startDate || "startDate"}
+- תאריך סיום: ${endDate || "endDate"}
 
 יש לנסח את החוזה בצורה מקצועית, בשפה משפטית ברורה אך נגישה,
 בסעיפים ממוספרים וללא תוספות מיותרות או הסברים כלליים.
 החוזה יסתיים בסעיף חתימות עבור שני הצדדים.
 
 ${htmlInstruction}`;
-  return generateContractText(prompt, "אירעה שגיאה ביצירת החוזה");
-});
+    return generateContractText(prompt, "אירעה שגיאה ביצירת החוזה");
+  }
+);
 
 // Service contract generator
-export const generateServiceContract = functions.https.onCall(async () => {
-  const prompt = `
+export const generateServiceContract = functions.https.onCall(
+  async (request) => {
+    const {provider, client, amount, startDate, endDate} = request.data || {};
+    const prompt = `
 אתה משמש כעורך דין מומחה לדיני חוזים ושירותים בישראל.
 כתוב הסכם מתן שירותים מקצועי וברור בין ספק ללקוח, כולל הסעיפים הבאים:
 
 1. פרטי הצדדים
 2. תיאור השירותים
-3. תקופת ההסכם (תאריך התחלה: {{startDate}}, תאריך סיום: {{endDate}})
-4. סכום ותנאי תשלום: {{amount}} ש"ח
+3. תקופת ההסכם (תאריך התחלה: ${startDate || "startDate"}, תאריך סיום: ${
+  endDate || "endDate"
+})
+4. סכום ותנאי תשלום: ${amount || "amount"} ש"ח
 5. אחריות, סודיות, קניין רוחני
 6. סיום מוקדם, הפרות וסעדים
 7. סמכות שיפוט וחתימות
 
 פרטי ההסכם:
-- ספק: {{provider}}
-- לקוח: {{client}}
+- ספק: ${provider || "provider"}
+- לקוח: ${client || "client"}
 
 יש לנסח את ההסכם בשפה משפטית ברורה, בסעיפים ממוספרים, וללא הסברים כלליים.
 ההסכם יסתיים בסעיף חתימות עבור שני הצדדים.
 
 ${htmlInstruction}`;
-  return generateContractText(prompt, "אירעה שגיאה ביצירת ההסכם");
-});
+    return generateContractText(prompt, "אירעה שגיאה ביצירת ההסכם");
+  }
+);
 
 // Last will contract generator
-export const generateLastWillContract = functions.https.onCall(async () => {
-  const prompt = `
+export const generateLastWillContract = functions.https.onCall(
+  async (request) => {
+    const {testator, heirs, executor, assets, date} = request.data || {};
+    const prompt = `
 אתה משמש כעורך דין מומחה לדיני ירושה וצוואות בישראל.
 כתוב נוסח צוואה תקני וברור, הכולל את הסעיפים הבאים:
 
-1. פרטי המצווה: {{testator}}
-2. פרטי היורשים: {{heirs}}
-3. מינוי מבצע צוואה: {{executor}}
-4. פירוט הנכסים והרכוש: {{assets}}
-5. תאריך עריכת הצוואה: {{date}}
+1. פרטי המצווה: ${testator || "testator"}
+2. פרטי היורשים: ${heirs || "heirs"}
+3. מינוי מבצע צוואה: ${executor || "executor"}
+4. פירוט הנכסים והרכוש: ${assets || "assets"}
+5. תאריך עריכת הצוואה: ${date || "date"}
 
 הצוואה תכלול הצהרה על כשירות המצווה, רצונו החופשי,
 חלוקת הרכוש, הוראות מיוחדות (אם יש), מינוי מבצע,
@@ -117,8 +128,9 @@ export const generateLastWillContract = functions.https.onCall(async () => {
 יש לנסח את הצוואה בשפה משפטית ברורה, בסעיפים ממוספרים, וללא הסברים כלליים.
 
 ${htmlInstruction}`;
-  return generateContractText(prompt, "אירעה שגיאה ביצירת הצוואה");
-});
+    return generateContractText(prompt, "אירעה שגיאה ביצירת הצוואה");
+  }
+);
 
 // Create contract and contractAccess atomically
 export const createContractWithAccess = functions.https.onCall(
@@ -130,7 +142,7 @@ export const createContractWithAccess = functions.https.onCall(
       );
     }
     const uid = request.auth.uid;
-    const { contractData } = request.data;
+    const {contractData} = request.data;
 
     const db = admin.firestore();
     const contractRef = db.collection("contracts").doc();
@@ -155,6 +167,6 @@ export const createContractWithAccess = functions.https.onCall(
     batch.set(accessRef, access);
     await batch.commit();
 
-    return { contractId: contractRef.id };
+    return {contractId: contractRef.id};
   }
 );
