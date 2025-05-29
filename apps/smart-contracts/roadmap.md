@@ -17,7 +17,14 @@
 -[ ] Clear disclaimers and risk assessment for AI-generated contracts
 -[ ] Version history and change tracking for contracts
 
-## Phase 3: Collaboration & Workflow
+## Phase 3: Hybrid Approach: Template + AI
+
+-[ ] Implement hybrid contract creation: start from vetted templates, allow user edits, and use AI only for custom clauses or advanced customization
+-[ ] UI for editing template sections and inserting AI-generated clauses on demand
+-[ ] Option to review, accept, or reject AI-suggested content before finalizing contract
+-[ ] Analytics to track usage of templates vs. AI-generated content
+
+## Phase 4: Collaboration & Workflow
 
 -[ ] Break contract generation to sections
 -[ ] Share contract with users
@@ -36,18 +43,18 @@
 -[ ] Audit trails for contract changes and signatures
 -[ ] Reminders and contract lifecycle management
 
-## Phase 4: Compliance & Localization
+## Phase 5: Compliance & Localization
 
 -[ ] Templates tailored to specific jurisdictions and industries
 -[ ] Compliance checks (e.g., GDPR, HIPAA) and flagging risky clauses
 -[ ] Support for multiple languages
 
-## Phase 5: Integrations & Analytics
+## Phase 6: Integrations & Analytics
 
 -[ ] Integrations with CRM, accounting, and cloud storage tools
 -[ ] Analytics dashboard for contract status, deadlines, and key metrics
 
-## Phase 6: Monetization & Scaling
+## Phase 7: Monetization & Scaling
 
 -[ ] Freemium model: free basic use, paid advanced features
 -[ ] Pay-per-contract or per-signature pricing
