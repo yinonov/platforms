@@ -1,5 +1,9 @@
 # Smart Contracts
 
+## Vision
+
+Empower every business and individual to create, manage, and sign legally compliant contracts with confidence and ease. By combining advanced AI, legal expertise, and seamless digital workflows, we aim to make contract management accessible, efficient, and trustworthy for everyone.
+
 ## Product Positioning & Marketing Highlight
 
 **Unique Value Proposition:**  
