@@ -3,11 +3,6 @@ import { listenToContract } from "@features/contracts/services/firestore-service
 import type { Contract } from "@features/contracts/models";
 import { functions } from "@services/firebase-config";
 import { httpsCallable } from "firebase/functions";
-import {
-  pdfToBase64,
-  pdfDownload,
-  textToPdf,
-} from "@features/contracts/services/pdf-utils";
 import { notificationService } from "@components/ui/src/services";
 
 export class ContractDetail extends FASTElement {
@@ -48,10 +43,11 @@ export class ContractDetail extends FASTElement {
     try {
       const signerEmail = "yinon@hotmail.com";
       const signerName = "Yinon";
-      // Generate PDF bytes from contract content
-      const pdfBytes = await textToPdf(this.contract.content);
-      const documentBase64 = await pdfToBase64(pdfBytes);
-      const documentName = this.contract.title || "contract.pdf";
+      // Wrap contract HTML fragment in a full HTML document with RTL direction
+      const htmlContent = `<!DOCTYPE html>\n<html lang=\"he\" dir=\"rtl\"><head><meta charset=\"utf-8\"></head><body dir=\"rtl\">${this.contract.content}</body></html>`;
+      // Encode as base64
+      const documentBase64 = btoa(unescape(encodeURIComponent(htmlContent)));
+      const documentName = (this.contract.title || "contract") + ".html";
       if (!signerEmail || !signerName || !documentBase64) {
         this.error = "Missing contract data for signature.";
         this.loading = false;
@@ -81,19 +77,7 @@ export class ContractDetail extends FASTElement {
   }
 
   async downloadContract() {
-    if (!this.contract) {
-      this.error = "No contract loaded.";
-      return;
-    }
-    this.loading = true;
-    this.error = null;
-    try {
-      const pdfBytes = await textToPdf(this.contract.content);
-      await pdfDownload(pdfBytes);
-    } catch (err: any) {
-      this.error = err.message || "Failed to download contract.";
-    } finally {
-      this.loading = false;
-    }
+    // TODO: Implement download functionality
+    console.log("Download contract not implemented yet.");
   }
 }

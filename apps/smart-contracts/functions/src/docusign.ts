@@ -69,7 +69,8 @@ export const sendForSignature = onCall(
         {
           documentBase64,
           name: documentName,
-          fileExtension: "pdf",
+          fileExtension:
+            documentName.toLowerCase().endsWith(".html") ? "html" : "pdf",
           documentId: "1",
         },
       ],

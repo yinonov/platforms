@@ -48,8 +48,14 @@ async function generateContractText(
 // Rental contract generator
 export const generateRentalContract = functions.https.onCall(
   async (request) => {
-    const {landlord, tenant, address, rent, startDate, endDate} =
-      request.data || {};
+    const {
+      landlord = "{{landlord}}",
+      tenant = "{{tenant}}",
+      address = "{{address}}",
+      rent = "{{rent}}",
+      startDate = "{{startDate}}",
+      endDate = "{{endDate}}",
+    } = request.data || {};
     const prompt = `
 אתה משמש כעורך דין מומחה לדיני מקרקעין ושכירות בישראל,
 עם ניסיון רב בניסוח חוזים תקניים למגורים.
@@ -61,12 +67,12 @@ export const generateRentalContract = functions.https.onCall(
 תוך שמירה על מבנה, כותרות וסעיפים כפי שמופיעים בחוזה המקורי.
 
 פרטי השכירות:
-- משכיר: {{${landlord || "landlord"}}}
-- שוכר: {{${tenant || "tenant"}}}
-- כתובת הנכס: {{${address || "address"}}}
-- דמי שכירות חודשיים: {{${rent || "rent"}}} ש"ח
-- תאריך התחלה: {{${startDate || "startDate"}}}
-- תאריך סיום: {{${endDate || "endDate"}}}
+- משכיר: ${landlord}
+- שוכר: ${tenant}
+- כתובת הנכס: ${address}
+- דמי שכירות חודשיים: ${rent} ש"ח
+- תאריך התחלה: ${startDate}
+- תאריך סיום: ${endDate}
 
 יש לנסח את החוזה בצורה מקצועית, בשפה משפטית ברורה אך נגישה,
 בסעיפים ממוספרים וללא תוספות מיותרות או הסברים כלליים.
@@ -80,23 +86,29 @@ ${htmlInstruction}`;
 // Service contract generator
 export const generateServiceContract = functions.https.onCall(
   async (request) => {
-    const {provider, client, amount, startDate, endDate} = request.data || {};
+    const {
+      provider = "{{provider}}",
+      client = "{{client}}",
+      amount = "{{amount}}",
+      startDate = "{{startDate}}",
+      endDate = "{{endDate}}",
+    } = request.data || {};
     const prompt = `
 אתה משמש כעורך דין מומחה לדיני חוזים ושירותים בישראל.
 כתוב הסכם מתן שירותים מקצועי וברור בין ספק ללקוח, כולל הסעיפים הבאים:
 
 1. פרטי הצדדים
 2. תיאור השירותים
-3. תקופת ההסכם (תאריך התחלה: {{${startDate || "startDate"}}},
-   תאריך סיום: {{${endDate || "endDate"}}})
-4. סכום ותנאי תשלום: {{${amount || "amount"}}} ש"ח
+3. תקופת ההסכם (תאריך התחלה: ${startDate},
+   תאריך סיום: ${endDate})
+4. סכום ותנאי תשלום: ${amount} ש"ח
 5. אחריות, סודיות, קניין רוחני
 6. סיום מוקדם, הפרות וסעדים
 7. סמכות שיפוט וחתימות
 
 פרטי ההסכם:
-- ספק: {{${provider || "provider"}}}
-- לקוח: {{${client || "client"}}}
+- ספק: ${provider}
+- לקוח: ${client}
 
 יש לנסח את ההסכם בשפה משפטית ברורה, בסעיפים ממוספרים, וללא הסברים כלליים.
 ההסכם יסתיים בסעיף חתימות עבור שני הצדדים.
@@ -109,16 +121,22 @@ ${htmlInstruction}`;
 // Last will contract generator
 export const generateLastWillContract = functions.https.onCall(
   async (request) => {
-    const {testator, heirs, executor, assets, date} = request.data || {};
+    const {
+      testator = "{{testator}}",
+      heirs = "{{heirs}}",
+      executor = "{{executor}}",
+      assets = "{{assets}}",
+      date = "{{date}}",
+    } = request.data || {};
     const prompt = `
 אתה משמש כעורך דין מומחה לדיני ירושה וצוואות בישראל.
 כתוב נוסח צוואה תקני וברור, הכולל את הסעיפים הבאים:
 
-1. פרטי המצווה: {{${testator || "testator"}}}
-2. פרטי היורשים: {{${heirs || "heirs"}}}
-3. מינוי מבצע צוואה: {{${executor || "executor"}}}
-4. פירוט הנכסים והרכוש: {{${assets || "assets"}}}
-5. תאריך עריכת הצוואה: {{${date || "date"}}}
+1. פרטי המצווה: ${testator}
+2. פרטי היורשים: ${heirs}
+3. מינוי מבצע צוואה: ${executor}
+4. פירוט הנכסים והרכוש: ${assets}
+5. תאריך עריכת הצוואה: ${date}
 
 הצוואה תכלול הצהרה על כשירות המצווה, רצונו החופשי,
 חלוקת הרכוש, הוראות מיוחדות (אם יש), מינוי מבצע,
