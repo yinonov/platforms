@@ -5,9 +5,11 @@ export const ContractStepperStyles = css`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 2rem;
+    margin-block: 2rem;
+    margin-inline: auto;
     gap: 1rem;
     position: relative;
+    inline-size: 60vw;
   }
 
   /* Specific positioning styles - keep these as they're functional, not visual */
