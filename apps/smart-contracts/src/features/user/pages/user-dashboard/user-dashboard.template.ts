@@ -125,14 +125,6 @@ export const UserDashboardTemplate = html<UserDashboard>`
                               <sl-icon slot="prefix" name="eye"></sl-icon>
                               צפייה
                             </sl-button>
-                            <sl-button
-                              variant="text"
-                              href="/contract/${(x) => x.id}/edit"
-                              class="edit-btn"
-                            >
-                              <sl-icon slot="prefix" name="pencil"></sl-icon>
-                              עריכה
-                            </sl-button>
                           </div>
                         </sl-card>
                       `

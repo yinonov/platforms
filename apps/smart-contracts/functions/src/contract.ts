@@ -187,3 +187,35 @@ export const createContractWithAccess = functions.https.onCall(
     return {contractId: contractRef.id};
   }
 );
+
+// Delete contract and all related access records
+export const deleteContract = functions.https.onCall(
+  async (request) => {
+    if (!request.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "User must be authenticated"
+      );
+    }
+    const {contractId} = request.data || {};
+    if (!contractId) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Missing contractId"
+      );
+    }
+    const db = admin.firestore();
+    const contractRef = db.collection("contracts").doc(contractId);
+    const accessQuery = db
+      .collection("contractAccess")
+      .where("contractId", "==", contractId);
+    // Delete contract doc
+    await contractRef.delete();
+    // Delete all related access docs
+    const accessSnap = await accessQuery.get();
+    const batch = db.batch();
+    accessSnap.forEach((doc) => batch.delete(doc.ref));
+    await batch.commit();
+    return {success: true};
+  }
+);

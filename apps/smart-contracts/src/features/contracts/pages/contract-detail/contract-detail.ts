@@ -1,7 +1,7 @@
 import { FASTElement, attr, observable } from "@microsoft/fast-element";
 import { listenToContract } from "@features/contracts/services/firestore-service";
 import type { Contract } from "@features/contracts/models";
-import { functions } from "@services/firebase-config";
+import { functions, auth } from "@services/firebase-config";
 import { httpsCallable } from "firebase/functions";
 import { notificationService } from "@components/ui/src/services";
 
@@ -10,7 +10,7 @@ export class ContractDetail extends FASTElement {
   @observable contract: Contract | null = null;
   @observable loading = false;
   @observable error: string | null = null;
-
+  accessManager?: HTMLFormElement;
   private unsubscribe: (() => void) | null = null;
 
   connectedCallback() {
@@ -79,5 +79,31 @@ export class ContractDetail extends FASTElement {
   async downloadContract() {
     // TODO: Implement download functionality
     console.log("Download contract not implemented yet.");
+  }
+
+  async deleteContract() {
+    if (!this.contractId) {
+      this.error = "No contract ID provided.";
+      return;
+    }
+    if (!confirm("האם אתה בטוח שברצונך למחוק את החוזה? פעולה זו אינה הפיכה.")) {
+      return;
+    }
+    this.loading = true;
+    this.error = null;
+    try {
+      const deleteContractFn = httpsCallable(functions, "deleteContract");
+      await deleteContractFn({ contractId: this.contractId });
+      notificationService.showToast("החוזה נמחק בהצלחה", {
+        variant: "success",
+        duration: 3000,
+      });
+      // Redirect to dashboard after deletion
+      window.location.href = "/dashboard";
+    } catch (err: any) {
+      this.error = err.message || "מחיקת החוזה נכשלה.";
+    } finally {
+      this.loading = false;
+    }
   }
 }

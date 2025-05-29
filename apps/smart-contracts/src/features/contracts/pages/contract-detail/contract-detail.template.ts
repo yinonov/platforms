@@ -1,4 +1,9 @@
-import { html, when, InlineTemplateDirective } from "@microsoft/fast-element";
+import {
+  html,
+  when,
+  InlineTemplateDirective,
+  ref,
+} from "@microsoft/fast-element";
 import type { ContractDetail } from "./contract-detail";
 
 export const ContractDetailTemplate = html<ContractDetail>`
@@ -26,6 +31,7 @@ export const ContractDetailTemplate = html<ContractDetail>`
             html="${(x) => x.contract!.content}"
           ></sc-contract-document>
           <sc-contract-access-manager
+            ${ref("accessManager")}
             contract-id="${(x) => x.contractId}"
           ></sc-contract-access-manager>
           <div
@@ -38,6 +44,15 @@ export const ContractDetailTemplate = html<ContractDetail>`
             <sl-button variant="success" @click="${(x) => x.downloadContract()}"
               >הורד</sl-button
             >
+            ${when(
+              // could be replaced with a more robust check from a service
+              (x) => x.accessManager?.viewerIsOwner,
+              html`<sl-button
+                variant="danger"
+                @click="${(x) => x.deleteContract()}"
+                >מחק חוזה</sl-button
+              >`
+            )}
           </div>
         </sl-card>
       `

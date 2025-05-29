@@ -3,6 +3,7 @@ export {
   generateServiceContract,
   generateLastWillContract,
   createContractWithAccess,
+  deleteContract,
 } from "./contract";
 export {
   grantContractAccess,
