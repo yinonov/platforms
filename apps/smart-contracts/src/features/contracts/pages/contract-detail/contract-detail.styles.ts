@@ -18,6 +18,7 @@ export const ContractDetailStyles = css`
     display: flex;
     flex-direction: column;
     margin-block-start: 2rem;
+
     > sl-button {
       align-self: center;
     }
