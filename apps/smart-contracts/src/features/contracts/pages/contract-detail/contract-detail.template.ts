@@ -44,16 +44,20 @@ export const ContractDetailTemplate = html<ContractDetail>`
             <sl-button variant="success" @click="${(x) => x.downloadContract()}"
               >הורד</sl-button
             >
-            ${when(
-              // could be replaced with a more robust check from a service
-              (x) => x.accessManager?.viewerIsOwner,
-              html`<sl-button
+          </div>
+          ${when(
+            // could be replaced with a more robust check from a service
+            (x) => x.accessManager?.viewerIsOwner,
+            html`<div class="delete-section">
+              <sl-divider></sl-divider>
+              <sl-button
                 variant="danger"
+                outline
                 @click="${(x) => x.deleteContract()}"
                 >מחק חוזה</sl-button
-              >`
-            )}
-          </div>
+              >
+            </div>`
+          )}
         </sl-card>
       `
     )}
