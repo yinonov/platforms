@@ -29,4 +29,19 @@ export const ContractStepperStyles = css`
     z-index: 1;
     --height: 6px;
   }
+
+  .contract-form {
+    inline-size: 60vw;
+    display: block;
+    margin-inline: auto;
+  }
+
+  .progress-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: flex-end;
+    inline-size: 60vw;
+    margin-inline: auto;
+  }
 `;
