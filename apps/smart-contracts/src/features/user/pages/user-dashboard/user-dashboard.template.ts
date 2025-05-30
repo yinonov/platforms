@@ -53,10 +53,6 @@ export const UserDashboardTemplate = html<UserDashboard>`
   <div class="dashboard-container">
     <div class="dashboard-header">
       <h2>החוזים שלי</h2>
-      <sl-button variant="primary" href="/create-contract" class="create-btn">
-        <sl-icon slot="prefix" name="plus-circle"></sl-icon>
-        צור חוזה חדש
-      </sl-button>
     </div>
 
     ${(x) =>
@@ -68,88 +64,76 @@ export const UserDashboardTemplate = html<UserDashboard>`
             </div>
           `
         : html`
-            ${x.contracts.length > 0
-              ? html`
-                  <div class="contracts-grid">
-                    ${repeat(
-                      (x) => x.contracts,
-                      html<any>`
-                        <sl-card class="contract-card hover-lift">
-                          <div class="contract-header">
-                            <h3 class="contract-title">
-                              ${(x) => x.title || "חוזה ללא כותרת"}
-                            </h3>
-                            <sl-badge
-                              variant="neutral"
-                              pill
-                              class="contract-status"
-                            >
-                              ${(x) => x.status || "טיוטה"}
-                            </sl-badge>
-                          </div>
-
-                          <div class="contract-meta">
-                            <div class="meta-item">
-                              <sl-icon name="calendar"></sl-icon>
-                              <span
-                                >${(x) => {
-                                  const val = x.createdAt;
-                                  let date: Date | null = null;
-                                  if (val && typeof val.toDate === "function") {
-                                    date = val.toDate();
-                                  } else if (
-                                    typeof val === "string" ||
-                                    typeof val === "number"
-                                  ) {
-                                    date = new Date(val);
-                                  }
-                                  return date && !isNaN(date.getTime())
-                                    ? date.toLocaleDateString("he-IL")
-                                    : "תאריך לא ידוע";
-                                }}</span
-                              >
-                            </div>
-
-                            <div class="meta-item">
-                              <sl-icon name="person"></sl-icon>
-                              <span>${(x) => x.createdBy || "לא מוגדר"}</span>
-                            </div>
-                          </div>
-
-                          <div class="contract-actions">
-                            <sl-button
-                              variant="text"
-                              href="/contract/${(x) => x.id}"
-                              class="view-btn"
-                            >
-                              <sl-icon slot="prefix" name="eye"></sl-icon>
-                              צפייה
-                            </sl-button>
-                          </div>
-                        </sl-card>
-                      `
-                    )}
+            <div class="contracts-grid">
+              <sl-card class="contract-card hover-lift create-contract-card" style="cursor:pointer;" @click=${() => (window.location.href = "/create-contract")}> 
+                <div class="contract-header">
+                  <h3 class="contract-title">
+                    <sl-icon name="plus-circle" style="margin-left:0.5rem;"></sl-icon>
+                    צור חוזה חדש
+                  </h3>
+                </div>
+                <div class="contract-meta">
+                  <div class="meta-item">
+                    <span>התחל חוזה חדש מתבנית</span>
                   </div>
-                `
-              : html`
-                  <div class="empty-state">
-                    <div class="empty-card glass-card text-center">
-                      <div class="empty-content">
-                        <sl-icon name="file-plus" class="empty-icon"></sl-icon>
-                        <h3>אין חוזים עדיין</h3>
-                        <p>התחל ליצור את החוזה הראשון שלך</p>
-                        <sl-button
-                          variant="primary"
-                          href="/create-contract"
-                          size="large"
+                </div>
+              </sl-card>
+              ${repeat(
+                (x) => x.contracts,
+                html<any>`
+                  <sl-card class="contract-card hover-lift">
+                    <div class="contract-header">
+                      <h3 class="contract-title">
+                        ${(x) => x.title || "חוזה ללא כותרת"}
+                      </h3>
+                      <sl-badge
+                        variant="neutral"
+                        pill
+                        class="contract-status"
+                      >
+                        ${(x) => x.status || "טיוטה"}
+                      </sl-badge>
+                    </div>
+                    <div class="contract-meta">
+                      <div class="meta-item">
+                        <sl-icon name="calendar"></sl-icon>
+                        <span
+                          >${(x) => {
+                            const val = x.createdAt;
+                            let date: Date | null = null;
+                            if (val && typeof val.toDate === "function") {
+                              date = val.toDate();
+                            } else if (
+                              typeof val === "string" ||
+                              typeof val === "number"
+                            ) {
+                              date = new Date(val);
+                            }
+                            return date && !isNaN(date.getTime())
+                              ? date.toLocaleDateString("he-IL")
+                              : "תאריך לא ידוע";
+                          }}</span
                         >
-                          <sl-icon slot="prefix" name="plus-circle"></sl-icon>
-                          צור חוזה ראשון
-                        </sl-button>
+                      </div>
+                      <div class="meta-item">
+                        <sl-icon name="person"></sl-icon>
+                        <span>${(x) => x.createdBy || "לא מוגדר"}</span>
                       </div>
                     </div>
-                  </div>
-                `}
-          `}
+                    <div class="contract-actions">
+                      <sl-button
+                        variant="text"
+                        href="/contract/${(x) => x.id}"
+                        class="view-btn"
+                      >
+                        <sl-icon slot="prefix" name="eye"></sl-icon>
+                        צפייה
+                      </sl-button>
+                    </div>
+                  </sl-card>
+                `
+              )}
+            </div>
+        `}
   </div>
 `;

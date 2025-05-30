@@ -13,7 +13,12 @@ export class UserDashboard extends FASTElement {
     this.loading = true;
 
     this.unsubscribeContracts = listenToContracts((contracts) => {
-      this.contracts = contracts;
+      // Sort contracts by createdAt descending (newest first)
+      this.contracts = contracts.slice().sort((a, b) => {
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
+        return dateB - dateA;
+      });
       this.loading = false;
     });
   }
